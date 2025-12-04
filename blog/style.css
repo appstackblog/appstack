@@ -6,6 +6,7 @@
   --muted: #94a3b8;
   --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
   --ring: linear-gradient(135deg, rgba(124, 251, 203, 0.55), rgba(110, 231, 255, 0.3), rgba(167, 139, 250, 0.35));
+  --bg-gradient: radial-gradient(circle at 20% 20%, #1e293b 0, #0f172a 35%, #0b1224 70%);
 }
 
 *,
@@ -14,13 +15,21 @@
   box-sizing: border-box;
 }
 
+html {
+  min-height: 100%;
+  background: var(--bg-gradient);
+}
+
 body {
   margin: 0;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 20% 20%, #1e293b 0, #0f172a 35%, #0b1224 70%);
+  background: var(--bg-gradient);
+  background-color: #0b1224;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: var(--text);
   font-family: "Space Grotesk", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   letter-spacing: 0.1px;
