@@ -215,7 +215,7 @@ body {
 
 .app-meta p {
   margin: 4px 0 0;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   color: #4b5563;
 }
 
@@ -258,7 +258,7 @@ body {
 }
 
 .handle-block {
-  margin-top: -165px;
+  margin-top: -200px;
   display: flex;
   flex-direction: column;
   align-items: center;
