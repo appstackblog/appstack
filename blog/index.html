@@ -3,98 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>APPSTACK Background</title>
+  <title>APPSTACK.BLOG - Th&#244;ng b&#225;o</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="top-bar" aria-hidden="true">
-    <div class="top-menu" aria-hidden="true">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  </div>
-  <div class="background-texture"></div>
-  <main class="hero">
-    <div class="avatar-wrap">
-      <div class="avatar" role="img" aria-label="Ảnh đại diện">
-        <img src="assets/avatar.png" alt="Ảnh đại diện">
+  <main class="page">
+    <section class="phone">
+      <div class="status-bar">
+        <span class="time" id="time">12:00</span>
+        <span class="signal">|||||</span>
       </div>
-    </div>
-    <div class="handle-block">
-      <div class="handle">
-        <span class="name">APPSTACK.BLOG</span>
-        <span class="verify" aria-label="Đã xác minh Meta">
-          <span class="check" aria-hidden="true"></span>
-        </span>
+      <div class="notification" id="notification">
+        <div class="tag">Th&#244;ng b&#225;o</div>
+        <div class="message"><span class="brand">APPSTACK.BLOG</span><br>&#272;ang C&#7853;p Nh&#7853;t. . .</div>
       </div>
-      <p class="subtitle">Trusted iOS IPA Library</p>
-      <p class="tagline">Chỉ chia sẻ những file IPA được kiểm tra kỹ, giúp bạn cài đặt an toàn hơn trên iOS.</p>
-      <a class="app-link" href="https://www.appstack.blog/" target="_blank" rel="noopener">appstack.blog</a>
-      <section class="appstore-plain" aria-label="Danh sách app">
-        <div class="dns-card">
-          <div class="dns-title">
-            <img src="assets/dns.png" alt="DNS icon">
-            <div>
-              <h3>DNS Configuration</h3>
-              <p class="dns-sub">Install via DNS configuration file</p>
-            </div>
-          </div>
-          <div class="dns-alert">
-            <svg
-              class="warning-icon"
-              width="32"
-              height="32"
-              viewBox="0 0 64 64"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path d="M32 4 L60 54 H4 Z" fill="#F44336" />
-              <rect x="30" y="20" width="4" height="20" rx="2" fill="#ffffff" />
-              <circle cx="32" cy="48" r="3" fill="#ffffff" />
-            </svg>
-            <span>This installation method prohibits the use of VPN</span>
-          </div>
-          <div class="dns-download-block">
-            <h4>Download DNS Configuration</h4>
-            <a class="dns-download" href="assets/dns/cloudflare-dns-vshtech.mobileconfig">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 3v14" />
-                <path d="m7 12 5 5 5-5" />
-                <path d="M5 19h14" />
-              </svg>
-              <span>DNS Config</span>
-            </a>
-          </div>
-        </div>
-        <div class="app-header">
-          <h2>PANEL IOS</h2>
-          <span class="app-sub">Bản cài trực tiếp</span>
-        </div>
-        <div class="app-line">
-          <div class="app-icon">
-            <img src="assets/icons/panel.png" alt="Panel icon">
-          </div>
-          <div class="app-meta">
-            <h3>PANEL IOS V1</h3>
-            <p>Etisalat – Emirates Telecommunications Corporation</p>
-          </div>
-          <div class="app-action">
-            <a class="app-download" href="itms-services://?action=download-manifest&url=https://appstack.blog/test/assets/ipas/manifest.plist">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
-                <path d="m12 11.5 0 7" />
-                <path d="m9.5 15 2.5 3 2.5-3" />
-              </svg>
-              <span>Tải về</span>
-            </a>
-          </div>
-        </div>
-      </section>
-    </div>
+    </section>
   </main>
+  <script src="script.js"></script>
 </body>
 </html>
