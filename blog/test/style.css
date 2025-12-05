@@ -207,14 +207,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 12px;
+  gap: 6px;
+  padding: 8px 10px;
   background: #fef2f2;
   color: #b91c1c;
   border: 1px solid #fecdd3;
   border-radius: 12px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
+  line-height: 1.2;
   animation: alertPulse 2.8s ease-in-out infinite;
   text-align: center;
 }
@@ -224,8 +225,8 @@ body {
 }
 
 .warning-icon {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
 }
 
