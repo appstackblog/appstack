@@ -12,21 +12,22 @@ body {
 
 .top-bar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
-  background: #2b2f38;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
-  border-radius: 0;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1100px, calc(100% - 24px));
+  height: 56px;
+  background: rgba(43, 47, 56, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+  border-radius: 16px;
   z-index: 10;
 }
 
 .top-menu {
   position: absolute;
-  top: 14px;
-  right: 16px;
+  top: 10px;
+  right: 14px;
   width: 56px;
   height: 36px;
   background: #d2c5b2;
@@ -157,26 +158,40 @@ body {
   gap: 12px;
 }
 
+.app-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
 .appstore-plain h2 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   font-weight: 800;
   color: #0f172a;
-  text-align: center;
+}
+
+.app-sub {
+  font-size: 0.92rem;
+  color: #6b7280;
 }
 
 .app-line {
   display: grid;
-  grid-template-columns: 64px 1fr auto;
+  grid-template-columns: 72px 1fr auto;
   align-items: center;
-  gap: 12px;
-  padding: 6px 0;
-  border-bottom: 1px solid #e5e7eb;
+  gap: 14px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #f8fafc;
 }
 
 .app-icon {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   border-radius: 14px;
   background: linear-gradient(135deg, #1d4ed8, #3b82f6);
   display: grid;
@@ -193,29 +208,45 @@ body {
 
 .app-meta h3 {
   margin: 0;
-  font-size: 0.98rem;
+  font-size: 1rem;
   font-weight: 800;
   color: #0f172a;
 }
 
 .app-meta p {
   margin: 4px 0 0;
-  font-size: 0.86rem;
+  font-size: 0.9rem;
   color: #4b5563;
 }
 
+.app-action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .app-download {
-  color: #2563eb;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+  gap: 6px;
+  padding: 8px 12px;
+  color: #0f172a;
+  background: #e0e7ff;
+  border: 1px solid #cbd5ff;
+  border-radius: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .app-download svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
+}
+
+.app-download:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
 .tagline .char {
@@ -227,7 +258,7 @@ body {
 }
 
 .handle-block {
-  margin-top: -150px;
+  margin-top: -165px;
   display: flex;
   flex-direction: column;
   align-items: center;
