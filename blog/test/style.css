@@ -73,7 +73,7 @@ body {
   background: linear-gradient(135deg, #1b8cfb, #12d6ff);
   padding: 4px;
   box-shadow: 0 10px 40px rgba(17, 134, 255, 0.35);
-  margin-top: -100px;
+  margin-top: 0;
 }
 
 .avatar {
@@ -151,11 +151,99 @@ body {
 }
 
 .appstore-plain {
-  margin-top: 34px;
+  margin-top: 44px;
   width: min(520px, 100%);
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.dns-card {
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #f8fafc;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dns-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dns-title img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.dns-title h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.dns-sub {
+  margin: 2px 0 0;
+  color: #6b7280;
+  font-size: 0.92rem;
+}
+
+.dns-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecdd3;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.dns-alert svg {
+  width: 18px;
+  height: 18px;
+  fill: #b91c1c;
+}
+
+.dns-download-block h4 {
+  margin: 0 0 8px;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.dns-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 800;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.24);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dns-download svg {
+  width: 18px;
+  height: 18px;
+  stroke: #ffffff;
+  fill: none;
+}
+
+.dns-download:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.28);
 }
 
 .app-header {
@@ -163,7 +251,7 @@ body {
   align-items: baseline;
   gap: 10px;
   justify-content: center;
-  margin-bottom: 10px;
+  margin: 8px 0 4px;
 }
 
 .appstore-plain h2 {
@@ -198,6 +286,27 @@ body {
   place-items: center;
   box-shadow: 0 6px 14px rgba(29, 78, 216, 0.25);
   overflow: hidden;
+}
+
+.app-icon span {
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+}
+
+.dns-line {
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  border-radius: 16px;
+  align-items: center;
+}
+
+.dns-line .app-action {
+  justify-content: center;
+}
+
+.dns-line .app-download {
+  justify-content: center;
 }
 
 .app-icon img {
@@ -258,7 +367,7 @@ body {
 }
 
 .handle-block {
-  margin-top: -200px;
+  margin-top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
