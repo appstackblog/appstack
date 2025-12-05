@@ -11,7 +11,7 @@ body {
 }
 
 .top-bar {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
@@ -19,8 +19,8 @@ body {
   background: #2b2f38;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
-  border-radius: 0 0 18px 18px;
-  z-index: 5;
+  border-radius: 0;
+  z-index: 10;
 }
 
 .top-menu {
