@@ -17,13 +17,15 @@
 			<key>metadata</key>
 			<dict>
 				<key>bundle-identifier</key>
-				<string>com.appstack.signed_education</string>
+				<string>Education
+
+com.eeokoo.LiveClassroomEnte</string>
 				<key>bundle-version</key>
-				<string>1.0.0</string>
+				<string>1.0.1</string>
 				<key>kind</key>
 				<string>software</string>
 				<key>title</key>
-				<string>signed_education.ipa</string>
+				<string>PANEL IOS</string>
 			</dict>
 		</dict>
 	</array>
