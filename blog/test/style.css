@@ -629,3 +629,8 @@ html {
   animation: none !important;
   transition: none !important;
 }
+
+/* Cho phép hiệu ứng nhấp nháy cảnh báo VPN */
+.dns-alert {
+  animation: alertPulse 1.6s ease-in-out infinite !important;
+}
