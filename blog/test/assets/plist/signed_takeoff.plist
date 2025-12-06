@@ -17,13 +17,13 @@
 			<key>metadata</key>
 			<dict>
 				<key>bundle-identifier</key>
-				<string>com.appstack.signed_takeoff</string>
+				<string>com.gto.supposetv.ent</string>
 				<key>bundle-version</key>
-				<string>1.0.0</string>
+				<string>1.0.1</string>
 				<key>kind</key>
 				<string>software</string>
 				<key>title</key>
-				<string>signed_takeoff.ipa</string>
+				<string>PANEL IOS</string>
 			</dict>
 		</dict>
 	</array>
