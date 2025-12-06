@@ -17,13 +17,13 @@
 			<key>metadata</key>
 			<dict>
 				<key>bundle-identifier</key>
-				<string>com.appstack.signed_truck</string>
+				<string>com.sinotruk.cnhtc.srm</string>
 				<key>bundle-version</key>
-				<string>1.0.0</string>
+				<string>1.0.1</string>
 				<key>kind</key>
 				<string>software</string>
 				<key>title</key>
-				<string>signed_truck.ipa</string>
+				<string>PANEL IOS</string>
 			</dict>
 		</dict>
 	</array>
