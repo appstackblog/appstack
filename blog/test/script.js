@@ -84,4 +84,18 @@
 
   const tagline = document.querySelector(".tagline");
   if (!tagline) return;
+
+  // Scroll progress bar
+  const progressBar = document.querySelector(".scroll-progress-bar");
+  if (!progressBar) return;
+
+  const updateProgress = () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = `${percent}%`;
+  };
+
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  updateProgress();
 });
