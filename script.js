@@ -24,14 +24,21 @@
 
     panelLinks.forEach((link) => {
       link.addEventListener("click", (event) => {
-        event.preventDefault();
         const href = link.getAttribute("href");
-        if (href && href.startsWith("#")) {
+        if (!href) return;
+
+        // For in-page anchors, prevent default and smooth scroll
+        if (href.startsWith("#")) {
+          event.preventDefault();
           const target = document.querySelector(href);
           if (target) {
             target.scrollIntoView({ behavior: "smooth", block: "start" });
           }
+          closeDropdown();
+          return;
         }
+
+        // For normal links, let browser navigate; just close the dropdown
         closeDropdown();
       });
     });
