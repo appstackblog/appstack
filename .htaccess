@@ -1,0 +1,9 @@
+Options -Indexes
+DirectoryIndex index.php index.html
+
+RewriteEngine On
+
+# If a blog subfolder exists with an index.php, send root traffic there
+RewriteCond %{REQUEST_URI} ^/$
+RewriteCond %{DOCUMENT_ROOT}/blog/index.php -f
+RewriteRule ^$ /blog/index.php [L]
