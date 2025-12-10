@@ -7,11 +7,97 @@
   <link rel="stylesheet" href="./panel.css">
 </head>
 <body>
+  <div class="header-frame"></div>
+  <div class="header-strip"></div>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-content">
+        <a href="#hero" class="logo">
+          <img src="../assets/icons/panel.png" alt="PANEL" class="logo-icon-img">
+          <span class="logo-text">PANEL IOS</span>
+        </a>
+        <button class="mobile-menu-toggle" type="button" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="nav-links">
+          <a href="#hero" data-i18n="nav.home">Home</a>
+          <a href="../index.html#panel-ios" data-i18n="nav.dns">DNS Config</a>
+          <a href="#panel-list-panel" data-i18n="nav.apps">Apps</a>
+        </div>
+        <div class="lang-selector">
+          <button class="lang-btn" type="button">
+            <span class="lang-icon">🌐</span>
+            <span data-i18n="nav.languages">Languages</span>
+            <svg class="lang-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 4.5 6 7.5 9 4.5"></polyline>
+            </svg>
+          </button>
+          <div class="lang-dropdown">
+            <div class="lang-option" data-lang="en">English</div>
+            <div class="lang-option" data-lang="vi">Vietnamese</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <section id="hero" class="osign-hero">
+    <div class="osign-container">
+      <div class="osign-content">
+        <div class="osign-left">
+          <h1 class="osign-title">PANEL IOS</h1>
+          <p class="osign-desc" data-i18n="hero.description">
+            APP IOS
+          </p>
+          <div class="osign-features">
+            <div class="osign-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span data-i18n="hero.feature.simple">Simple</span>
+            </div>
+            <span class="osign-divider">|</span>
+            <div class="osign-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              <span data-i18n="hero.feature.efficient">Efficient</span>
+            </div>
+            <span class="osign-divider">|</span>
+            <div class="osign-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="7" y="2" width="10" height="20" rx="2" ry="2"></rect>
+                <line x1="11" y1="19" x2="13" y2="19"></line>
+              </svg>
+              <span data-i18n="hero.feature.phone">Phone</span>
+            </div>
+          </div>
+        </div>
+        <div class="osign-right">
+          <div class="osign-icon-large">
+            <img src="../assets/icons/panel.png" alt="Osign" class="osign-icon-img">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <main class="hero">
-    <div class="handle-block">
-      <div class="app-header">
-        <h2>PANEL IOS</h2>
-        <span class="app-sub">Bản cài trực tiếp</span>
+    <div class="panel-frame">
+      <div class="handle-block">
+
+      <div class="install-banner">
+        <div class="install-banner-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="14" />
+            <line x1="12" y1="18" x2="12" y2="18.01" />
+          </svg>
+        </div>
+        <p class="install-banner-title" data-i18n="banner.title">First, you need to download the DNS configuration file to your phone before installing the PANEL IOS.</p>
+        <div class="install-banner-action">
+          <a class="install-banner-link" href="../index.html#panel-ios" data-i18n="banner.link">MOVE THERE</a>
+        </div>
       </div>
 
       <div class="panel-preview">
@@ -334,9 +420,12 @@
         </div>
       </div>
     </div>
+    </div>
   </main>
   <script src="./panel.js"></script>
 </body>
 </html>
+
+
 
 
