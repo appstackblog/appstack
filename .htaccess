@@ -8,8 +8,3 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI} ^/$
 RewriteCond %{DOCUMENT_ROOT}/maintenance.html -f
 RewriteRule ^$ /maintenance.html [L]
-
-# If you still want /blog as fallback when not in maintenance, keep this
-RewriteCond %{REQUEST_URI} ^/$
-RewriteCond %{DOCUMENT_ROOT}/blog/index.php -f
-RewriteRule ^$ /blog/index.php [L]
