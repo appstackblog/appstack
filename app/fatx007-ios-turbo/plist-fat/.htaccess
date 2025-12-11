@@ -1,0 +1,3 @@
+<FilesMatch "\.(plist|ipa)$">
+    Require all denied
+</FilesMatch>
