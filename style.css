@@ -629,3 +629,9 @@ html {
   animation: none !important;
   transition: none !important;
 }
+
+/* Re-enable shine effect for the main APPSTACK.BLOG name */
+.name {
+  animation: shine 3.2s ease-in-out infinite !important;
+  transition: initial;
+}
