@@ -2,22 +2,22 @@
 $id = $_GET['id'] ?? '';
 
 $maps = [
-    'panel_chiba'        => __DIR__ . '/plist/signed_chiba.plist',
-    'panel_chinatelecom' => __DIR__ . '/plist/signed_chinatelecom.plist',
-    'panel_education'    => __DIR__ . '/plist/signed_education.plist',
-    'panel_Eryuan'       => __DIR__ . '/plist/signed_Eryuan.plist',
-    'panel_takeoff'      => __DIR__ . '/plist/signed_takeoff.plist',
-    'panel_Tianjin'      => __DIR__ . '/plist/signed_Tianjin.plist',
-    'panel_truck'        => __DIR__ . '/plist/signed_truck.plist',
-    'panel_vietnambank'  => __DIR__ . '/plist/signed_vietnambank.plist',
-    'panel_wuling'       => __DIR__ . '/plist/signed_wuling.plist',
-    'panel_chinamobile'  => __DIR__ . '/plist/signed_chinamobile.plist',
-    'panel_bocom'        => __DIR__ . '/plist/signed_bocom.plist',
-    'panel_icbc'         => __DIR__ . '/plist/signed_icbc.plist',
-    'panel_cspg'         => __DIR__ . '/plist/signed_cspg.plist',
-    'panel_ccb'          => __DIR__ . '/plist/signed_ccb.plist',
-    'panel_boc'          => __DIR__ . '/plist/signed_boc.plist',
-    'panel_sjtu'         => __DIR__ . '/plist/signed_sjtu.plist',
+    'panel_bank'        => __DIR__ . '/plist/Bank.plist',
+    'panel_chiba'       => __DIR__ . '/plist/Chiba.plist',
+    'panel_chinatelecom'=> __DIR__ . '/plist/ChinaTelecom.plist',
+    'panel_education'   => __DIR__ . '/plist/Education.plist',
+    'panel_eeo'         => __DIR__ . '/plist/Eeo.plist',
+    'panel_eryuan'      => __DIR__ . '/plist/Eryuan.plist',
+    'panel_esen'        => __DIR__ . '/plist/Esen.plist',
+    'panel_infor'       => __DIR__ . '/plist/Infor.plist',
+    'panel_mkt'         => __DIR__ . '/plist/Mkt.plist',
+    'panel_takeoff'     => __DIR__ . '/plist/Takeoff.plist',
+    'panel_telecom'     => __DIR__ . '/plist/Telecom.plist',
+    'panel_tianjin'     => __DIR__ . '/plist/Tianjin.plist',
+    'panel_truck'       => __DIR__ . '/plist/Truck.plist',
+    'panel_viettel'     => __DIR__ . '/plist/Viettel.plist',
+    'panel_viettinbank' => __DIR__ . '/plist/Viettinbank.plist',
+    'panel_wuling'      => __DIR__ . '/plist/Wuling.plist',
 ];
 
 if (!isset($maps[$id])) {

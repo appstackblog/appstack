@@ -2,15 +2,22 @@
 $id = $_GET['id'] ?? '';
 
 $maps = [
-    'panel_chiba'        => __DIR__ . '/ipas/signed_chiba.ipa',
-    'panel_chinatelecom' => __DIR__ . '/ipas/signed_chinatelecom.ipa',
-    'panel_education'    => __DIR__ . '/ipas/signed_education.ipa',
-    'panel_Eryuan'       => __DIR__ . '/ipas/signed_Eryuan.ipa',
-    'panel_takeoff'      => __DIR__ . '/ipas/signed_takeoff.ipa',
-    'panel_Tianjin'      => __DIR__ . '/ipas/signed_Tianjin.ipa',
-    'panel_truck'        => __DIR__ . '/ipas/signed_truck.ipa',
-    'panel_vietnambank'  => __DIR__ . '/ipas/signed_vietnambank.ipa',
-    'panel_wuling'       => __DIR__ . '/ipas/signed_wuling.ipa',
+    'panel_bank'        => __DIR__ . '/ipas/Bank.ipa',
+    'panel_chiba'       => __DIR__ . '/ipas/Chiba.ipa',
+    'panel_chinatelecom'=> __DIR__ . '/ipas/ChinaTelecom.ipa',
+    'panel_education'   => __DIR__ . '/ipas/Education.ipa',
+    'panel_eeo'         => __DIR__ . '/ipas/Eeo.ipa',
+    'panel_eryuan'      => __DIR__ . '/ipas/Eryuan.ipa',
+    'panel_esen'        => __DIR__ . '/ipas/Esen.ipa',
+    'panel_infor'       => __DIR__ . '/ipas/Infor.ipa',
+    'panel_mkt'         => __DIR__ . '/ipas/Mkt.ipa',
+    'panel_takeoff'     => __DIR__ . '/ipas/Takeoff.ipa',
+    'panel_telecom'     => __DIR__ . '/ipas/Telecom.ipa',
+    'panel_tianjin'     => __DIR__ . '/ipas/Tianjin.ipa',
+    'panel_truck'       => __DIR__ . '/ipas/Truck.ipa',
+    'panel_viettel'     => __DIR__ . '/ipas/Viettel.ipa',
+    'panel_viettinbank' => __DIR__ . '/ipas/Viettinbank.ipa',
+    'panel_wuling'      => __DIR__ . '/ipas/Wuling.ipa',
 ];
 
 if (!isset($maps[$id])) {
