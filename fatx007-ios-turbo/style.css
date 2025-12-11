@@ -103,7 +103,7 @@ html {
   align-items: center;
   gap: 12px;
   flex-wrap: nowrap;
-  overflow-x: hidden;
+  overflow: visible;
   scrollbar-width: none;
 }
 
@@ -230,6 +230,7 @@ html {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   padding: 8px;
   display: none;
+  z-index: 20;
 }
 
 .lang-option {
@@ -243,7 +244,7 @@ html {
   background: #f3f4f6;
 }
 
-.lang-selector:hover .lang-dropdown {
+.lang-selector.open .lang-dropdown {
   display: block;
 }
 
