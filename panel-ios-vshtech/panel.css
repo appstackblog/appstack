@@ -105,94 +105,6 @@ html {
   z-index: 6;
 }
 
-.osign-hero {
-  margin-top: 2cm;
-  padding: 26px 16px 10px;
-  background: #ffffff;
-}
-
-.osign-container {
-  width: min(1100px, calc(100% - 24px));
-  margin: 0 auto;
-}
-
-.osign-content {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 18px;
-  align-items: center;
-}
-
-.osign-title {
-  margin: 0 0 10px;
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: #0f172a;
-}
-
-.osign-desc {
-  margin: 0 0 12px;
-  color: #4b5563;
-  line-height: 1.55;
-  font-size: 0.98rem;
-}
-
-.osign-features {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #1f2937;
-  font-weight: 700;
-  font-size: 0.95rem;
-}
-
-.osign-feature {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.osign-feature svg {
-  color: #2563eb;
-}
-
-.osign-divider {
-  color: #9ca3af;
-}
-
-.osign-right {
-  display: flex;
-  justify-content: center;
-}
-
-.osign-icon-large {
-  width: 120px;
-  height: 120px;
-  border-radius: 24px;
-  overflow: hidden;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
-}
-
-.osign-icon-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-@media (max-width: 760px) {
-  .osign-content {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  .osign-features {
-    justify-content: center;
-  }
-  .osign-right {
-    order: -1;
-  }
-}
-
 .nav-container {
   width: min(1100px, calc(100% - 24px));
   margin: 0 auto;
@@ -302,6 +214,94 @@ html {
 
 .lang-selector:hover .lang-dropdown {
   display: block;
+}
+
+.osign-hero {
+  margin-top: 2cm;
+  padding: 26px 16px 10px;
+  background: #ffffff;
+}
+
+.osign-container {
+  width: min(1100px, calc(100% - 24px));
+  margin: 0 auto;
+}
+
+.osign-content {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.osign-title {
+  margin: 0 0 10px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.osign-desc {
+  margin: 0 0 12px;
+  color: #4b5563;
+  line-height: 1.55;
+  font-size: 0.98rem;
+}
+
+.osign-features {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #1f2937;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.osign-feature {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.osign-feature svg {
+  color: #2563eb;
+}
+
+.osign-divider {
+  color: #9ca3af;
+}
+
+.osign-right {
+  display: flex;
+  justify-content: center;
+}
+
+.osign-icon-large {
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+}
+
+.osign-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 760px) {
+  .osign-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .osign-features {
+    justify-content: center;
+  }
+  .osign-right {
+    order: -1;
+  }
 }
 
 .panel-overlay {
@@ -705,62 +705,6 @@ html {
   margin: 8px 0 4px;
 }
 
-.install-banner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px 12px;
-  width: 100%;
-  margin: 4px 0 12px;
-  border: 1px solid #fcd34d;
-  border-radius: 10px;
-  background: #fffbeb;
-  flex-wrap: wrap;
-}
-
-.install-banner-title {
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #92400e;
-  text-align: center;
-  animation: bannerPulse 2.4s ease-in-out infinite;
-}
-
-.install-banner-icon {
-  width: 18px;
-  height: 18px;
-  display: grid;
-  place-items: center;
-}
-
-.install-banner-action {
-  display: inline-flex;
-  margin-top: 4px;
-}
-
-.install-banner-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 12px;
-  border: 1px solid #1d4ed8;
-  border-radius: 10px;
-  background: #2563eb;
-  color: #ffffff;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
-}
-
-@keyframes bannerPulse {
-  0% { transform: translateY(0); opacity: 0.9; }
-  40% { transform: translateY(-2px); opacity: 1; }
-  100% { transform: translateY(0); opacity: 0.9; }
-}
-
 .appstore-plain h2 {
   margin: 0;
   font-size: 0.95rem;
@@ -944,4 +888,54 @@ html {
 *::after {
   animation: none !important;
   transition: none !important;
+}
+/* install banner (reused from panel) */
+.install-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 12px;
+  width: 100%;
+  margin: 4px 0 12px;
+  border: 1px solid #fcd34d;
+  border-radius: 10px;
+  background: #fffbeb;
+  flex-wrap: wrap;
+}
+
+.install-banner-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #92400e;
+  text-align: center;
+  animation: bannerPulse 2.4s ease-in-out infinite;
+}
+
+.install-banner-icon {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+}
+
+.install-banner-action {
+  display: inline-flex;
+  margin-top: 4px;
+}
+
+.install-banner-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border: 1px solid #1d4ed8;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
 }
