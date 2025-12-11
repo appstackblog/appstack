@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
   appLinks.forEach((link) => {
     const id = link.getAttribute("data-app-id");
     if (!id) return;
-    const target = `itms-services://?action=download-manifest&url=${window.location.origin}/panel-ios-vshtech/install.php?id=${encodeURIComponent(id)}`;
+    const target = `itms-services://?action=download-manifest&url=${window.location.origin}/app/panel-ios-vshtech/install.php?id=${encodeURIComponent(id)}`;
     link.setAttribute("href", target);
   });
 });
