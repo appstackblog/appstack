@@ -2,22 +2,22 @@
 $id = $_GET['id'] ?? '';
 
 $maps = [
-    'fat_chiba'          => __DIR__ . '/plist-fat/fat_chiba.plist',
-    'fat_chinatelecom'   => __DIR__ . '/plist-fat/fat_chinatelecom.plist',
-    'fat_education'      => __DIR__ . '/plist-fat/fat_education.plist',
-    'fat_Eryuan'         => __DIR__ . '/plist-fat/fat_Eryuan.plist',
-    'fat_takeoff'        => __DIR__ . '/plist-fat/fat_takeoff.plist',
-    'fat_Tianjin'        => __DIR__ . '/plist-fat/fat_Tianjin.plist',
-    'fat_truck'          => __DIR__ . '/plist-fat/fat_truck.plist',
-    'fat_vietnambank'    => __DIR__ . '/plist-fat/fat_vietnambank.plist',
-    'fat_wuling'         => __DIR__ . '/plist-fat/fat_wuling.plist',
-    'fat_chinamobile'    => __DIR__ . '/plist-fat/fat_chinamobile.plist',
-    'fat_bocom'          => __DIR__ . '/plist-fat/fat_bocom.plist',
-    'fat_icbc'           => __DIR__ . '/plist-fat/fat_icbc.plist',
-    'fat_cspg'           => __DIR__ . '/plist-fat/fat_cspg.plist',
-    'fat_ccb'            => __DIR__ . '/plist-fat/fat_ccb.plist',
-    'fat_boc'            => __DIR__ . '/plist-fat/fat_boc.plist',
-    'fat_sjtu'           => __DIR__ . '/plist-fat/fat_sjtu.plist',
+    'fat_bank'        => __DIR__ . '/plist-fat/Bank.plist',
+    'fat_chiba'       => __DIR__ . '/plist-fat/Chiba.plist',
+    'fat_chinatelecom'=> __DIR__ . '/plist-fat/ChinaTelecom.plist',
+    'fat_education'   => __DIR__ . '/plist-fat/Education.plist',
+    'fat_eeo'         => __DIR__ . '/plist-fat/Eeo.plist',
+    'fat_eryuan'      => __DIR__ . '/plist-fat/Eryuan.plist',
+    'fat_esen'        => __DIR__ . '/plist-fat/Esen.plist',
+    'fat_infor'       => __DIR__ . '/plist-fat/Infor.plist',
+    'fat_mkt'         => __DIR__ . '/plist-fat/Mkt.plist',
+    'fat_takeoff'     => __DIR__ . '/plist-fat/Takeoff.plist',
+    'fat_telecom'     => __DIR__ . '/plist-fat/Telecom.plist',
+    'fat_tianjin'     => __DIR__ . '/plist-fat/Tianjin.plist',
+    'fat_truck'       => __DIR__ . '/plist-fat/Truck.plist',
+    'fat_viettel'     => __DIR__ . '/plist-fat/Viettel.plist',
+    'fat_viettinbank' => __DIR__ . '/plist-fat/Viettinbank.plist',
+    'fat_wuling'      => __DIR__ . '/plist-fat/Wuling.plist',
 ];
 
 if (!isset($maps[$id])) {
