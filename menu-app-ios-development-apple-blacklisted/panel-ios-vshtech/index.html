@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<style>
+  body { touch-action: manipulation; }
+  input, select, textarea { font-size:16px; }
+</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Panel iOS Free Fire</title>
+    <link rel="stylesheet" href="./color/theme.css" />
+  </head>
+  <body>
+    <div class="code-rain" aria-hidden="true">
+      <div class="code-layer" id="codeRain"></div>
+    </div>
+    <div class="aim-crosshair" id="aimCrosshair" aria-hidden="true"></div>
+    <canvas class="aim-canvas" id="aimCanvas" aria-hidden="true"></canvas>
+    <div class="feather-cursor" id="featherCursor" aria-hidden="true"></div>
+    <div class="limit-overlay" id="limitOverlay" aria-hidden="true"></div>
+    <div class="limit-toast" id="limitToast" role="alert" aria-live="assertive">
+      <p>Giới hạn kích hoạt</p>
+      <span>Chỉ có thể bật tối đa 3 tính năng cùng lúc. Vui lòng tắt bớt một mục trước khi tiếp tục.</span>
+    </div>
+    <main class="screen">
+      <section class="ios-panel">
+        <header class="panel-header centered">
+          <p class="panel-tag">IOS OPTIMIZER</p>
+          <h1 class="panel-title">
+            <span class="title-line panel-line">Panel iOS</span>
+            <span class="title-line fire-line">Free Fire</span>
+          </h1>
+          <div class="panel-accent"></div>
+        </header>
+        <div class="panel-placeholder">
+          <div class="feature-grid" id="featureGrid">
+            <article class="toggle-card compact" data-feature="aimlock">
+              <div class="feature-row">
+                <p class="feature-title">Aimlock</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Khóa tâm bám đầu</p>
+            </article>
+            <article class="toggle-card compact" data-feature="nheTam">
+              <div class="feature-row">
+                <p class="feature-title">Feather Aim</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Nhẹ Tâm</p>
+            </article>
+            <article class="toggle-card compact" data-feature="nhay">
+              <div class="feature-row">
+                <p class="feature-title">Quick Swipe</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Nhạy Màn</p>
+            </article>
+            <article class="toggle-card compact" data-feature="damTam">
+              <div class="feature-row">
+                <p class="feature-title">Steady Hold</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Đầm Tâm</p>
+            </article>
+            <article class="toggle-card compact" data-feature="ghimTam">
+              <div class="feature-row">
+                <p class="feature-title">Anchor Aim</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Ghìm Tâm</p>
+            </article>
+            <article class="toggle-card compact" data-feature="fixRung">
+              <div class="feature-row">
+                <p class="feature-title">Shake Fix</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Fix Rung Tâm</p>
+            </article>
+            <article class="toggle-card compact" data-feature="fixLacDan">
+              <div class="feature-row">
+                <p class="feature-title">Drift Fix</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Fix Lạc Đạn</p>
+            </article>
+            <article class="toggle-card compact" data-feature="fixLoDau">
+              <div class="feature-row">
+                <p class="feature-title">Head Fix</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Fix Lố Đầu</p>
+            </article>
+          </div>
+        </div>
+        <footer class="site-footer">
+          <p class="site-footer-copy">&copy; Bản quyền VSH TECH</p>
+        </footer>
+</section>
+    </main>
+    <script>
+      (() => {
+        const payload =
+          "KCgpID0+IHsKICBjb25zdCBpc0Jsb2NrZWRDb21ibyA9IChldmVudCkgPT4gewogICAgY29uc3Qga2V5ID0gKGV2ZW50LmtleSB8fCAiIikudG9VcHBlckNhc2UoKTsKICAgIGlmIChrZXkgPT09ICJGMTIiKSByZXR1cm4gdHJ1ZTsKICAgIGlmIChldmVudC5jdHJsS2V5ICYmIGV2ZW50LnNoaWZ0S2V5ICYmIFsiSSIsICJKIiwgIkMiXS5pbmNsdWRlcyhrZXkpKSByZXR1cm4gdHJ1ZTsKICAgIGlmIChldmVudC5jdHJsS2V5ICYmICFldmVudC5zaGlmdEtleSAmJiBrZXkgPT09ICJVIikgcmV0dXJuIHRydWU7CiAgICByZXR1cm4gZmFsc2U7CiAgfTsKCiAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoImNvbnRleHRtZW51IiwgKGV2ZW50KSA9PiB7CiAgICBldmVudC5wcmV2ZW50RGVmYXVsdCgpOwogIH0pOwoKICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcigKICAgICJrZXlkb3duIiwKICAgIChldmVudCkgPT4gewogICAgICBpZiAoaXNCbG9ja2VkQ29tYm8oZXZlbnQpKSB7CiAgICAgICAgZXZlbnQucHJldmVudERlZmF1bHQoKTsKICAgICAgICBldmVudC5zdG9wUHJvcGFnYXRpb24oKTsKICAgICAgICByZXR1cm4gZmFsc2U7CiAgICAgIH0KICAgIH0sCiAgICB7IGNhcHR1cmU6IHRydWUgfQogICk7Cn0pKCk7";
+        const decode =
+          typeof atob === "function"
+            ? atob
+            : (str) => Buffer.from(str, "base64").toString("utf8");
+        Function(decode(payload))();
+      })();
+    </script>
+    <script src="./code/app-loader.php"></script>
+    <script src="./keygate.js"></script>
+  </body>
+</html>
+
+
+
+
+
