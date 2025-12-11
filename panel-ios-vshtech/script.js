@@ -62,12 +62,31 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const langOptions = document.querySelectorAll(".lang-option[data-lang]");
+  const langSelector = document.querySelector(".lang-selector");
+  const langBtn = langSelector?.querySelector(".lang-btn");
+
+  const closeLang = () => {
+    langSelector?.classList.remove("open");
+  };
+
+  langBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    langSelector?.classList.toggle("open");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (langSelector && !langSelector.contains(e.target)) {
+      closeLang();
+    }
+  });
+
   langOptions.forEach((opt) => {
     opt.addEventListener("click", () => {
       const lang = opt.dataset.lang || "en";
       currentLang = lang;
       localStorage.setItem(LANG_KEY, lang);
       applyLang(lang);
+      closeLang();
     });
   });
 
