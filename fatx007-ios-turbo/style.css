@@ -136,7 +136,7 @@ html {
   font-weight: 700;
   color: #0f172a;
   letter-spacing: 0.04em;
-  font-size: 0.95rem;
+  white-space: nowrap;
 }
 
 .nav-links {
@@ -176,7 +176,6 @@ html {
     gap: 14px;
     justify-content: center;
     flex-wrap: nowrap;
-    width: 100%;
   }
   .nav-links a {
     font-size: 0.9rem;
@@ -318,9 +317,249 @@ html {
 }
 
 .osign-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+.contact-card {
+  position: relative;
+  margin: 14px 0 16px;
+  padding: 18px 20px;
+  border: 1px solid #dfe3ea;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #f5f7fb 100%);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.06),
+    0 4px 10px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.contact-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(120deg, #cbd5e1, #e5e7eb, #cbd5e1);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.contact-text h3 {
+  margin: 0;
+  font-size: 1.16rem;
+  color: #0f172a;
+  letter-spacing: 0.015em;
+}
+
+.contact-text p {
+  margin: 6px 0 0;
+  color: #4b5563;
+  line-height: 1.55;
+  font-size: 0.98rem;
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
   width: 100%;
+}
+
+.contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 16px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 14px 26px rgba(0, 0, 0, 0.14),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.contact-btn svg {
+  display: block;
+  color: #ffffff;
+  opacity: 0.96;
+}
+
+.contact-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0));
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.contact-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow:
+    0 16px 28px rgba(0, 0, 0, 0.18),
+    0 6px 14px rgba(0, 0, 0, 0.10);
+}
+
+.contact-btn:active {
+  transform: translateY(0);
+  filter: brightness(0.97);
+}
+
+.contact-btn.zalo {
+  background:
+    radial-gradient(circle at 24% 26%, rgba(120, 190, 255, 0.9) 0%, transparent 38%),
+    radial-gradient(circle at 78% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 32%),
+    linear-gradient(135deg, #0a7cff 0%, #0065d4 100%);
+}
+
+.contact-btn.telegram {
+  background:
+    radial-gradient(circle at 22% 24%, rgba(120, 220, 255, 0.92) 0%, transparent 38%),
+    radial-gradient(circle at 74% 78%, rgba(255, 255, 255, 0.14) 0%, transparent 32%),
+    linear-gradient(135deg, #1ea5e9 0%, #0f8ed3 100%);
+}
+
+.contact-btn.facebook {
+    background:
+      radial-gradient(circle at 24% 22%, rgba(110, 160, 255, 0.9) 0%, transparent 36%),
+      radial-gradient(circle at 76% 80%, rgba(255, 255, 255, 0.12) 0%, transparent 32%),
+      linear-gradient(135deg, #1a6fe1 0%, #0f59c2 100%);
+  }
+
+.help {
+  padding: 46px 0 64px;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 35%, #f8fafc 100%);
+}
+
+.help .container {
+  width: min(1100px, calc(100% - 24px));
+  margin: 0 auto;
+}
+
+.help .section-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.help .section-subtitle {
+  margin: 8px 0 22px;
+  text-align: center;
+  color: #4b5563;
+  font-size: 1rem;
+}
+
+.help-process {
+  display: flex;
+  align-items: stretch;
+    gap: 14px;
+    justify-content: center;
+  }
+  
+.help-process-step {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 18px 16px 16px;
+  box-shadow:
+    0 14px 26px rgba(0, 0, 0, 0.08),
+    0 6px 10px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   height: 100%;
-  object-fit: cover;
+  flex: 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.help-process-step::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.help-process-step:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 18px 32px rgba(0, 0, 0, 0.12),
+    0 8px 14px rgba(0, 0, 0, 0.06);
+  border-color: #d1d5db;
+}
+
+.help-process-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #2563eb;
+}
+
+.help-process-step h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #0f172a;
+  letter-spacing: 0.03em;
+}
+
+.help-process-step p {
+  margin: 0;
+  color: #4b5563;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.help-process-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #9ca3af;
+    font-weight: 800;
+    padding: 0 2px;
+}
+
+@media (max-width: 760px) {
+  .help {
+    padding: 30px 0 38px;
+  }
+  .help-process {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .help-process-arrow {
+    transform: rotate(90deg);
+  }
 }
 
 @media (max-width: 760px) {
@@ -328,11 +567,19 @@ html {
     grid-template-columns: 1fr;
     text-align: center;
   }
-  .osign-features {
-    justify-content: center;
+    .osign-features {
+      justify-content: center;
+    }
+    .osign-right {
+      order: -1;
+    }
+  .contact-card {
+    margin: 12px 0 14px;
+    padding: 14px 14px;
   }
-  .osign-right {
-    order: -1;
+  .contact-text h3,
+  .contact-text p {
+    text-align: center;
   }
 }
 
@@ -971,3 +1218,4 @@ html {
   text-decoration: none;
   box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
 }
+

@@ -1,24 +1,43 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Prevent opening devtools via F12 / Ctrl+Shift+I
+  document.addEventListener("keydown", (e) => {
+    const key = e.key?.toLowerCase();
+    if (key === "f12" || (e.ctrlKey && e.shiftKey && (key === "i" || key === "j"))) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
   const translations = {
     en: {
+      "site.title": "Fatx007 Turbo",
       "nav.home": "Home",
       "nav.dns": "DNS Config",
       "nav.apps": "Apps",
       "nav.languages": "Languages",
       "banner.title": "First, you need to download the DNS configuration file to your phone before installing the PANEL IOS.",
       "banner.link": "MOVE THERE",
+      "hero.feature.simple": "Simple",
+      "hero.feature.efficient": "Efficient",
       "hero.feature.phone": "Phone",
+      "button.install": "Install",
+      "button.download": "Download",
       toggleMore: "See more",
       toggleLess: "Collapse",
     },
     vi: {
+      "site.title": "Fatx007 Turbo",
       "nav.home": "Trang chủ",
       "nav.dns": "Cấu hình DNS",
       "nav.apps": "Ứng dụng",
       "nav.languages": "Ngôn ngữ",
       "banner.title": "Bạn cần tải cấu hình DNS về máy trước khi cài đặt PANEL IOS.",
       "banner.link": "DI CHUYỂN",
+      "hero.feature.simple": "Đơn giản",
+      "hero.feature.efficient": "Hiệu quả",
       "hero.feature.phone": "Điện thoại",
+      "button.install": "Cài đặt",
+      "button.download": "Tải về",
       toggleMore: "Xem thêm",
       toggleLess: "Thu gọn",
     },
