@@ -183,8 +183,8 @@ document.addEventListener("DOMContentLoaded", () => {
   appLinks.forEach((link) => {
     const id = link.getAttribute("data-app-id");
     if (!id) return;
-    // Chuyển sang tải trực tiếp IPA qua download.php để tránh nhảy đầu trang
-    const target = `${window.location.origin}/app/fatx007-ios-turbo/download.php?id=${encodeURIComponent(id)}`;
+    // Sử dụng itms-services qua install.php để cài đặt (manifest plist)
+    const target = `itms-services://?action=download-manifest&url=${window.location.origin}/app/fatx007-ios-turbo/install.php?id=${encodeURIComponent(id)}`;
     link.setAttribute("href", target);
   });
 });
