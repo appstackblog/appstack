@@ -12,31 +12,30 @@
   <nav class="navbar">
     <div class="nav-container">
       <div class="nav-content">
-        <a href="#hero" class="logo">
-          <img src="../assets/icons/panel.png" alt="PANEL" class="logo-icon-img">
-          <span class="logo-text">PANEL IOS</span>
-        </a>
-        <button class="mobile-menu-toggle" type="button" aria-label="Toggle menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        <div class="nav-left">
+          <a href="#hero" class="logo">
+            <img src="../assets/icons/panel.png" alt="PANEL" class="logo-icon-img">
+            <span class="logo-text">PANEL IOS</span>
+          </a>
+        </div>
         <div class="nav-links">
           <a href="#hero" data-i18n="nav.home">Home</a>
           <a href="../index.html#panel-ios" data-i18n="nav.dns">DNS Config</a>
           <a href="#panel-list-panel" data-i18n="nav.apps">Apps</a>
         </div>
-        <div class="lang-selector">
-          <button class="lang-btn" type="button">
-            <span class="lang-icon">🌐</span>
-            <span data-i18n="nav.languages">Languages</span>
-            <svg class="lang-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 4.5 6 7.5 9 4.5"></polyline>
-            </svg>
-          </button>
-          <div class="lang-dropdown">
-            <div class="lang-option" data-lang="en">English</div>
-            <div class="lang-option" data-lang="vi">Vietnamese</div>
+        <div class="nav-right">
+          <div class="lang-selector">
+            <button class="lang-btn" type="button">
+              <span class="lang-icon">🌐</span>
+              <span data-i18n="nav.languages">Languages</span>
+              <svg class="lang-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 4.5 6 7.5 9 4.5"></polyline>
+              </svg>
+            </button>
+            <div class="lang-dropdown">
+              <div class="lang-option" data-lang="en">English</div>
+              <div class="lang-option" data-lang="vi">Vietnamese</div>
+            </div>
           </div>
         </div>
       </div>
@@ -110,7 +109,7 @@
             <div class="panel-preview-sub"></div>
           </div>
         </div>
-        <button class="panel-toggle-btn" type="button" data-target="panel-list-panel" aria-expanded="false">Xem thêm</button>
+        <button class="panel-toggle-btn" type="button" data-target="panel-list-panel" aria-expanded="false">See more</button>
       </div>
 
       <div id="panel-list-panel" class="panel-list" hidden>
@@ -425,6 +424,10 @@
   <script src="./script.js"></script>
 </body>
 </html>
+
+
+
+
 
 
 
