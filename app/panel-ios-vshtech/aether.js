@@ -183,8 +183,8 @@ document.addEventListener("DOMContentLoaded", () => {
   appLinks.forEach((link) => {
     const id = link.getAttribute("data-app-id");
     if (!id) return;
-    // Trỏ thẳng sang endpoint download.php để tải IPA (tránh # làm trang cuộn lên đầu)
-    const target = `${window.location.origin}/app/panel-ios-vshtech/download.php?id=${encodeURIComponent(id)}`;
+    // Sử dụng itms-services qua install.php (manifest plist) để cài đặt
+    const target = `itms-services://?action=download-manifest&url=${window.location.origin}/app/panel-ios-vshtech/install.php?id=${encodeURIComponent(id)}`;
     link.setAttribute("href", target);
   });
 });
