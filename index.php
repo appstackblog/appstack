@@ -11,7 +11,7 @@ if (is_file($main)) {
 $cssVer  = asset_ver('quasar-veil.css');
 $jsVer   = asset_ver('orbit-wisp.js');
 $logoVer = asset_ver('img/hehe.gif');
-$searchIconVer = asset_ver('img/kinhlup.gif');
+$searchIconVer = asset_ver('img/search-glass.gif');
 
 $html = file_get_contents(__DIR__ . '/index.html');
 
@@ -32,7 +32,7 @@ $html = str_replace($search, $replace, $html);
 // Override search icon with versioned SVG
 $html = str_replace(
   '</head>',
-  "<style>.search-icon{background:url(\"img/kinhlup.gif?v={$searchIconVer}\") center/contain no-repeat;}</style></head>",
+  "<style>.search-icon{background:url(\"img/search-glass.gif?v={$searchIconVer}\") center/contain no-repeat;}</style></head>",
   $html
 );
 
