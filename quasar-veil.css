@@ -186,7 +186,7 @@ body {
   width: 35px;
   height: 35px;
   pointer-events: none;
-  background: url("img/Kinhlup.svg") center/contain no-repeat;
+  background: url("img/kinhlup.svg") center/contain no-repeat;
 }
 
 .search-box input {
