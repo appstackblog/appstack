@@ -176,9 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const tagline = document.querySelector(".tagline");
-  if (!tagline) return;
-
   const appLinks = document.querySelectorAll(".app-download[data-app-id]");
   appLinks.forEach((link) => {
     const id = link.getAttribute("data-app-id");
