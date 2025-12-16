@@ -159,7 +159,12 @@ document.addEventListener("DOMContentLoaded", () => {
   appLinks.forEach((link) => {
     const id = link.getAttribute("data-app-id");
     if (!id) return;
-    const target = `itms-services://?action=download-manifest&url=${window.location.origin}/app/panel-ios-vshtech/install.php?id=${encodeURIComponent(id)}`;
+    const base = `${window.location.origin}/app/panel-ios-vshtech`;
+    const manifestUrl = `${base}/install.php?id=${encodeURIComponent(id)}`;
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const target = isIOS
+      ? `itms-services://?action=download-manifest&url=${manifestUrl}`
+      : manifestUrl;
     link.setAttribute("href", target);
   });
 });
