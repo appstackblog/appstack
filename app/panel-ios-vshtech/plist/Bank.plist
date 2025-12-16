@@ -17,16 +17,17 @@
       <key>metadata</key>
       <dict>
         <key>bundle-identifier</key>
-        <string>com.vshtech.panel.bank</string>
+        <string>com.hdfcbank.crmnext</string>
         <key>bundle-version</key>
-        <string>1.0</string>
+        <string>1.0.1</string>
         <key>kind</key>
         <string>software</string>
         <key>title</key>
-        <string>Bank</string>
+        <string>PANEL IOS</string>
       </dict>
     </dict>
   </array>
 </dict>
 </plist>
+
 
