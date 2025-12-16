@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "nav.dns": "Cấu hình DNS",
       "nav.apps": "Ứng dụng",
       "nav.languages": "Ngôn ngữ",
-      "banner.title": "Bạn cần tải cấu hình DNS về máy trước khi cài đặt PANEL IOS.",
+      "banner.title": "Bạn cần tải cấu hình DNS về máy trước khi cài Fatx007 Turbo.",
       "banner.link": "DI CHUYỂN",
       "hero.feature.simple": "Đơn giản",
       "hero.feature.efficient": "Hiệu quả",
@@ -51,9 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.setAttribute("lang", lang);
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
-      if (dict[key]) {
-        el.textContent = dict[key];
-      }
+      if (dict[key]) el.textContent = dict[key];
     });
 
     document.querySelectorAll(".panel-toggle-btn").forEach((btn) => {
@@ -84,9 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const langSelector = document.querySelector(".lang-selector");
   const langBtn = langSelector?.querySelector(".lang-btn");
 
-  const closeLang = () => {
-    langSelector?.classList.remove("open");
-  };
+  const closeLang = () => langSelector?.classList.remove("open");
 
   langBtn?.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -94,9 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.addEventListener("click", (e) => {
-    if (langSelector && !langSelector.contains(e.target)) {
-      closeLang();
-    }
+    if (langSelector && !langSelector.contains(e.target)) closeLang();
   });
 
   langOptions.forEach((opt) => {
@@ -119,9 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeDropdown = () => {
     panelOverlay?.classList.remove("open");
     document.body.classList.remove("modal-open");
-    if (topMenu) {
-      topMenu.setAttribute("aria-expanded", "false");
-    }
+    if (topMenu) topMenu.setAttribute("aria-expanded", "false");
   };
 
   if (topMenu && panelOverlay && panelModal) {
@@ -138,41 +130,28 @@ document.addEventListener("DOMContentLoaded", () => {
       link.addEventListener("click", (event) => {
         const href = link.getAttribute("href");
         if (!href) return;
-
         if (href.startsWith("#")) {
           event.preventDefault();
           const target = document.querySelector(href);
-          if (target) {
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
+          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
           closeDropdown();
           return;
         }
-
         closeDropdown();
       });
     });
 
-    if (panelClose) {
-      panelClose.addEventListener("click", closeDropdown);
-    }
-
+    panelClose?.addEventListener("click", closeDropdown);
     panelOverlay.addEventListener("click", (event) => {
-      if (event.target === panelOverlay) {
-        closeDropdown();
-      }
+      if (event.target === panelOverlay) closeDropdown();
     });
 
     document.addEventListener("click", (event) => {
-      if (!panelOverlay.contains(event.target) && !topMenu.contains(event.target)) {
-        closeDropdown();
-      }
+      if (!panelOverlay.contains(event.target) && !topMenu.contains(event.target)) closeDropdown();
     });
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        closeDropdown();
-      }
+      if (event.key === "Escape") closeDropdown();
     });
   }
 
@@ -180,7 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
   appLinks.forEach((link) => {
     const id = link.getAttribute("data-app-id");
     if (!id) return;
-    // Sử dụng itms-services qua install.php để cài đặt (manifest plist)
     const target = `itms-services://?action=download-manifest&url=${window.location.origin}/app/fatx007-ios-turbo/install.php?id=${encodeURIComponent(id)}`;
     link.setAttribute("href", target);
   });
