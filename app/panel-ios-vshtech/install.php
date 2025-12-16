@@ -33,7 +33,7 @@ if (!is_file($target)) {
 
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'] ?? '';
-$base = $host ? "{$scheme}://{$host}" : '';
+$base = $host ? "{$scheme}://{$host}/app" : '';
 
 $plist = file_get_contents($target);
 if ($plist === false) {
