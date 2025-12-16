@@ -12,19 +12,22 @@ $cssVer  = asset_ver('quasar-veil.css');
 $jsVer   = asset_ver('orbit-wisp.js');
 $logoVer = asset_ver('img/hehe.gif');
 $searchIconVer = asset_ver('img/search-glass.gif');
+$promoVer = asset_ver('img/appstackback.gif');
 
 $html = file_get_contents(__DIR__ . '/index.html');
 
 $search = [
   'quasar-veil.css',
   'orbit-wisp.js',
-  'img/hehe.gif'
+  'img/hehe.gif',
+  'img/appstackback.gif'
 ];
 
 $replace = [
   'quasar-veil.css?v=' . $cssVer,
   'orbit-wisp.js?v=' . $jsVer,
-  'img/hehe.gif?v=' . $logoVer
+  'img/hehe.gif?v=' . $logoVer,
+  'img/appstackback.gif?v=' . $promoVer
 ];
 
 $html = str_replace($search, $replace, $html);

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
@@ -17,20 +17,66 @@
       <img src="img/hehe.gif" alt="AppStack logo">
     </a>
     <div class="nav-labels">
-      <a class="home" href="/">Trang chủ</a>
-      <a class="menu" href="/app/index.php">Menu App iOS</a>
+      <div class="nav-dropdown">
+        <a class="menu" href="/">Trang chủ</a>
+      </div>
+      <div class="nav-dropdown">
+        <button class="nav-drop-toggle" type="button" aria-expanded="false" aria-haspopup="true">
+          Menu App iOS
+        </button>
+        <div class="nav-drop-menu" role="menu">
+          <a href="/app/" role="menuitem">IPA SUPPORT GAME</a>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <button class="nav-drop-toggle" type="button" aria-expanded="false" aria-haspopup="true">
+          Digital Marketing
+        </button>
+        <div class="nav-drop-menu" role="menu">
+          <a href="/digital-marketing/" role="menuitem">Tài Liệu Digital Marketing PDF</a>
+        </div>
+      </div>
     </div>
   </div>
   <div class="nav-overlay" hidden aria-hidden="true"></div>
   <nav class="side-menu" aria-label="Menu di động">
-    <button class="close-btn" type="button" aria-label="Đóng menu">×</button>
+    <button class="close-btn" type="button" aria-label="Đóng menu">x</button>
     <div class="search-box">
       <div class="search-icon" aria-hidden="true"></div>
       <input type="search" placeholder="Tìm kiếm..." aria-label="Tìm kiếm">
     </div>
-    <a href="/" class="side-link">Trang chủ</a>
-    <a href="/app/index.php" class="side-link">Menu App iOS</a>
+    <a href="/" class="side-link">TRANG CHỦ</a>
+    <h2 class="side-title">Dịch Vụ appstack.blog</h2>
+    <div class="side-dropdown app-dropdown">
+      <button class="side-drop-toggle" type="button" aria-expanded="false" aria-controls="app-submenu">
+        MENU APP IOS <span class="side-arrow">﹀</span>
+      </button>
+      <div class="side-drop-menu" id="app-submenu" hidden>
+        <a href="/app/" class="side-link side-link--sub">IPA SUPPORT GAME</a>
+      </div>
+    </div>
+    <div class="side-dropdown dm-dropdown">
+      <button class="side-drop-toggle" type="button" aria-expanded="false" aria-controls="dm-submenu">
+        DIGITAL MARKETING <span class="side-arrow">﹀</span>
+      </button>
+      <div class="side-drop-menu" id="dm-submenu" hidden>
+        <a href="/digital-marketing/" class="side-link side-link--sub">Tài Liệu Digital Marketing PDF</a>
+      </div>
+    </div>
   </nav>
+
+  <section class="hero">
+    <div class="hero__inner">
+      <div class="hero__media">
+        <img src="img/appstackback.gif" alt="AppStack background" class="hero__img">
+      </div>
+      <div class="hero__text">
+        <h1>Thiết Kế Website Chuẩn SEO Trọn Gói | Kèm Tư Vấn Marketing – [Brand]</h1>
+        <p>Website đẹp, nhanh, chuẩn SEO và dễ quản trị. Tư vấn chiến lược nội dung, tối ưu chuyển đổi, phù hợp doanh nghiệp cần ra khách bền vững.</p>
+      </div>
+    </div>
+  </section>
+
   <script src="./orbit-wisp.js"></script>
 </body>
 </html>
