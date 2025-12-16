@@ -31,7 +31,21 @@ if (!is_file($target)) {
     exit('Not found');
 }
 
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? '';
+$base = $host ? "{$scheme}://{$host}" : '';
+
+$plist = file_get_contents($target);
+if ($plist === false) {
+    http_response_code(500);
+    exit('Cannot read manifest');
+}
+
+if ($base) {
+    $plist = str_replace('https://appstack.blog', $base, $plist);
+}
+
 header('Content-Type: application/xml');
 header('Content-Disposition: inline; filename="' . basename($target) . '"');
-readfile($target);
+echo $plist;
 exit;
