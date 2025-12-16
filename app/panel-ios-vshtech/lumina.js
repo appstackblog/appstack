@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
   // Prevent opening devtools via F12 / Ctrl+Shift+I
   document.addEventListener("keydown", (e) => {
     const key = e.key?.toLowerCase();
@@ -27,19 +27,19 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     vi: {
       "site.title": "PANEL IOS",
-      "nav.home": "Trang chủ",
-      "nav.dns": "Cấu hình DNS",
-      "nav.apps": "Ứng dụng",
-      "nav.languages": "Ngôn ngữ",
-      "banner.title": "Bạn cần tải cấu hình DNS về máy trước khi cài đặt PANEL IOS.",
-      "banner.link": "DI CHUYỂN",
-      "hero.feature.simple": "Đơn giản",
-      "hero.feature.efficient": "Hiệu quả",
-      "hero.feature.phone": "Điện thoại",
-      "button.install": "Cài đặt",
-      "button.download": "Tải về",
-      toggleMore: "Xem thêm",
-      toggleLess: "Thu gọn",
+      "nav.home": "Trang chá»§",
+      "nav.dns": "Cáº¥u hÃ¬nh DNS",
+      "nav.apps": "á»¨ng dá»¥ng",
+      "nav.languages": "NgÃ´n ngá»¯",
+      "banner.title": "Báº¡n cáº§n táº£i cáº¥u hÃ¬nh DNS vá» mÃ¡y trÆ°á»›c khi cÃ i Ä‘áº·t PANEL IOS.",
+      "banner.link": "DI CHUYá»‚N",
+      "hero.feature.simple": "ÄÆ¡n giáº£n",
+      "hero.feature.efficient": "Hiá»‡u quáº£",
+      "hero.feature.phone": "Äiá»‡n thoáº¡i",
+      "button.install": "CÃ i Ä‘áº·t",
+      "button.download": "Táº£i vá»",
+      toggleMore: "Xem thÃªm",
+      toggleLess: "Thu gá»n",
     },
   };
 
@@ -180,8 +180,9 @@ document.addEventListener("DOMContentLoaded", () => {
   appLinks.forEach((link) => {
     const id = link.getAttribute("data-app-id");
     if (!id) return;
-    // Sử dụng itms-services qua install.php (manifest plist) để cài đặt
-    const target = `itms-services://?action=download-manifest&url=${window.location.origin}/app/panel-ios-vshtech/install.php?id=${encodeURIComponent(id)}`;
+    // Sá»­ dá»¥ng itms-services qua install.php (manifest plist) Ä‘á»ƒ cÃ i Ä‘áº·t
+    const target = `${window.location.origin}/app/panel-ios-vshtech/install.php?id=${encodeURIComponent(id)}`;
     link.setAttribute("href", target);
   });
 });
+
