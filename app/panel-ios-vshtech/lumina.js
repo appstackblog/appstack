@@ -161,10 +161,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!id) return;
     const base = `${window.location.origin}/app/panel-ios-vshtech`;
     const manifestUrl = `${base}/install.php?id=${encodeURIComponent(id)}`;
-    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const target = isIOS
-      ? `itms-services://?action=download-manifest&url=${manifestUrl}`
-      : manifestUrl;
+    // Luôn dùng itms-services để iOS mở manifest và hiện prompt cài đặt
+    const target = `itms-services://?action=download-manifest&url=${manifestUrl}`;
     link.setAttribute("href", target);
   });
 });
