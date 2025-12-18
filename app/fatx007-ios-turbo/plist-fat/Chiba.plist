@@ -11,21 +11,24 @@
           <key>kind</key>
           <string>software-package</string>
           <key>url</key>
-          <string>https://appstack.blog/fatx007-ios-turbo/download.php?id=fat_chiba</string>
+          <string>https://appstack.blog/app/fatx007-ios-turbo/download.php?id=fat_chiba</string>
         </dict>
       </array>
       <key>metadata</key>
       <dict>
         <key>bundle-identifier</key>
-        <string>com.vshtech.fat.chiba</string>
+        <string>test.jp.ac.it-chiba.portal2</string>
         <key>bundle-version</key>
-        <string>1.0</string>
+        <string>12.0.1</string>
         <key>kind</key>
         <string>software</string>
         <key>title</key>
-        <string>Chiba</string>
+        <string>Fatx007 Turbo</string>
       </dict>
     </dict>
   </array>
 </dict>
 </plist>
+
+
+
