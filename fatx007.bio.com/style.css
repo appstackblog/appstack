@@ -1,0 +1,126 @@
+:root{
+  --bg1:#0b0f24; --bg2:#000;
+  --card: rgba(13,18,38,.62); --card2: rgba(13,18,38,.38);
+  --text: rgba(255,255,255,.92); --muted: rgba(255,255,255,.68);
+  --border: rgba(255,255,255,.14); --shadow: rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; overflow:hidden; height:100vh; width:100vw;
+  background: radial-gradient(ellipse at bottom, var(--bg1) 0%, var(--bg2) 100%);
+  color:var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+#sky{position:absolute; inset:0}
+.star{
+  position:absolute; background:#fff; border-radius:50%;
+  animation: twinkle 4s infinite ease-in-out alternate;
+  will-change: transform, opacity, filter;
+}
+@keyframes twinkle{
+  0%{opacity:.2; transform:scale(.85); filter:brightness(120%)}
+  50%{opacity:1; transform:scale(2.3); filter:brightness(240%)}
+  100%{opacity:.35; transform:scale(1.05); filter:brightness(160%)}
+}
+.overlay{
+  position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center;
+  padding:28px 16px;
+}
+.overlay::before{
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:.18;
+  background:
+    linear-gradient(to right, rgba(255,255,255,.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:56px 56px;
+  mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 65%);
+}
+.card{
+  position:relative; width:min(440px,100%); border-radius:22px; padding:18px;
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    linear-gradient(135deg, rgba(94,234,212,.85), rgba(96,165,250,.85), rgba(167,139,250,.85)) border-box;
+  border:1px solid transparent;
+  box-shadow:0 18px 60px var(--shadow), inset 0 0 0 1px rgba(255,255,255,.05);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.scan{
+  position:absolute; inset:0; border-radius:22px; pointer-events:none; opacity:.55; mix-blend-mode:screen;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(94,234,212,.24), transparent 45%),
+    radial-gradient(circle at 90% 40%, rgba(96,165,250,.22), transparent 50%),
+    radial-gradient(circle at 40% 95%, rgba(167,139,250,.22), transparent 45%),
+    repeating-linear-gradient(to bottom, rgba(255,255,255,.06), rgba(255,255,255,.06) 1px, transparent 1px, transparent 6px);
+  animation: scanMove 7s linear infinite;
+}
+@keyframes scanMove{to{background-position:0 0,0 0,0 0,0 240px}}
+.profile{display:flex; gap:14px; align-items:center; padding:8px 6px 14px}
+.avatar{
+  width:56px; height:56px; border-radius:16px; display:grid; place-items:center;
+  background:linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.02));
+  border:1px solid var(--border); box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+.avatar span{font-size:28px}
+.name{margin:0; font-size:20px; letter-spacing:.5px}
+.tagline{margin:6px 0 0; color:var(--muted); font-size:13px}
+.mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; color:rgba(255,255,255,.84)}
+.sep{margin:0 6px; opacity:.7}
+.status{margin:10px 0 0; display:flex; gap:8px; font-size:12px}
+.dot{width:9px; height:9px; border-radius:50%; background:rgba(94,234,212,.95); box-shadow:0 0 18px rgba(94,234,212,.7)}
+.muted{color:var(--muted)}
+.links{display:flex; flex-direction:column; gap:10px; padding:6px 2px 10px}
+.btn{
+  appearance:none; border:none; cursor:pointer; text-decoration:none; color:var(--text);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:13px 14px; border-radius:16px;
+  background:
+    linear-gradient(var(--card2), var(--card2)) padding-box,
+    linear-gradient(135deg, rgba(255,255,255,.2), rgba(255,255,255,.06)) border-box;
+  border:1px solid transparent;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.btn:hover{transform:translateY(-2px); box-shadow:0 16px 35px rgba(0,0,0,.45)}
+.btn:active{transform:none; box-shadow:0 10px 22px rgba(0,0,0,.4)}
+.btn-left{font-weight:600}
+.btn.ghost{
+  background:
+    linear-gradient(rgba(255,255,255,.06), rgba(255,255,255,.04)) padding-box,
+    linear-gradient(135deg, rgba(94,234,212,.35), rgba(167,139,250,.22)) border-box;
+}
+.chips{display:flex; flex-wrap:wrap; gap:8px; padding:12px 4px 6px}
+.chip{font-size:12px; padding:7px 10px; border-radius:999px; border:1px solid var(--border); background:rgba(255,255,255,.04)}
+.footer{padding:10px 6px 6px}
+.small{margin:0; font-size:12px}
+.footer a{color:rgba(94,234,212,.92); text-decoration:none; border-bottom:1px dashed rgba(94,234,212,.35)}
+.tiny{margin:8px 0 0; font-size:11px}
+.toast{
+  position:absolute; left:18px; right:18px; bottom:16px; opacity:0; transform:translateY(10px);
+  pointer-events:none; padding:10px 12px; border-radius:14px;
+  background:rgba(0,0,0,.42); border:1px solid rgba(255,255,255,.16);
+  backdrop-filter: blur(10px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.toast.show{opacity:1; transform:none}
+@media (prefers-reduced-motion: reduce){
+  .star,.scan{animation:none!important}
+  .btn{transition:none}
+}
+.avatar{ 
+  overflow: hidden;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  border-radius:14px;
+}
+.btn-left img{
+  width: 1em;
+  height: 1em;
+  border-radius: 4px;
+  object-fit: cover;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
