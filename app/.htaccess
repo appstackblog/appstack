@@ -1,10 +1,4 @@
 Options -Indexes
-# Always try maintenance page first
-DirectoryIndex maintenance.html index.php index.html
+DirectoryIndex index.php index.html
 
 RewriteEngine On
-
-# Force root to maintenance.html when it exists
-RewriteCond %{REQUEST_URI} ^/$
-RewriteCond %{DOCUMENT_ROOT}/maintenance.html -f
-RewriteRule ^$ /maintenance.html [L]
