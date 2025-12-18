@@ -11,8 +11,8 @@ $avatarVer = asset_ver('../assets/avatar.png');
 $html = file_get_contents(__DIR__ . '/index.html');
 
 $search = [
-  'falcon.css',
-  'falcon.js',
+  './falcon.css',
+  './falcon.js',
   '../assets/icons/fat.png',
   '../assets/icons/panel.png',
   '../assets/dns.png',
@@ -21,8 +21,8 @@ $search = [
 ];
 
 $replace = [
-  'falcon.css?v=' . $cssVer,
-  'falcon.js?v=' . $jsVer,
+  './falcon.css?v=' . $cssVer,
+  './falcon.js?v=' . $jsVer,
   '../assets/icons/fat.png?v=' . $fatVer,
   '../assets/icons/panel.png?v=' . $panelVer,
   '../assets/dns.png?v=' . $dnsVer,
