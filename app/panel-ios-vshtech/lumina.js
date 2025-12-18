@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Nút "See more" toggle danh sách app
   const toggleBtn = document.querySelector(".panel-toggle-btn");
-  const panelList = document.getElementById("panel-list-panel");
+  const targetId = toggleBtn?.getAttribute("data-target") || "panel-list-panel";
+  const panelList = targetId ? document.getElementById(targetId) : null;
   if (toggleBtn && panelList) {
     const updateState = (open) => {
       if (open) {
