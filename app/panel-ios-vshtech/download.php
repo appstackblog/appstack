@@ -33,6 +33,12 @@ if (!is_file($target)) {
     exit('Not found');
 }
 
+// Tránh timeout và dọn các buffer trước khi stream
+@set_time_limit(0);
+while (ob_get_level()) {
+    ob_end_clean();
+}
+
 clearstatcache(true, $target);
 $size = filesize($target);
 if ($size === false) {
