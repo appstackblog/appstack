@@ -17,16 +17,15 @@
       <key>metadata</key>
       <dict>
         <key>bundle-identifier</key>
-        <string>com.vshtech.panel.education</string>
+        <string>com.huahaniosenterprisemobileprovision.hh.001</string>
         <key>bundle-version</key>
-        <string>1.0</string>
+        <string>1.0.1</string>
         <key>kind</key>
         <string>software</string>
         <key>title</key>
-        <string>Education</string>
+        <string>PANEL IOS</string>
       </dict>
     </dict>
   </array>
 </dict>
 </plist>
-

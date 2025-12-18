@@ -17,16 +17,15 @@
       <key>metadata</key>
       <dict>
         <key>bundle-identifier</key>
-        <string>com.vshtech.panel.viettel</string>
+        <string>com.viettel.viettelpay.prod.enterprise</string>
         <key>bundle-version</key>
-        <string>1.0</string>
+        <string>1.0.1</string>
         <key>kind</key>
         <string>software</string>
         <key>title</key>
-        <string>Viettel</string>
+        <string>PANEL IOS</string>
       </dict>
     </dict>
   </array>
 </dict>
 </plist>
-

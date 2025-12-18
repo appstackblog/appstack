@@ -17,16 +17,15 @@
       <key>metadata</key>
       <dict>
         <key>bundle-identifier</key>
-        <string>com.vshtech.panel.eryuan</string>
+        <string>com.crec.ework</string>
         <key>bundle-version</key>
-        <string>1.0</string>
+        <string>1.0.1</string>
         <key>kind</key>
         <string>software</string>
         <key>title</key>
-        <string>Eryuan</string>
+        <string>PANEL IOS</string>
       </dict>
     </dict>
   </array>
 </dict>
 </plist>
-
