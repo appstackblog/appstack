@@ -1001,11 +1001,11 @@ html {
   display: grid;
   grid-template-columns: 72px 1fr auto;
   align-items: center;
-  gap: 14px;
-  padding: 10px 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  background: #f8fafc;
+  gap: 10px;
+  padding: 8px 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
   width: 100%;
 }
 
@@ -1078,6 +1078,11 @@ html {
   font-weight: 700;
   text-decoration: none;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Ẩn chữ Install để chỉ còn icon */
+.app-download span {
+  display: none;
 }
 
 .app-download svg {
@@ -1342,5 +1347,3 @@ html {
   text-decoration: none;
   box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
 }
-
-
