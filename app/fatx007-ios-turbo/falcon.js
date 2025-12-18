@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     link.addEventListener("click", (ev) => {
       ev.preventDefault();
-      const manifestUrl = `${window.location.origin}/app/panel-ios-vshtech/install.php?id=${encodeURIComponent(id)}`;
+      const manifestUrl = `${window.location.origin}/app/fatx007-ios-turbo/install.php?id=${encodeURIComponent(id)}`;
       const itms = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestUrl)}`;
       window.location.href = itms;
     });
