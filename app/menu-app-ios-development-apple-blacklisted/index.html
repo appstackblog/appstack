@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chuyển hướng</title>
+    <meta http-equiv="refresh" content="0;url=./index.php" />
+  </head>
+  <body>
+    <script>
+      (function () {
+        var base = "./index.php";
+        var search = window.location.search || "";
+        var target = base + (search || "");
+        window.location.replace(target);
+      })();
+    </script>
+    <noscript>
+      <p>
+        Đang chuyển qua cầu nối PHP.
+        Nếu không tự chuyển, hãy bấm
+        <a href="./index.php">vào đây</a>.
+      </p>
+    </noscript>
+  </body>
+</html>
