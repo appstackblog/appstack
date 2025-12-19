@@ -1,0 +1,183 @@
+const featureCards = document.querySelectorAll("[data-feature]");
+const toggleAudio = createTingAudio();
+const featureElements = new Map();
+const featureState = {};
+const limitToast = document.getElementById("limitToast");
+const limitOverlay = document.getElementById("limitOverlay");
+const MAX_ACTIVE_FEATURES = 3;
+const codeRainElement = document.getElementById("codeRain");
+const CODE_COLUMNS = 8;
+let toastTimer;
+
+initializeFeatureCards();
+resetAllFeatures(true);
+
+window.addEventListener("beforeunload", () => {
+  resetAllFeatures(true);
+});
+
+if (codeRainElement) {
+  const refreshCode = () => {
+    codeRainElement.innerHTML = "";
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < CODE_COLUMNS; i += 1) {
+      const column = document.createElement("span");
+      column.className = "code-column";
+      column.style.setProperty("--duration", `${8 + Math.random() * 4}s`);
+      column.style.setProperty("--delay", `-${Math.random() * 4}s`);
+      column.style.setProperty("--tone", `${180 + Math.random() * 120}`);
+      const codeText = buildCodeColumn();
+      column.textContent = `${codeText}\n${codeText}\n${codeText}`;
+      fragment.appendChild(column);
+    }
+    codeRainElement.appendChild(fragment);
+  };
+  refreshCode();
+  setInterval(refreshCode, 9000);
+}
+
+function initializeFeatureCards() {
+  featureCards.forEach((card) => {
+    const featureId = card.getAttribute("data-feature");
+    const status = card.querySelector(".status-pill");
+    const button = card.querySelector(".aimlock-switch");
+    if (!featureId || !status || !button) {
+      return;
+    }
+    featureState[featureId] = false;
+    featureElements.set(featureId, { status, button, card });
+    button.addEventListener("click", () => toggleFeature(featureId));
+    updateFeatureState(featureId, false, true);
+  });
+}
+
+function toggleFeature(id) {
+  if (!featureState[id] && getActiveCount() >= MAX_ACTIVE_FEATURES) {
+    showLimitToast();
+    return;
+  }
+  const nextValue = !featureState[id];
+  updateFeatureState(id, nextValue);
+}
+
+function updateFeatureState(id, value, silent = false) {
+  featureState[id] = value;
+  const refs = featureElements.get(id);
+  if (!refs) {
+    return;
+  }
+  refs.button.setAttribute("aria-pressed", String(value));
+  refs.button.classList.toggle("on", value);
+  refs.button.classList.add("clicked");
+  if (refs.card) {
+    refs.card.classList.toggle("active", value);
+  }
+  refs.status.textContent = value ? "On" : "Off";
+  refs.status.classList.toggle("on", value);
+  refs.status.classList.toggle("off", !value);
+  if (!silent) {
+    toggleAudio.currentTime = 0;
+    toggleAudio.play().catch(() => {});
+  }
+  setTimeout(() => refs.button.classList.remove("clicked"), 200);
+}
+
+function resetAllFeatures(silent = true) {
+  featureElements.forEach((_, featureId) => {
+    if (featureState[featureId]) {
+      updateFeatureState(featureId, false, silent);
+    }
+  });
+}
+
+function getActiveCount() {
+  return Object.values(featureState).reduce((count, isOn) => count + (isOn ? 1 : 0), 0);
+}
+
+function showLimitToast() {
+  if (!limitToast) {
+    return;
+  }
+  limitToast.classList.add("show");
+  if (limitOverlay) {
+    limitOverlay.classList.add("show");
+  }
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    limitToast.classList.remove("show");
+    if (limitOverlay) {
+      limitOverlay.classList.remove("show");
+    }
+  }, 3200);
+}
+
+function createTingAudio() {
+  const ctx = new AudioContext();
+  const totalDuration = 0.28;
+  const sampleRate = ctx.sampleRate;
+  const buffer = ctx.createBuffer(1, Math.floor(sampleRate * totalDuration), sampleRate);
+  const channelData = buffer.getChannelData(0);
+  for (let i = 0; i < channelData.length; i += 1) {
+    const t = i / sampleRate;
+    const env = Math.exp(-t * 16);
+    const body = Math.sin(2 * Math.PI * 1800 * t);
+    const shimmer = Math.sin(2 * Math.PI * 2600 * t) * 0.45;
+    const click = (Math.random() * 2 - 1) * 0.08 * Math.max(1 - t * 8, 0);
+    channelData[i] = (body + shimmer) * env + click;
+  }
+  return {
+    play() {
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      source.start();
+    },
+    set currentTime(value) {},
+  };
+}
+
+function buildCodeColumn() {
+  const keywords = ["int", "float", "auto", "constexpr", "template<typename T>", "namespace", "struct", "class", "static", "inline", "volatile", "virtual", "override"];
+  const statements = [
+    "std::vector<int> aimlock {",
+    "std::array<float, 3> recoil {",
+    "std::chrono::steady_clock::now();",
+    "std::clamp(packet, 0.1f, 1.0f);",
+    "std::rotate(gyro.begin(), gyro.mid(), gyro.end());",
+    "std::accumulate(latency.begin(), latency.end(), 0u);",
+    "std::transform(phi.begin(), phi.end(), phi.begin(), normalize);",
+    "std::this_thread::sleep_for(1ms);",
+    "std::cout << \"LOCK\" << std::endl;",
+    "std::bit_cast<uint32_t>(sigma);",
+    "std::atomic_fetch_add(expand, 1u);",
+    "std::span<const uint8_t> payload",
+  ];
+  const operators = ["=", "+=", "-=", "*=", "/=", "^=", "|=", "<<"];
+  const suffixes = ["f", "u", "ull", ""];
+  const includes = ["#include <bits/stdc++.h>", "#include <iostream>", "#include <chrono>", "#include <vector>", "#include <thread>"];
+  const braces = ["{", "}", "(", ")", "[", "]"];
+  const lines = [];
+  includes.forEach((inc) => {
+    if (Math.random() > 0.6) {
+      lines.push(inc);
+    }
+  });
+  const count = 90;
+  for (let i = 0; i < count; i += 1) {
+    const keyword = keywords[Math.floor(Math.random() * keywords.length)];
+    const statement = statements[Math.floor(Math.random() * statements.length)];
+    const operator = operators[Math.floor(Math.random() * operators.length)];
+    const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+    const brace = braces[Math.floor(Math.random() * braces.length)];
+    const hex = Math.floor(Math.random() * 0xffffff)
+      .toString(16)
+      .toUpperCase()
+      .padStart(6, "0");
+    const value = (Math.random() * 1.5 + 0.1).toFixed(3);
+    const variable = `v${hex}`;
+    const padding = " ".repeat(Math.floor(Math.random() * 6));
+    const line = `${keyword} ${variable}${padding}${operator} ${brace}${statement} * ${value}${suffix};`;
+    lines.push(line);
+  }
+  return lines.join("\n");
+}
