@@ -4,7 +4,7 @@
     <meta name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <style>
-  body { touch-action: manipulation; }
+  html, body { touch-action: manipulation; }
   input, select, textarea { font-size:16px; }
 </style>
     <meta charset="utf-8" />
@@ -152,6 +152,18 @@
     </script>
     <script>
       (function () {
+        // Ngăn pinch/zoom trên mobile
+        const blockGesture = (e) => e.preventDefault();
+        ["gesturestart", "gesturechange"].forEach((ev) =>
+          document.addEventListener(ev, blockGesture, { passive: false })
+        );
+        // Ngăn zoom bằng Ctrl + wheel
+        window.addEventListener("wheel", (e) => {
+          if (e.ctrlKey) {
+            e.preventDefault();
+          }
+        }, { passive: false });
+
         function loadScript(src, onDone) {
           var s = document.createElement("script");
           s.src = src;
@@ -178,7 +190,6 @@
     </script>
   </body>
 </html>
-
 
 
 
