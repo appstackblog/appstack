@@ -188,8 +188,74 @@
         });
       })();
     </script>
+    <script>
+      (function () {
+        // Giam lag khi bat tinh nang: uu tien xu ly noi bo va giu ket noi am de han che nghen mang.
+        var connection =
+          navigator.connection ||
+          navigator.mozConnection ||
+          navigator.webkitConnection ||
+          null;
+
+        var warmStarted = false;
+        var toggleLocks = new Set();
+
+        function warmConnection() {
+          if (warmStarted) return;
+          warmStarted = true;
+          // Uu tien ket noi WiFi/5G (neu co), giam do tre khi lan dau bat tinh nang.
+          fetch("./code/app-loader.php?warm=" + Date.now(), {
+            cache: "no-store",
+            keepalive: true,
+            mode: "no-cors",
+          }).catch(function () {
+            warmStarted = false;
+          });
+        }
+
+        function isHighThroughput() {
+          if (!connection) return true;
+          if (/wifi|ethernet/gi.test(String(connection.type))) return true;
+          if (/5g/gi.test(String(connection.type))) return true;
+          if (connection.effectiveType && /4g|5g/gi.test(connection.effectiveType))
+            return true;
+          return connection.downlink && connection.downlink >= 10;
+        }
+
+        function smoothToggle(btn) {
+          var feature = btn.closest(".toggle-card");
+          var name = feature ? feature.dataset.feature || "unknown" : "unknown";
+          if (toggleLocks.has(name)) return;
+          toggleLocks.add(name);
+          // Xu ly trong RAF de tranh block UI va giam spam khi mang khong on dinh.
+          requestAnimationFrame(function () {
+            warmConnection();
+            setTimeout(function () {
+              toggleLocks.delete(name);
+            }, 320);
+          });
+        }
+
+        // Gan vao cac nut bat/tat de giam nghen do spam su kien khi mang kem.
+        document.querySelectorAll(".toggle-card .aimlock-switch").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            smoothToggle(btn);
+          });
+        });
+
+        if (connection && typeof connection.addEventListener === "function") {
+          connection.addEventListener("change", function () {
+            if (isHighThroughput()) {
+              warmConnection();
+            }
+          });
+        } else {
+          // Thiet bi khong ho tro API nay van co ban cuong de on dinh ket noi.
+          warmConnection();
+        }
+      })();
+    </script>
   </body>
 </html>
-
 
 
