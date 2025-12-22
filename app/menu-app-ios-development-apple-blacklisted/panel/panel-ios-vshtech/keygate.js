@@ -27,7 +27,7 @@
 
   async function api(path, payload) {
     try {
-      const res = await fetch(`https://bot-key-vshtech.hdangxaykenh.workers.dev${path}`, {
+      const res = await fetch(`https://botkey.vshtechteam.workers.dev${path}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -49,7 +49,7 @@
 
   const style = document.createElement("style");
   style.textContent = `
-  #vgGate{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;background:rgba(3,6,18,.82);backdrop-filter:blur(20px)}
+  #vgGate{position:fixed;inset:0;width:100vw;height:100vh;z-index:2147483647;display:grid;place-items:center;background:rgba(3,6,18,.82);backdrop-filter:blur(20px)}
   #vgGate .vg-panel{width:min(860px,95vw);max-height:min(720px,95vh);overflow-y:auto;border-radius:32px;padding:36px;
     background:linear-gradient(135deg,rgba(12,17,38,.95),rgba(26,33,72,.9));color:#f4f6ff;
     font-family:"Inter","SF Pro Display",system-ui,-apple-system,sans-serif;border:1px solid rgba(119,139,255,.25);

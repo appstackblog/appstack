@@ -150,11 +150,34 @@
         Function(decode(payload))();
       })();
     </script>
-    <script src="./code/app-loader.php"></script>
-    <script src="./keygate.js"></script>
+    <script>
+      (function () {
+        function loadScript(src, onDone) {
+          var s = document.createElement("script");
+          s.src = src;
+          s.async = false;
+          s.onload = function () {
+            if (typeof onDone === "function") onDone();
+          };
+          s.onerror = function () {
+            console.error("Không tải được script:", src);
+            if (typeof onDone === "function") onDone();
+          };
+          document.body.appendChild(s);
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var id = params.get("id");
+        var loaderSrc =
+          "./code/app-loader.php" + (id ? "?id=" + encodeURIComponent(id) : "");
+
+        loadScript(loaderSrc, function () {
+          loadScript("./keygate.js");
+        });
+      })();
+    </script>
   </body>
 </html>
-
 
 
 
