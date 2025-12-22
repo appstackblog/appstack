@@ -27,7 +27,7 @@
 
   async function api(path, payload) {
     try {
-      const res = await fetch(`https://botkey.vshtechteam.workers.dev${path}`, {
+      const res = await fetch(`https://bot-key-vshtech.hdangxaykenh.workers.dev${path}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
