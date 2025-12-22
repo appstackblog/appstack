@@ -152,13 +152,11 @@
     </script>
     <script>
       (function () {
-        // Ngăn pinch/zoom trên mobile
-        const blockGesture = (e) => e.preventDefault();
+         const blockGesture = (e) => e.preventDefault();
         ["gesturestart", "gesturechange"].forEach((ev) =>
           document.addEventListener(ev, blockGesture, { passive: false })
         );
-        // Ngăn zoom bằng Ctrl + wheel
-        window.addEventListener("wheel", (e) => {
+         window.addEventListener("wheel", (e) => {
           if (e.ctrlKey) {
             e.preventDefault();
           }
@@ -190,8 +188,7 @@
     </script>
     <script>
       (function () {
-        // Giam lag khi bat tinh nang: uu tien xu ly noi bo va giu ket noi am de han che nghen mang.
-        var connection =
+         var connection =
           navigator.connection ||
           navigator.mozConnection ||
           navigator.webkitConnection ||
@@ -203,8 +200,7 @@
         function warmConnection() {
           if (warmStarted) return;
           warmStarted = true;
-          // Uu tien ket noi WiFi/5G (neu co), giam do tre khi lan dau bat tinh nang.
-          fetch("./code/app-loader.php?warm=" + Date.now(), {
+           fetch("./code/app-loader.php?warm=" + Date.now(), {
             cache: "no-store",
             keepalive: true,
             mode: "no-cors",
@@ -227,8 +223,7 @@
           var name = feature ? feature.dataset.feature || "unknown" : "unknown";
           if (toggleLocks.has(name)) return;
           toggleLocks.add(name);
-          // Xu ly trong RAF de tranh block UI va giam spam khi mang khong on dinh.
-          requestAnimationFrame(function () {
+           requestAnimationFrame(function () {
             warmConnection();
             setTimeout(function () {
               toggleLocks.delete(name);
@@ -236,8 +231,7 @@
           });
         }
 
-        // Gan vao cac nut bat/tat de giam nghen do spam su kien khi mang kem.
-        document.querySelectorAll(".toggle-card .aimlock-switch").forEach(function (btn) {
+         document.querySelectorAll(".toggle-card .aimlock-switch").forEach(function (btn) {
           btn.addEventListener("click", function () {
             smoothToggle(btn);
           });
@@ -250,12 +244,9 @@
             }
           });
         } else {
-          // Thiet bi khong ho tro API nay van co ban cuong de on dinh ket noi.
-          warmConnection();
+           warmConnection();
         }
       })();
     </script>
   </body>
 </html>
-
-
