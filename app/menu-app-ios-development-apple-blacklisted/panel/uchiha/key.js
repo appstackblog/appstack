@@ -81,7 +81,8 @@
   #vgGate .vg-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:0 18px 36px rgba(3,5,12,.5)}
   #vgGate .vg-label{font-size:0.7rem;color:var(--muted);margin-bottom:8px;letter-spacing:0.22em;text-transform:uppercase}
   #vgGate .vg-field{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center}
-  #vgGate .vg-field.uuid{grid-template-columns:1fr auto auto auto}
+  #vgGate .vg-field.uuid{grid-template-columns:1fr}
+  #vgGate .vg-field-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
   #vgGate .vg-field.two{grid-template-columns:1fr auto}
   #vgGate .vg-input{padding:13px;border-radius:14px;border:1px solid var(--border);background:rgba(10,18,26,.95);color:var(--text);font-size:1rem;width:100%}
   #vgGate .vg-icon{display:inline-flex;align-items:center;gap:8px;padding:11px 13px;border-radius:12px;border:1px solid rgba(0,209,255,.35);
@@ -172,9 +173,8 @@
               <div class="vg-label">UUID / UDID thiết bị</div>
               <div class="vg-field uuid">
                 <input id="vgDev" class="vg-input" type="text" placeholder="UUID (có -) hoặc UDID iOS (40 ký tự)">
-                <button class="vg-icon" id="vgGetUuid" title="Lấy">
-                  <span>Lấy</span>
-                </button>
+              </div>
+              <div class="vg-field-actions">
                 <button class="vg-icon" id="vgGetDev" title="Lấy UDID bằng cấu hình">
                   <span>Lấy UUID</span>
                 </button>
@@ -235,7 +235,6 @@
     devInput.oninput = () => onDevChange();
 
     // Open device capture page
-    $("#vgGetUuid").onclick = () => openDeviceCapture();
     $("#vgGetDev").onclick = () => openDeviceCapture();
 
     $("#vgReset").onclick = () => {
