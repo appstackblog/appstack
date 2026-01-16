@@ -270,7 +270,7 @@
     const u = `${DEVICE_INFO_URL}?return=${encodeURIComponent(returnUrl)}`;
 
     // iOS Safari có thể chặn popup nếu không trực tiếp từ click -> mình mở luôn trong onclick
-    devWin = window.open(u, "_blank");
+    window.location.href = u;
     showMsg("", "Đang mở trang lấy UDID… Nếu bị chặn popup, hãy cho phép mở tab mới.");
   }
 
