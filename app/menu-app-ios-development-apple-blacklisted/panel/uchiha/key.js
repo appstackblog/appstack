@@ -3,7 +3,7 @@
   // CONFIG
   // =========================================================
   const API_BASE = "https://uchihakey.vshtechofficial.workers.dev"; // KHÔNG có dấu / cuối
-  const DEVICE_INFO_URL = "https://appstack.blog/app/getuuid/";
+  const DEVICE_INFO_URL = "https://appstack.blog/app/getuuid/get_mobileconfig.php";
   const DEVICE_KEY  = "vsh_license_device_id";   // lưu UDID/UUID
   const DEVICE_SERIAL_KEY = "vsh_device_serial";
   const DEVICE_IMEI_KEY = "vsh_device_imei";
