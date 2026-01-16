@@ -3,49 +3,33 @@
 <plist version="1.0">
 <dict>
     <key>PayloadContent</key>
+    <dict>
+        <key>URL</key>
+        <string>http://appstack.blog/app/getuuid/processes_data.php</string>
+    <key>DeviceAttributes</key>
     <array>
-        <dict>
-            <key>PayloadType</key>
-            <string>Profile Service</string>
-            <key>PayloadVersion</key>
-            <integer>1</integer>
-            <key>PayloadIdentifier</key>
-            <string>com.appstack.getuuid.service</string>
-            <key>PayloadUUID</key>
-            <string>BDD0F593-5B98-47FF-A0A4-4B98E30CE451</string>
-            <key>PayloadDisplayName</key>
-            <string>Device Information (UDID)</string>
-            <key>PayloadDescription</key>
-            <string>Knowing the UDID of my iOS device</string>
-            <key>PayloadOrganization</key>
-            <string>My Organization</string>
-            <key>URL</key>
-            <string>https://appstack.blog/app/getuuid/processes_data.php</string>
-            <key>DeviceAttributes</key>
-            <array>
-                <string>UDID</string>
-                <string>DEVICE_NAME</string>
-                <string>VERSION</string>
-                <string>PRODUCT</string>
-                <string>MAC_ADDRESS_EN0</string>
-                <string>IMEI</string>
-                <string>ICCID</string>
-            </array>
-        </dict>
+        <string>UDID</string>
+        <string>DEVICE_NAME</string>
+        <string>VERSION</string>
+        <string>PRODUCT</string>
+        <string>MAC_ADDRESS_EN0</string>
+        <string>IMEI</string>
+        <string>ICCID</string>
     </array>
-    <key>PayloadType</key>
-    <string>Configuration</string>
-    <key>PayloadVersion</key>
-    <integer>1</integer>
-    <key>PayloadIdentifier</key>
-    <string>com.appstack.getuuid.profile</string>
-    <key>PayloadUUID</key>
-    <string>1C3C2F6A-6D0C-4A6A-9A3A-2F8C0D8D7C1A</string>
-    <key>PayloadDisplayName</key>
-    <string>Get UUID Profile</string>
-    <key>PayloadDescription</key>
-    <string>Profile Service for device information</string>
-    <key>PayloadOrganization</key>
-    <string>My Organization</string>
+</dict>
+<key>PayloadOrganization</key>
+<string>My Organization</string>
+<key>PayloadDisplayName</key>
+<string>Device Information (UDID)</string>
+<key>PayloadVersion</key>
+<integer>1</integer>
+<key>PayloadUUID</key>
+<string>BDD0F593-5B98-47FF-A0A4-4B98E30CE451</string>
+<key>PayloadIdentifier</key>
+<string>mx.com.hunk.getUDID</string>
+<key>PayloadDescription</key>
+<string>Knowing the UDID of my iOS device</string>
+<key>PayloadType</key>
+<string>Profile Service</string>
 </dict>
 </plist>
