@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Get UUID</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card: #121a24;
+      --card2: #0f1620;
+      --border: #223041;
+      --text: #e6edf3;
+      --muted: #9fb0c0;
+      --accent: #00d1ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px 16px;
+    }
+    .wrap {
+      width: min(720px, 92vw);
+      display: grid;
+      gap: 16px;
+    }
+    .back {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--text);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .back:hover { transform: translateY(-1px); border-color: var(--accent); }
+    .card {
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .preview {
+      border: 1px solid var(--border);
+      background: var(--card2);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .preview iframe {
+      width: 100%;
+      height: 320px;
+      border: 0;
+      display: block;
+      background: #0b0f14;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--text);
+      font-size: 14px;
+    }
+    .btn {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: var(--accent); }
+    @media (max-width: 640px) {
+      body { padding: 20px 14px; }
+      .wrap { width: 100%; }
+      .row { grid-template-columns: 1fr; }
+      input { font-size: 13px; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <button class="back" id="backBtn" title="Quay lại">&#8592;</button>
+
+    <div class="card">
+      <div class="label">Link lấy UUID</div>
+      <div class="preview">
+        <iframe src="https://udid.tech/" title="udid.tech"></iframe>
+      </div>
+      <div class="row">
+        <input id="linkUdid" type="text" value="https://udid.tech/" readonly />
+        <button class="btn" data-copy="linkUdid">Sao chép</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Cách lấy (Video hướng dẫn)</div>
+      <div class="row">
+        <input id="linkVideo" type="text" value="https://drive.google.com/drive/folders/1D-J51QnkupiJAPvn43HCvyQHpVMCmmDM" readonly />
+        <button class="btn" data-copy="linkVideo">Sao chép</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = "https://appstack.blog/app/menu-app-ios-development-apple-blacklisted/panel/panel-ios-vshtech/";
+    });
+
+    document.querySelectorAll("[data-copy]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = btn.getAttribute("data-copy");
+        const input = document.getElementById(id);
+        const value = (input?.value || "").trim();
+        if (!value) return;
+        try {
+          await navigator.clipboard.writeText(value);
+        } catch {
+          prompt("Copy link:", value);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
