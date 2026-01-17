@@ -68,11 +68,14 @@
       border: 1px solid var(--border);
       background: var(--card2);
       border-radius: 14px;
-      padding: 12px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.45;
-      word-break: break-word;
+      overflow: hidden;
+    }
+    .preview iframe {
+      width: 100%;
+      height: 320px;
+      border: 0;
+      display: block;
+      background: #0b0f14;
     }
     input {
       width: 100%;
@@ -108,12 +111,12 @@
 
     <div class="card">
       <div class="label">Link lấy UUID</div>
+      <div class="preview">
+        <iframe src="https://udid.tech/" title="udid.tech"></iframe>
+      </div>
       <div class="row">
         <input id="linkUdid" type="text" value="https://udid.tech/" readonly />
         <button class="btn" data-copy="linkUdid">Sao chép</button>
-      </div>
-      <div class="preview">
-        https://udid.tech/
       </div>
     </div>
 
@@ -123,16 +126,12 @@
         <input id="linkVideo" type="text" value="https://drive.google.com/drive/folders/1D-J51QnkupiJAPvn43HCvyQHpVMCmmDM" readonly />
         <button class="btn" data-copy="linkVideo">Sao chép</button>
       </div>
-      <div class="preview">
-        https://drive.google.com/drive/folders/1D-J51QnkupiJAPvn43HCvyQHpVMCmmDM
-      </div>
     </div>
   </div>
 
   <script>
-    const returnUrl = document.referrer || "https://appstack.blog/app/menu-app-ios-development-apple-blacklisted/panel/uchiha/";
     document.getElementById("backBtn").addEventListener("click", () => {
-      window.location.href = returnUrl;
+      window.location.href = "https://appstack.blog/app/menu-app-ios-development-apple-blacklisted/panel/uchiha/";
     });
 
     document.querySelectorAll("[data-copy]").forEach(btn => {
