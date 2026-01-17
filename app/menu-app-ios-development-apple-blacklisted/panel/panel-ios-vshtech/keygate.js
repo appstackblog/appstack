@@ -257,7 +257,7 @@
     devInput.oninput = () => onDevChange();
 
     // Open device capture page
-    $("#vgGetDev").onclick = () => { window.location.href = "https://appstack.blog/app/getuuid/"; };
+    $("#vgGetDev").onclick = () => { window.location.href = "https://appstack.blog/app/getuuid-panel/"; };
 
     $("#vgReset").onclick = () => {
       localStorage.removeItem(LICENSE_KEY);
@@ -540,8 +540,3 @@
     }
   };
 })();
-
-
-
-
-
