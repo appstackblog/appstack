@@ -1,18 +1,27 @@
 (() => {
-  const DEVICE_KEY = "vsh_license_device";
+  // =========================================================
+  // CONFIG
+  // =========================================================
+  const API_BASE = "https://uchihakey.vshtechofficial.workers.dev"; // KHÔNG có dấu / cuối
+  const DEVICE_INFO_URL = "https://appstack.blog/app/getuuid/get_mobileconfig.php";
+  const DEVICE_KEY  = "vsh_license_device_id";   // lưu UDID/UUID
+  const DEVICE_SERIAL_KEY = "vsh_device_serial";
+  const DEVICE_IMEI_KEY = "vsh_device_imei";
   const LICENSE_KEY = "vsh_license_key";
-
-  // Lấy/generate deviceId và lưu vào localStorage
-  let deviceId = localStorage.getItem(DEVICE_KEY);
-  if (!deviceId) {
-    const fallbackId = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
-    deviceId = (crypto.randomUUID?.() || fallbackId).toUpperCase();
-    localStorage.setItem(DEVICE_KEY, deviceId);
-  }
+  // Chấp nhận:// - UUID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  // - iOS UDID: 40 hex
+  // - iOS Finder ID: 8-16 hex (vd 00008140-000E50D22687001C)
+  // - Android ID: 16 hex
+  // - Linux machine-id: 32 hex
+  const UUID_ANY = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/;
+  const IOS_UDID = /^[0-9A-F]{40}$/;
+  const IOS_FINDER = /^[0-9A-F]{8}-[0-9A-F]{16}$/;
+  const HEX_16 = /^[0-9A-F]{16}$/;
+  const HEX_32 = /^[0-9A-F]{32}$/;
 
   const refs = { status: null, expiry: null, device: null };
 
-  const formatDate = (ts) =>
+            const formatDate = (ts) =>
     ts == null
       ? "Không giới hạn"
       : new Intl.DateTimeFormat("vi-VN", {
@@ -25,80 +34,101 @@
           second: "2-digit",
         }).format(ts);
 
-  async function api(path, payload) {
+  function normDevId(s){ return String(s || "").trim().toUpperCase(); }
+  function isDevId(s){
+    const v = normDevId(s);
+    return (
+      UUID_ANY.test(v) ||
+      IOS_UDID.test(v) ||
+      IOS_FINDER.test(v) ||
+      HEX_16.test(v) ||
+      HEX_32.test(v)
+    );
+  }
+
+  // Load stored device id (UDID/UUID)
+  let deviceId = normDevId(localStorage.getItem(DEVICE_KEY) || "");
+
+  async function api(path, payload, timeoutMs = 10000) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
-      const res = await fetch(`https://bot-key-vshtech.hdangxaykenh.workers.dev${path}`, {
+      const res = await fetch(`${API_BASE}${path}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        signal: ctrl.signal,
       });
-      return await res.json();
-    } catch {
-      return { ok: false, error: "PARSE_ERROR" };
+      const data = await res.json().catch(() => null);
+      return data || { ok: false, error: "PARSE_ERROR" };
+    } catch (e) {
+      return { ok: false, error: e?.name === "AbortError" ? "TIMEOUT" : "NETWORK_ERROR" };
+    } finally {
+      clearTimeout(t);
     }
   }
 
-  // Validate dữ liệu: thu hồi/hết hạn coi như không hợp lệ
-  function validateData(data) {
-    if (!data) return { ok: false, code: "INVALID" };
-    const status = (data.status || "").toUpperCase();
-    if (data.revoked || status === "REVOKED") return { ok: false, code: "REVOKED" };
-    if (data.expiresAt && Date.now() > data.expiresAt) return { ok: false, code: "EXPIRED" };
-    return { ok: true };
-  }
-
+  // =========================================================
+  // UI CSS
+  // =========================================================
   const style = document.createElement("style");
   style.textContent = `
-  #vgGate{position:fixed;inset:0;width:100vw;height:100vh;z-index:2147483647;display:grid;place-items:center;background:rgba(3,6,18,.82);backdrop-filter:blur(20px);touch-action:none;overscroll-behavior:none}
-  #vgGate .vg-panel{width:min(860px,95vw);max-height:min(720px,95vh);overflow-y:auto;border-radius:32px;padding:36px;
-    background:linear-gradient(135deg,rgba(12,17,38,.95),rgba(26,33,72,.9));color:#f4f6ff;
-    font-family:"Inter","SF Pro Display",system-ui,-apple-system,sans-serif;border:1px solid rgba(119,139,255,.25);
-    box-shadow:0 45px 95px rgba(2,4,12,.9)}
-  #vgGate .vg-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:32px}
-  #vgGate .vg-brand-block{display:flex;flex-direction:column;gap:6px}
-  #vgGate .vg-tag{margin:0;font-size:0.75rem;letter-spacing:0.38em;color:#7dc8ff;text-transform:uppercase}
-  #vgGate .vg-brand{margin:0;font-size:2rem;font-weight:800;letter-spacing:0.06em;color:#fff}
-  #vgGate .vg-close{border:none;background:rgba(255,255,255,.08);color:#fff;border-radius:50%;width:46px;height:46px;display:grid;place-items:center;font-size:1.3rem;cursor:pointer;transition:.2s}
-  #vgGate .vg-close:hover{background:rgba(255,255,255,.16)}
-  #vgGate .vg-body{display:grid;grid-template-columns:1.15fr .85fr;gap:26px}
-  #vgGate .vg-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:22px;box-shadow:0 22px 40px rgba(3,5,12,.6)}
-  #vgGate .vg-label{font-size:0.75rem;color:#9fb6ff;margin-bottom:8px;letter-spacing:0.26em;text-transform:uppercase}
+  #vgGate{--bg:#0b0f14;--surface:#121a24;--surface2:#0f1620;--border:#223041;--text:#e6edf3;--muted:#9fb0c0;--accent:#00d1ff;--success:#2dff7a;--warning:#ffb020;--danger:#ff3b3b;position:fixed;inset:0;z-index:2147483647;display:block;padding:28px 20px;overflow:auto;background:rgba(11,15,20,.86);backdrop-filter:blur(16px);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+  
+  #vgGate .vg-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+  #vgGate .vg-tag{margin:0;font-size:0.72rem;letter-spacing:0.3em;color:var(--accent);text-transform:uppercase}
+  #vgGate .vg-brand{margin:0;font-size:2rem;font-weight:800;letter-spacing:0.06em;color:var(--text)}
+  #vgGate .vg-close{border:none;background:rgba(255,255,255,.06);color:var(--text);border-radius:50%;width:44px;height:44px;display:grid;place-items:center;font-size:1.2rem;cursor:pointer;transition:.2s}
+  #vgGate .vg-close:hover{background:rgba(255,255,255,.12)}
+  #vgGate .vg-body{display:grid;grid-template-columns:1fr;gap:22px}
+  #vgGate .vg-topstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
+  #vgGate .vg-stat{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:16px;padding:14px;display:grid;gap:6px}
+  #vgGate .vg-stat span{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  #vgGate .vg-stat strong{font-size:1.05rem;color:var(--text);word-break:break-word}
+  #vgGate .vg-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:0 18px 36px rgba(3,5,12,.5)}
+  #vgGate .vg-label{font-size:0.7rem;color:var(--muted);margin-bottom:8px;letter-spacing:0.22em;text-transform:uppercase}
   #vgGate .vg-field{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center}
-  #vgGate .vg-input{padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.18);background:rgba(5,8,22,.92);color:#fff;font-size:1.05rem;width:100%}
-  #vgGate .vg-icon{display:inline-flex;align-items:center;gap:8px;padding:12px 14px;border-radius:14px;border:1px solid rgba(130,148,255,.45);
-    background:rgba(9,14,32,.95);color:#e5eaff;cursor:pointer;transition:transform .2s,border-color .2s}
-  #vgGate .vg-icon:hover{transform:translateY(-1px);border-color:rgba(152,170,255,.75)}
+  #vgGate .vg-field.uuid{grid-template-columns:1fr}
+  #vgGate .vg-field-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+  #vgGate .vg-field.two{grid-template-columns:1fr auto}
+  #vgGate .vg-input{padding:13px;border-radius:14px;border:1px solid var(--border);background:rgba(10,18,26,.95);color:var(--text);font-size:1rem;width:100%}
+  #vgGate .vg-icon{display:inline-flex;align-items:center;gap:8px;padding:11px 13px;border-radius:12px;border:1px solid rgba(0,209,255,.35);
+    background:rgba(9,14,22,.95);color:var(--text);cursor:pointer;transition:transform .2s,border-color .2s;white-space:nowrap}
+  #vgGate .vg-icon:hover{transform:translateY(-1px);border-color:rgba(0,209,255,.6)}
   #vgGate .vg-icon svg{width:17px;height:17px;display:block}
-  #vgGate .vg-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:20px}
-  #vgGate .vg-btn{border:none;border-radius:16px;padding:13px 22px;font-weight:650;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:.2s}
-  #vgGate .vg-btn--pri{background:linear-gradient(120deg,#6286ff,#8ab6ff);color:#040611;box-shadow:0 16px 35px rgba(98,134,255,.45)}
-  #vgGate .vg-btn--ghost{background:rgba(255,255,255,.05);color:#e9edff;border:1px solid rgba(255,255,255,.14)}
+  #vgGate .vg-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+  #vgGate .vg-btn{border:none;border-radius:14px;padding:12px 20px;font-weight:650;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:.2s}
+  #vgGate .vg-btn--pri{background:linear-gradient(120deg,#00d1ff,#7fe9ff);color:#041018;box-shadow:0 12px 28px rgba(0,209,255,.35)}
+  #vgGate .vg-btn--ghost{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--border)}
   #vgGate .vg-btn:hover{transform:translateY(-2px)}
-  #vgGate .vg-summary{display:grid;gap:18px}
-  #vgGate .vg-summary-block{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px}
-  #vgGate .vg-summary-block h4{margin:0 0 6px;font-size:0.78rem;letter-spacing:.3em;color:#7da4ff;text-transform:uppercase}
-  #vgGate .vg-summary-block p{margin:0;color:#f5f7ff;font-size:1.05rem;font-weight:600}
-  #vgGate .vg-msg{margin-top:24px;padding:14px 18px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);font-size:.95rem;color:#d7e2ff}
-  #vgGate .vg-msg.ok{border-color:rgba(73,245,196,.4);background:rgba(73,245,196,.14);color:#d5ffef}
-  #vgGate .vg-msg.warn{border-color:rgba(255,214,102,.4);background:rgba(255,214,102,.12);color:#fff2c0}
-  #vgGate .vg-msg.err{border-color:rgba(255,115,115,.45);background:rgba(255,95,95,.12);color:#ffd7d7}
+  #vgGate .vg-summary{display:grid;gap:16px}
+  #vgGate .vg-summary-block{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:16px;padding:16px}
+  #vgGate .vg-summary-block h4{margin:0 0 6px;font-size:0.72rem;letter-spacing:.28em;color:var(--muted);text-transform:uppercase}
+  #vgGate .vg-summary-block p{margin:0;color:var(--text);font-size:1.02rem;font-weight:600;word-break:break-word}
+  #vgGate .vg-msg{margin-top:18px;padding:13px 16px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-size:.92rem;color:var(--text)}
+  #vgGate .vg-msg.ok{border-color:rgba(45,255,122,.4);background:rgba(45,255,122,.12);color:#dfffee}
+  #vgGate .vg-msg.warn{border-color:rgba(255,176,32,.45);background:rgba(255,176,32,.12);color:#fff2c0}
+  #vgGate .vg-msg.err{border-color:rgba(255,59,59,.45);background:rgba(255,59,59,.12);color:#ffd7d7}
   body.vg-locked{overflow:hidden}
   body.vg-locked>*:not(#vgGate){filter:blur(4px);pointer-events:none !important;user-select:none !important}
-  #vgGate details{margin-top:16px;border:1px dashed rgba(255,255,255,.14);border-radius:14px;overflow:hidden}
-  #vgGate summary{padding:12px 18px;cursor:pointer;list-style:none;background:rgba(4,7,18,.92);color:#c1ceff;font-weight:600}
+  #vgGate details{margin-top:14px;border:1px dashed rgba(255,255,255,.12);border-radius:12px;overflow:hidden}
+  #vgGate summary{padding:12px 16px;cursor:pointer;list-style:none;background:rgba(9,14,22,.92);color:var(--muted);font-weight:600}
   #vgGate summary::-webkit-details-marker{display:none}
-  #vgGate .vg-pre{margin:0;padding:14px 18px;background:rgba(2,4,12,.9);color:#d1dbff;max-height:220px;overflow:auto;font-family:"JetBrains Mono","SFMono-Regular",monospace;font-size:0.85rem}
-  #vgGate .vg-foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;color:#b8c6ff;font-size:.85rem;letter-spacing:.18em;text-transform:uppercase}
-  #vgGate .vg-foot strong{font-size:1rem;color:#fff}
-  @media(max-width:720px){
+  #vgGate .vg-pre{margin:0;padding:14px 16px;background:rgba(2,4,12,.9);color:#d1dbff;max-height:220px;overflow:auto;font-family:ui-monospace,Menlo,Monaco,Consolas,"JetBrains Mono",monospace;font-size:0.85rem}
+  #vgGate .vg-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;color:var(--muted);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase}
+  #vgGate .vg-foot strong{font-size:1rem;color:var(--text)}
+  @media(max-width:760px){
     #vgGate .vg-body{grid-template-columns:1fr}
+    #vgGate .vg-topstats{grid-template-columns:1fr}
     #vgGate .vg-field{grid-template-columns:1fr}
-    #vgGate .vg-panel{padding:28px}
   }`;
   document.head.appendChild(style);
 
   const $ = (sel, root = document) => root.querySelector(sel);
 
+  // =========================================================
+  // UI Build
+  // =========================================================
   function buildUI() {
     let wrap = $("#vgGate");
     if (wrap) return wrap;
@@ -106,122 +136,221 @@
     wrap = document.createElement("div");
     wrap.id = "vgGate";
     wrap.innerHTML = `
-      <div class="vg-panel">
-        <div class="vg-hd">
-          <div class="vg-brand-block">
-            <p class="vg-tag">Secure Access</p>
-            <h3 class="vg-brand">VSH TECH API SERVER KEY</h3>
-          </div>
-          <button class="vg-close" id="vgReset" aria-label="Nhập lại key">&#8635;</button>
+      <div class="vg-hd">
+        <div>
+          <p class="vg-tag">VSH TECH ACCESS</p>
+          <h3 class="vg-brand">VSH TECH KEY</h3>
         </div>
-        <div class="vg-body">
-          <section class="vg-card">
-            <div class="vg-label">Mã kích hoạt</div>
-            <div class="vg-field">
-              <input id="vgKey" class="vg-input" type="text" placeholder="VSHTECH-XXXX-XXXX-XXXX" autocomplete="one-time-code" inputmode="latin">
-              <button class="vg-icon" id="vgPasteKey" title="Dán mã">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M8 4h8v4h4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4h4Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 2h6v3a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1V2Z" stroke="currentColor" stroke-width="1.6"/></svg>
+        <button class="vg-close" id="vgReset" title="Nhập lại key">&#8635;</button>
+      </div>
+
+      <div class="vg-topstats">
+        <div class="vg-stat">
+          <span>Trạng thái</span>
+          <strong id="vgState">Chưa kích hoạt</strong>
+        </div>
+        <div class="vg-stat">
+          <span>Hạn sử dụng</span>
+          <strong id="vgExpiry">--/--/--</strong>
+        </div>
+        <div class="vg-stat">
+          <span>Device ID</span>
+          <strong id="vgDevDisplay">--</strong>
+        </div>
+      </div>
+
+      <div class="vg-body">
+        <section class="vg-card">
+          <div class="vg-label">Mã kích hoạt</div>
+          <div class="vg-field">
+            <input id="vgKey" class="vg-input" type="text" placeholder="VSH-TECH...-XXXX-XXXX-XXXX" autocomplete="one-time-code" inputmode="latin">
+            <button class="vg-icon" id="vgPasteKey" title="Dán mã">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M8 4h8v4h4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4h4Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 2h6v3a1 1 0 0 1-1 1H10a 1 1 0 0 1-1-1V2Z" stroke="currentColor" stroke-width="1.6"/></svg>
+              <span>Dán</span>
+            </button>
+            <button class="vg-icon" id="vgDelKey" title="Xóa mã">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" stroke="currentColor" stroke-width="1.6"/><path d="M10 11v7M14 11v7" stroke="currentColor" stroke-width="1.6"/></svg>
+              <span>Xóa</span>
+            </button>
+          </div>
+
+          <div style="margin-top:18px">
+            <div class="vg-label">UUID / UDID thiết bị</div>
+            <div class="vg-field uuid">
+              <input id="vgDev" class="vg-input" type="text" placeholder="UUID (có dấu -) hoặc UDID iOS (40 ký tự)">
+            </div>
+            <div class="vg-field-actions">
+              <button class="vg-icon" id="vgGetDev" title="Lấy UDID bằng cấu hình">
+                <span>Lấy UUID</span>
+              </button>
+              <button class="vg-icon" id="vgCopyDev" title="Dán Device ID">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M9 9h8a2 2 0 0 1 2 2v8a 2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-8a 2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M7 15H6a 2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6"/></svg>
                 <span>Dán</span>
               </button>
-              <button class="vg-icon" id="vgDelKey" title="Xóa mã">
+              <button class="vg-icon" id="vgClearDev" title="Xóa Device ID">
                 <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" stroke="currentColor" stroke-width="1.6"/><path d="M10 11v7M14 11v7" stroke="currentColor" stroke-width="1.6"/></svg>
                 <span>Xóa</span>
               </button>
             </div>
-
-            <div style="margin-top:18px">
-              <div class="vg-label">Mã thiết bị</div>
-              <div class="vg-field">
-                <input id="vgDev" class="vg-input" type="text" readonly>
-                <button class="vg-icon" id="vgCopyDev" title="Sao chép mã thiết bị">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M9 9h8a2 2 0 0 1 2 2v8a 2 2 0 0 1-2 2H9a 2 2 0 0 1-2-2v-8a 2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M7 15H6a 2 2 0 0 1-2-2V5a 2 2 0 0 1 2-2h8a 2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6"/></svg>
-                  <span>Sao chép</span>
-                </button>
-              </div>
+            <div style="margin-top:10px;color:#b8c6ff;font-size:.9rem;line-height:1.45">
+              • iOS: bấm <b>Lấy UUID</b> → cài Profile → UDID sẽ tự điền vào đây.<br>
+              • Android/PC: bạn tự nhập UUID/ID theo hệ bạn dùng.<br>
+              • Thiết bị sẽ tự gắn với key khi bạn bấm <b>Kiểm tra</b> hoặc <b>Kích hoạt</b> lần đầu.
             </div>
+          </div>
 
-            <div class="vg-actions">
-              <button class="vg-btn vg-btn--ghost" id="vgCheck">Kiểm tra</button>
-              <button class="vg-btn vg-btn--pri" id="vgActive">Kích hoạt</button>
-            </div>
-          </section>
+          <div class="vg-actions">
+            <button class="vg-btn vg-btn--ghost" id="vgCheck">Kiểm tra</button>
+            <button class="vg-btn vg-btn--pri" id="vgActive">Kích hoạt</button>
+          </div>
+        </section>
+      </div>
 
-          <section class="vg-card vg-summary">
-            <div class="vg-summary-block">
-              <h4>Trạng thái</h4>
-              <p id="vgState">Chưa kích hoạt</p>
-            </div>
-            <div class="vg-summary-block">
-              <h4>Hạn sử dụng</h4>
-              <p id="vgExpiry">--/--/--</p>
-            </div>
-            <div class="vg-summary-block">
-              <h4>ID Thiết bị</h4>
-              <p id="vgDevDisplay">${deviceId}</p>
-            </div>
-          </section>
-        </div>
+      <div class="vg-msg" id="vgMsg">Nhập Device ID + Key để kiểm tra.</div>
 
-        <div class="vg-msg" id="vgMsg">Sẵn sàng kiểm tra key.</div>
-
-        <details id="vgDtl" hidden>
-          <summary>Chi tiết kỹ thuật</summary>
-          <pre class="vg-pre" id="vgRaw"></pre>
-        </details>
-
-        <div class="vg-foot">
-          <span>Lớp bảo vệ VSH TECH</span>
-          <strong id="vgSta">Chưa kích hoạt</strong>
-        </div>
-      </div>`;
+      <details id="vgDtl" hidden>
+        <summary>Chi tiết kỹ thuật</summary>
+        <pre class="vg-pre" id="vgRaw"></pre>
+      </details>\n`;
     document.body.appendChild(wrap);
 
     refs.status = $("#vgState");
     refs.expiry = $("#vgExpiry");
     refs.device = $("#vgDevDisplay");
-    if (refs.device) refs.device.textContent = deviceId;
 
+    // fill stored
     const storedKey = localStorage.getItem(LICENSE_KEY) || "";
     if (storedKey) $("#vgKey").value = storedKey;
-    $("#vgDev").value = deviceId;
+
+    const devInput = $("#vgDev");
+    devInput.value = deviceId;
+    refs.device.textContent = deviceId || "--";
 
     $("#vgPasteKey").onclick = pasteKey;
     $("#vgDelKey").onclick = clearKey;
-    $("#vgCopyDev").onclick = () => {
-      const text = $("#vgDev").value.trim();
-      navigator.clipboard?.writeText(text).then(() => showMsg("ok", "Đã sao chép Mã Thiết Bị."));
+
+    $("#vgCopyDev").onclick = async () => {
+      try {
+        const txt = await navigator.clipboard.readText();
+        const value = (txt || "").trim();
+        if(!value) return showMsg("warn","Chưa có Device ID để dán.");
+        $("#vgDev").value = value;
+        onDevChange();
+        showMsg("ok","Đã dán Device ID.");
+      } catch {
+        const txt = prompt("Dán Device ID tại đây:", "") || "";
+        const value = txt.trim();
+        if(!value) return showMsg("warn","Chưa có Device ID để dán.");
+        $("#vgDev").value = value;
+        onDevChange();
+        showMsg("ok","Đã dán Device ID.");
+      }
     };
+    $("#vgClearDev").onclick = () => {
+      $("#vgDev").value = "";
+      deviceId = "";
+      localStorage.removeItem(DEVICE_KEY);
+      refs.device && (refs.device.textContent = "--");
+      showMsg("ok","Đã xóa Device ID.");
+    };
+
+    devInput.oninput = () => onDevChange();
+
+    // Open device capture page
+    $("#vgGetDev").onclick = () => { window.location.href = "https://appstack.blog/app/getuuid/"; };
+
     $("#vgReset").onclick = () => {
       localStorage.removeItem(LICENSE_KEY);
       setState(null);
       openGate();
+      showMsg("ok","Đã reset key. Nhập lại để kích hoạt.");
     };
+
     $("#vgCheck").onclick = verifyKey;
     $("#vgActive").onclick = activateKey;
+
+    // Listen postMessage from /device/done
+    window.addEventListener("message", onDeviceMessage);
 
     return wrap;
   }
 
+  // =========================================================
+  // Device capture integration
+  // =========================================================
+  let devWin = null;
+
+  function currentUrlNoHash(){
+    const u = new URL(window.location.href);
+    u.hash = "";
+    return u.toString();
+  }
+
+        function openDeviceCapture(){
+    // return = trang hiện tại (để /device quay lại)
+    const returnUrl = currentUrlNoHash();
+    const u = `${DEVICE_INFO_URL}?return=${encodeURIComponent(returnUrl)}`;
+
+    // iOS Safari có thể chặn popup nếu không trực tiếp từ click -> nên mở luôn trong onclick
+    const a = document.createElement("a");
+    a.href = u;
+    a.target = "_blank";
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => { window.location.href = u; }, 200);
+    showMsg("", "Đang mở trang lấy UDID. Nếu bị chặn popup, hãy cho phép mở tab mới.");
+  }
+
+  // Device-info redirect + claim verify
+        function parseDeviceHash(){
+    const hash = window.location.hash || "";
+    if(!hash.startsWith("#")) return;
+    const params = new URLSearchParams(hash.slice(1));
+    if(params.get("vsh") !== "1") return;
+
+    const uuid = params.get("uuid") || "";
+    const serial = params.get("serial") || "";
+    const imei = params.get("imei") || "";
+
+    if(uuid) setDeviceId(uuid);
+    if(serial) localStorage.setItem(DEVICE_SERIAL_KEY, serial);
+    if(imei) localStorage.setItem(DEVICE_IMEI_KEY, imei);
+
+    showMsg("ok", "Đã nhận UUID từ thiết bị.");
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+
+        function onDeviceMessage(ev){
+    const msg = ev?.data;
+    if(!msg || !msg.vshDevice || !msg.data) return;
+
+    const udid = normDevId(msg.data.udid || "");
+    if(udid && isDevId(udid)){
+      setDeviceId(udid);
+      showMsg("ok", "Đã nhận UDID từ cấu hình và tự điền vào Device ID.");
+      try{ devWin && devWin.close && devWin.close(); }catch{}
+    }else{
+      showMsg("warn", "Đã nhận dữ liệu nhưng UDID không hợp lệ. Bạn copy UDID trên trang đó rồi dán vào ô này.");
+    }
+  }
+
+  function setDeviceId(v){
+    deviceId = normDevId(v);
+    localStorage.setItem(DEVICE_KEY, deviceId);
+    const dev = $("#vgDev");
+    if(dev) dev.value = deviceId;
+    refs.device && (refs.device.textContent = deviceId || "--");
+  }
+
+  // =========================================================
+  // UI helpers
+  // =========================================================
   function showMsg(type, msg, detail) {
     const el = $("#vgMsg");
     el.className = "vg-msg " + (type || "");
     el.innerHTML = msg;
-
-    // beep feedback
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      const now = ctx.currentTime;
-      osc.type = "sine";
-      osc.frequency.value = 1180;
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.18, now + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.2);
-    } catch {}
 
     const dtl = $("#vgDtl");
     const raw = $("#vgRaw");
@@ -234,110 +363,132 @@
     }
   }
 
-  function setState(data) {
+        function setState(data) {
     const sta = $("#vgSta");
     if (!sta) return;
+
     if (!data) {
       sta.textContent = "Chưa kích hoạt";
-      if (refs.status) refs.status.textContent = "Chưa kích hoạt";
-      if (refs.expiry) refs.expiry.textContent = "--/--/--";
+      refs.status && (refs.status.textContent = "Chưa kích hoạt");
+      refs.expiry && (refs.expiry.textContent = "--/--/--");
       return;
     }
+
     sta.textContent = `Hết hạn: ${formatDate(data.expiresAt)}`;
     refs.status && (refs.status.textContent = "Đã kích hoạt");
     refs.expiry && (refs.expiry.textContent = formatDate(data.expiresAt));
   }
 
-  async function pasteKey() {
+        async function pasteKey() {
     const input = $("#vgKey");
     try {
       const txt = await navigator.clipboard.readText();
       input.value = (txt || "").trim();
-      showMsg("ok", "Đã dán vào ô Mã Kích Hoạt.");
+      showMsg("ok", "Đã dán key.");
     } catch {
-      const txt = prompt("Dán mã kích hoạt tại đây:", "") || "";
+      const txt = prompt("Dán key tại đây:", "") || "";
       input.value = txt.trim();
-      showMsg("ok", "Đã dán vào ô Mã Kích Hoạt.");
+      showMsg("ok", "Đã dán key.");
     }
     input.focus();
   }
 
-  function clearKey() {
+        function clearKey() {
     $("#vgKey").value = "";
     localStorage.removeItem(LICENSE_KEY);
     setState(null);
-    showMsg("ok", "Đã xóa mã khỏi thiết bị này.");
+    showMsg("ok", "Đã xóa key khỏi thiết bị này.");
   }
 
-  async function verifyKey() {
+        function onDevChange(){
+    const v = normDevId($("#vgDev").value);
+    deviceId = v;
+    localStorage.setItem(DEVICE_KEY, deviceId);
+    refs.device && (refs.device.textContent = deviceId || "--");
+
+    if(deviceId && !isDevId(deviceId)){
+      showMsg("warn","Device ID chưa đúng. Hỗ trợ: <b>UUID</b> (có dấu -) hoặc <b>UDID iOS</b> (40 ký tự hex).");
+    }
+  }
+
+        function ensureInputs(){
     const key = $("#vgKey").value.trim();
-    if (!key) return showMsg("warn", "Vui lòng nhập Mã Kích Hoạt.");
+    if (!deviceId) { showMsg("warn","Vui lòng nhập Device ID."); return null; }
+    if (!isDevId(deviceId)) { showMsg("warn","Device ID không hợp lệ."); return null; }
+    if (!key) { showMsg("warn","Vui lòng nhập Key."); return null; }
+    return { key, deviceId };
+  }
+
+  function getDeviceMeta(){
+    return {
+      serial: localStorage.getItem(DEVICE_SERIAL_KEY) || "",
+      imei: localStorage.getItem(DEVICE_IMEI_KEY) || ""
+    };
+  }
+
+        function mapError(res){
+    const e = (res?.error || "").toUpperCase();
+    return {
+      RATE_LIMIT: "Bạn thao tác quá nhanh. Thử lại sau.",
+      TIMEOUT: "Timeout kết nối. Thử lại.",
+      NETWORK_ERROR: "Mất kết nối mạng.",
+      PARSE_ERROR: "Lỗi phản hồi server.",
+      INVALID_DEVICE_ID: "Device ID không hợp lệ.",
+      DEVICE_NOT_BOUND: "Key chưa gắn thiết bị. Hãy bấm <b>Kiểm tra</b> hoặc <b>Kích hoạt</b> để tự gắn lần đầu.",
+      BOUND_TO_ANOTHER_DEVICE: "Key đã gắn thiết bị khác.",
+      EXPIRED: "Key đã hết hạn.",
+      REVOKED: "Key đã bị thu hồi.",
+      NOT_FOUND: "Không tìm thấy key.",
+      UNAUTHORIZED: "Thiếu quyền truy cập.",
+      NO_ROUTE: "Sai đường dẫn API."
+    }[e] || "Có lỗi xảy ra.";
+  }
+
+  // =========================================================
+  // Actions
+  // =========================================================
+        async function verifyKey() {
+    const p = ensureInputs();
+    if(!p) return;
+
     showMsg("", "Đang kiểm tra...");
-    const res = await api("/api/verify", { key, deviceId });
+    const meta = getDeviceMeta();
+    const res = await api("/api/verify", { ...p, claim: true, serial: meta.serial, imei: meta.imei });
+
     if (res.ok) {
       const data = res.data || {};
-      const boundDevice = data.deviceId || data.device || null;
-      if (boundDevice && boundDevice !== deviceId) {
-        return showMsg("err", "Mã đã gán với thiết bị khác.", res);
-      }
-      const validity = validateData(data);
-      if (!validity.ok) {
-        const msg =
-          {
-            EXPIRED: "Mã đã hết hạn.",
-            REVOKED: "Mã đã bị thu hồi.",
-          }[validity.code] || "Mã không hợp lệ.";
-        return showMsg("err", msg, res);
-      }
-      localStorage.setItem(LICENSE_KEY, key);
+      localStorage.setItem(LICENSE_KEY, p.key);
       setState(data);
-      showMsg("ok", `Mã hợp lệ<br>Hết hạn: <b>${formatDate(data.expiresAt)}</b>`, res);
-    } else {
-      const msg =
-        {
-          EXPIRED: "Mã đã hết hạn.",
-          REVOKED: "Mã đã bị thu hồi.",
-          NOT_FOUND: "Không tìm thấy mã.",
-          BOUND_TO_ANOTHER_DEVICE: "Mã đã gán với thiết bị khác.",
-        }[(res.error || "").toUpperCase()] || "Lỗi không xác định";
-      showMsg("err", msg, res);
+      showMsg("ok", `Hợp lệ<br>Hết hạn: <b>${formatDate(data.expiresAt)}</b>`, res);
+      return;
     }
+    showMsg("err", mapError(res), res);
   }
 
-  async function activateKey() {
-    const key = $("#vgKey").value.trim();
-    if (!key) return showMsg("warn", "Vui lòng nhập Mã Kích Hoạt.");
-    showMsg("", "Đang kích hoạt…");
-    const res = await api("/api/activate", { key, deviceId });
+        async function activateKey() {
+    const p = ensureInputs();
+    if(!p) return;
+
+    showMsg("", "Đang kích hoạt.");
+    const meta = getDeviceMeta();
+    const res = await api("/api/activate", { ...p, serial: meta.serial, imei: meta.imei });
+
     if (res.ok) {
-      const validity = validateData(res.data);
-      if (!validity.ok) {
-        const msg =
-          {
-            EXPIRED: "Mã đã hết hạn.",
-            REVOKED: "Mã đã bị thu hồi.",
-          }[validity.code] || "Mã không hợp lệ.";
-        return showMsg("err", msg, res);
-      }
-      localStorage.setItem(LICENSE_KEY, key);
-      const data = res.data;
+      const data = res.data || {};
+      localStorage.setItem(LICENSE_KEY, p.key);
       setState(data);
       showMsg("ok", `Kích hoạt thành công<br>Hết hạn: <b>${formatDate(data.expiresAt)}</b>`, res);
-      setTimeout(() => closeGate(), 1200);
+      setTimeout(() => closeGate(), 900);
       window.dispatchEvent(new CustomEvent("vsh-license-change", { detail: { state: "activated", data } }));
-    } else {
-      const msg =
-        {
-          BOUND_TO_ANOTHER_DEVICE: "Mã đã gán với thiết bị khác.",
-          EXPIRED: "Mã đã hết hạn.",
-          REVOKED: "Mã đã bị thu hồi.",
-          NOT_FOUND: "Không tìm thấy mã.",
-        }[(res.error || "").toUpperCase()] || "Đã có lỗi kích hoạt";
-      showMsg("err", msg, res);
-      window.dispatchEvent(new CustomEvent("vsh-license-change", { detail: { state: "invalid", data: res } }));
+      return;
     }
+    showMsg("err", mapError(res), res);
+    window.dispatchEvent(new CustomEvent("vsh-license-change", { detail: { state: "invalid", data: res } }));
   }
 
+  // =========================================================
+  // Gate open/close + bootstrap
+  // =========================================================
   function openGate() {
     buildUI();
     document.body.classList.add("vg-locked");
@@ -351,27 +502,25 @@
   }
 
   async function bootstrap() {
+    buildUI();
+    parseDeviceHash();
+    onDevChange();
+
+    openGate();
+
     const storedKey = localStorage.getItem(LICENSE_KEY);
-    if (!storedKey) return openGate();
+    if (!storedKey) return;
+
+    if(!deviceId || !isDevId(deviceId)) return;
+
     const res = await api("/api/verify", { key: storedKey, deviceId });
-    if (res.ok && res.data.deviceId && res.data.deviceId === deviceId) {
-      const validity = validateData(res.data);
-      if (!validity.ok) return openGate();
+    if (res.ok) {
       setState(res.data);
-      document.addEventListener(
-        "visibilitychange",
-        () => {
-          if (document.visibilityState === "visible") bootstrap();
-        },
-        { once: true }
-      );
-      setTimeout(() => bootstrap(), 600000);
-    } else {
-      openGate();
     }
   }
 
   buildUI();
+  window.addEventListener("hashchange", parseDeviceHash);
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", bootstrap);
   } else {
@@ -382,9 +531,17 @@
   window.VSHKeyGate = {
     show: openGate,
     hide: closeGate,
-    reset() {
+    reset(){
       localStorage.removeItem(LICENSE_KEY);
       openGate();
     },
+    setDeviceId(v){
+      setDeviceId(v);
+    }
   };
 })();
+
+
+
+
+
