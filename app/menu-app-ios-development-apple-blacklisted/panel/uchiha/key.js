@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   // =========================================================
   // CONFIG
   // =========================================================
@@ -178,9 +178,13 @@
                 <button class="vg-icon" id="vgGetDev" title="Lấy UDID bằng cấu hình">
                   <span>Lấy UUID</span>
                 </button>
-                <button class="vg-icon" id="vgCopyDev" title="Sao chép Device ID">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M9 9h8a2 2 0 0 1 2 2v8a 2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-8a 2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M7 15H6a 2 2 0 0 1-2-2V5a 2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6"/></svg>
-                  <span>Copy</span>
+                <button class="vg-icon" id="vgCopyDev" title="Dán Device ID">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M9 9h8a2 2 0 0 1 2 2v8a 2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-8a 2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M7 15H6a 2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6"/></svg>
+                  <span>Dán</span>
+                </button>
+                <button class="vg-icon" id="vgClearDev" title="Xóa Device ID">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" stroke="currentColor" stroke-width="1.6"/><path d="M10 11v7M14 11v7" stroke="currentColor" stroke-width="1.6"/></svg>
+                  <span>Xóa</span>
                 </button>
               </div>
               <div style="margin-top:10px;color:#b8c6ff;font-size:.9rem;line-height:1.45">
@@ -226,16 +230,35 @@
     $("#vgPasteKey").onclick = pasteKey;
     $("#vgDelKey").onclick = clearKey;
 
-    $("#vgCopyDev").onclick = () => {
-      const text = $("#vgDev").value.trim();
-      if(!text) return showMsg("warn","Chưa có Device ID để copy.");
-      navigator.clipboard?.writeText(text).then(() => showMsg("ok", "Đã copy Device ID."));
+    $("#vgCopyDev").onclick = async () => {
+      try {
+        const txt = await navigator.clipboard.readText();
+        const value = (txt || "").trim();
+        if(!value) return showMsg("warn","Chưa có Device ID để dán.");
+        $("#vgDev").value = value;
+        onDevChange();
+        showMsg("ok","Đã dán Device ID.");
+      } catch {
+        const txt = prompt("Dán Device ID tại đây:", "") || "";
+        const value = txt.trim();
+        if(!value) return showMsg("warn","Chưa có Device ID để dán.");
+        $("#vgDev").value = value;
+        onDevChange();
+        showMsg("ok","Đã dán Device ID.");
+      }
+    };
+    $("#vgClearDev").onclick = () => {
+      $("#vgDev").value = "";
+      deviceId = "";
+      localStorage.removeItem(DEVICE_KEY);
+      refs.device && (refs.device.textContent = "--");
+      showMsg("ok","Đã xóa Device ID.");
     };
 
     devInput.oninput = () => onDevChange();
 
     // Open device capture page
-    $("#vgGetDev").onclick = () => openDeviceCapture();
+    $("#vgGetDev").onclick = () => { window.location.href = "https://appstack.blog/app/getuuid/"; };
 
     $("#vgReset").onclick = () => {
       localStorage.removeItem(LICENSE_KEY);
@@ -520,3 +543,7 @@
     }
   };
 })();
+
+
+
+
