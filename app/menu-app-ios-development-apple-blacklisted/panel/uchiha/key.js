@@ -12,8 +12,14 @@
   // Chấp nhận:
   // - UUID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   // - iOS UDID: 40 hex
-  const UUID_RE = /^[0-9A-F]{8}-[0-9A-F]{4}-[1-5][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/;
-  const UDID_RE = /^[0-9A-F]{40}$/;
+  // - iOS Finder ID: 8-16 hex (vd 00008140-000E50D22687001C)
+  // - Android ID: 16 hex
+  // - Linux machine-id: 32 hex
+  const UUID_ANY = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/;
+  const IOS_UDID = /^[0-9A-F]{40}$/;
+  const IOS_FINDER = /^[0-9A-F]{8}-[0-9A-F]{16}$/;
+  const HEX_16 = /^[0-9A-F]{16}$/;
+  const HEX_32 = /^[0-9A-F]{32}$/;
 
   const refs = { status: null, expiry: null, device: null };
 
@@ -33,7 +39,13 @@
   function normDevId(s){ return String(s || "").trim().toUpperCase(); }
   function isDevId(s){
     const v = normDevId(s);
-    return UUID_RE.test(v) || UDID_RE.test(v);
+    return (
+      UUID_ANY.test(v) ||
+      IOS_UDID.test(v) ||
+      IOS_FINDER.test(v) ||
+      HEX_16.test(v) ||
+      HEX_32.test(v)
+    );
   }
 
   // Load stored device id (UDID/UUID)
