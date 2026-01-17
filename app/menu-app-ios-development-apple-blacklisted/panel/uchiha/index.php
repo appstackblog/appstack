@@ -25,4 +25,19 @@ $replace = [
   "key.js?v={$keyVer}",
 ];
 
-echo str_replace($search, $replace, $html);
+// Add cache-busting for images in img/ (src="img/...").
+$html = str_replace($search, $replace, $html);
+$html = preg_replace_callback(
+  '/(src)=("|\'')(img\/[^"\']+)(\?[^"\']*)?\2/i',
+  function ($m) {
+    $path = $m[3];
+    $query = $m[4] ?? "";
+    $ver = asset_ver($path);
+    $sep = $query ? "&" : "?";
+    return $m[1] . "=" . $m[2] . $path . $query . $sep . "v=" . $ver . $m[2];
+  },
+  $html
+);
+
+echo $html;
+
