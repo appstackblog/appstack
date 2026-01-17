@@ -25,8 +25,9 @@ $replace = [
   "key.js?v={$keyVer}",
 ];
 
-// Add cache-busting for images in img/ (src="img/...").
 $html = str_replace($search, $replace, $html);
+
+// Cache-bust local images in img/ (src="img/...").
 $html = preg_replace_callback(
   '/(src)=("|\'')(img\/[^"\']+)(\?[^"\']*)?\2/i',
   function ($m) {
@@ -40,4 +41,3 @@ $html = preg_replace_callback(
 );
 
 echo $html;
-
