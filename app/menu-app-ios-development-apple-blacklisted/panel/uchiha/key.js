@@ -8,9 +8,7 @@
   const DEVICE_SERIAL_KEY = "vsh_device_serial";
   const DEVICE_IMEI_KEY = "vsh_device_imei";
   const LICENSE_KEY = "vsh_license_key";
-
-  // Chấp nhận:
-  // - UUID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  // Chấp nhận:// - UUID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   // - iOS UDID: 40 hex
   // - iOS Finder ID: 8-16 hex (vd 00008140-000E50D22687001C)
   // - Android ID: 16 hex
@@ -23,7 +21,7 @@
 
   const refs = { status: null, expiry: null, device: null };
 
-  const formatDate = (ts) =>
+            const formatDate = (ts) =>
     ts == null
       ? "Không giới hạn"
       : new Intl.DateTimeFormat("vi-VN", {
@@ -75,11 +73,8 @@
   // =========================================================
   const style = document.createElement("style");
   style.textContent = `
-  #vgGate{--bg:#0b0f14;--surface:#121a24;--surface2:#0f1620;--border:#223041;--text:#e6edf3;--muted:#9fb0c0;--accent:#00d1ff;--success:#2dff7a;--warning:#ffb020;--danger:#ff3b3b;position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;background:rgba(11,15,20,.86);backdrop-filter:blur(16px)}
-  #vgGate .vg-panel{width:min(920px,95vw);max-height:min(760px,95vh);overflow-y:auto;border-radius:28px;padding:32px;
-    background:linear-gradient(160deg,rgba(18,26,36,.98),rgba(15,22,32,.95));color:var(--text);
-    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;border:1px solid var(--border);
-    box-shadow:0 35px 85px rgba(2,4,12,.7)}
+  #vgGate{--bg:#0b0f14;--surface:#121a24;--surface2:#0f1620;--border:#223041;--text:#e6edf3;--muted:#9fb0c0;--accent:#00d1ff;--success:#2dff7a;--warning:#ffb020;--danger:#ff3b3b;position:fixed;inset:0;z-index:2147483647;display:block;padding:28px 20px;overflow:auto;background:rgba(11,15,20,.86);backdrop-filter:blur(16px);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+  
   #vgGate .vg-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
   #vgGate .vg-tag{margin:0;font-size:0.72rem;letter-spacing:0.3em;color:var(--accent);text-transform:uppercase}
   #vgGate .vg-brand{margin:0;font-size:2rem;font-weight:800;letter-spacing:0.06em;color:var(--text)}
@@ -126,7 +121,6 @@
     #vgGate .vg-body{grid-template-columns:1fr}
     #vgGate .vg-topstats{grid-template-columns:1fr}
     #vgGate .vg-field{grid-template-columns:1fr}
-    #vgGate .vg-panel{padding:26px}
   }`;
   document.head.appendChild(style);
 
@@ -142,89 +136,82 @@
     wrap = document.createElement("div");
     wrap.id = "vgGate";
     wrap.innerHTML = `
-      <div class="vg-panel">
-        <div class="vg-hd">
-          <div>
-            <p class="vg-tag">UCHIHA ACCESS</p>
-            <h3 class="vg-brand">UCHIHA KEY</h3>
-          </div>
-          <button class="vg-close" id="vgReset" title="Nhập lại key">&#8635;</button>
+      <div class="vg-hd">
+        <div>
+          <p class="vg-tag">UCHIHA ACCESS</p>
+          <h3 class="vg-brand">UCHIHA KEY</h3>
         </div>
+        <button class="vg-close" id="vgReset" title="Nhập lại key">&#8635;</button>
+      </div>
 
-        <div class="vg-topstats">
-          <div class="vg-stat">
-            <span>Trạng thái</span>
-            <strong id="vgState">Chưa kích hoạt</strong>
-          </div>
-          <div class="vg-stat">
-            <span>Hạn sử dụng</span>
-            <strong id="vgExpiry">--/--/--</strong>
-          </div>
-          <div class="vg-stat">
-            <span>Device ID</span>
-            <strong id="vgDevDisplay">--</strong>
-          </div>
+      <div class="vg-topstats">
+        <div class="vg-stat">
+          <span>Trạng thái</span>
+          <strong id="vgState">Chưa kích hoạt</strong>
         </div>
+        <div class="vg-stat">
+          <span>Hạn sử dụng</span>
+          <strong id="vgExpiry">--/--/--</strong>
+        </div>
+        <div class="vg-stat">
+          <span>Device ID</span>
+          <strong id="vgDevDisplay">--</strong>
+        </div>
+      </div>
 
-        <div class="vg-body">
-          <section class="vg-card">
-            <div class="vg-label">Mã kích hoạt</div>
-            <div class="vg-field">
-              <input id="vgKey" class="vg-input" type="text" placeholder="VSH...-XXXX-XXXX-XXXX" autocomplete="one-time-code" inputmode="latin">
-              <button class="vg-icon" id="vgPasteKey" title="Dán mã">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M8 4h8v4h4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4h4Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 2h6v3a1 1 0 0 1-1 1H10a 1 1 0 0 1-1-1V2Z" stroke="currentColor" stroke-width="1.6"/></svg>
+      <div class="vg-body">
+        <section class="vg-card">
+          <div class="vg-label">Mã kích hoạt</div>
+          <div class="vg-field">
+            <input id="vgKey" class="vg-input" type="text" placeholder="VSH...-XXXX-XXXX-XXXX" autocomplete="one-time-code" inputmode="latin">
+            <button class="vg-icon" id="vgPasteKey" title="Dán mã">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M8 4h8v4h4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4h4Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 2h6v3a1 1 0 0 1-1 1H10a 1 1 0 0 1-1-1V2Z" stroke="currentColor" stroke-width="1.6"/></svg>
+              <span>Dán</span>
+            </button>
+            <button class="vg-icon" id="vgDelKey" title="Xóa mã">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" stroke="currentColor" stroke-width="1.6"/><path d="M10 11v7M14 11v7" stroke="currentColor" stroke-width="1.6"/></svg>
+              <span>Xóa</span>
+            </button>
+          </div>
+
+          <div style="margin-top:18px">
+            <div class="vg-label">UUID / UDID thiết bị</div>
+            <div class="vg-field uuid">
+              <input id="vgDev" class="vg-input" type="text" placeholder="UUID (có dấu -) hoặc UDID iOS (40 ký tự)">
+            </div>
+            <div class="vg-field-actions">
+              <button class="vg-icon" id="vgGetDev" title="Lấy UDID bằng cấu hình">
+                <span>Lấy UUID</span>
+              </button>
+              <button class="vg-icon" id="vgCopyDev" title="Dán Device ID">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M9 9h8a2 2 0 0 1 2 2v8a 2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-8a 2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M7 15H6a 2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6"/></svg>
                 <span>Dán</span>
               </button>
-              <button class="vg-icon" id="vgDelKey" title="Xóa mã">
+              <button class="vg-icon" id="vgClearDev" title="Xóa Device ID">
                 <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" stroke="currentColor" stroke-width="1.6"/><path d="M10 11v7M14 11v7" stroke="currentColor" stroke-width="1.6"/></svg>
                 <span>Xóa</span>
               </button>
             </div>
-
-            <div style="margin-top:18px">
-              <div class="vg-label">UUID / UDID thiết bị</div>
-              <div class="vg-field uuid">
-                <input id="vgDev" class="vg-input" type="text" placeholder="UUID (có -) hoặc UDID iOS (40 ký tự)">
-              </div>
-              <div class="vg-field-actions">
-                <button class="vg-icon" id="vgGetDev" title="Lấy UDID bằng cấu hình">
-                  <span>Lấy UUID</span>
-                </button>
-                <button class="vg-icon" id="vgCopyDev" title="Dán Device ID">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M9 9h8a2 2 0 0 1 2 2v8a 2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-8a 2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M7 15H6a 2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6"/></svg>
-                  <span>Dán</span>
-                </button>
-                <button class="vg-icon" id="vgClearDev" title="Xóa Device ID">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" stroke="currentColor" stroke-width="1.6"/><path d="M10 11v7M14 11v7" stroke="currentColor" stroke-width="1.6"/></svg>
-                  <span>Xóa</span>
-                </button>
-              </div>
-              <div style="margin-top:10px;color:#b8c6ff;font-size:.9rem;line-height:1.45">
-                • iOS: bấm <b>Lấy UUID</b> → cài Profile → UDID sẽ tự điền vào đây.<br>
-                • Android/PC: bạn tự nhập UUID/ID theo hệ bạn dùng.<br>
-                • Thiết bị sẽ tự gắn với key khi bạn bấm <b>Kiểm tra</b> hoặc <b>Kích hoạt</b> lần đầu.
-              </div>
+            <div style="margin-top:10px;color:#b8c6ff;font-size:.9rem;line-height:1.45">
+              • iOS: bấm <b>Lấy UUID</b> → cài Profile → UDID sẽ tự điền vào đây.<br>
+              • Android/PC: bạn tự nhập UUID/ID theo hệ bạn dùng.<br>
+              • Thiết bị sẽ tự gắn với key khi bạn bấm <b>Kiểm tra</b> hoặc <b>Kích hoạt</b> lần đầu.
             </div>
+          </div>
 
-            <div class="vg-actions">
-              <button class="vg-btn vg-btn--ghost" id="vgCheck">Kiểm tra</button>
-              <button class="vg-btn vg-btn--pri" id="vgActive">Kích hoạt</button>
-            </div>
-          </section>
-        </div>
+          <div class="vg-actions">
+            <button class="vg-btn vg-btn--ghost" id="vgCheck">Kiểm tra</button>
+            <button class="vg-btn vg-btn--pri" id="vgActive">Kích hoạt</button>
+          </div>
+        </section>
+      </div>
 
-        <div class="vg-msg" id="vgMsg">Nhập Device ID + Key để kiểm tra.</div>
+      <div class="vg-msg" id="vgMsg">Nhập Device ID + Key để kiểm tra.</div>
 
-        <details id="vgDtl" hidden>
-          <summary>Chi tiết kỹ thuật</summary>
-          <pre class="vg-pre" id="vgRaw"></pre>
-        </details>
-
-        <div class="vg-foot">
-          <span>Lớp bảo vệ UCHIHA</span>
-          <strong id="vgSta"></strong>
-        </div>
-      </div>`;
+      <details id="vgDtl" hidden>
+        <summary>Chi tiết kỹ thuật</summary>
+        <pre class="vg-pre" id="vgRaw"></pre>
+      </details>\n`;
     document.body.appendChild(wrap);
 
     refs.status = $("#vgState");
@@ -299,12 +286,12 @@
     return u.toString();
   }
 
-  function openDeviceCapture(){
+        function openDeviceCapture(){
     // return = trang hiện tại (để /device quay lại)
     const returnUrl = currentUrlNoHash();
     const u = `${DEVICE_INFO_URL}?return=${encodeURIComponent(returnUrl)}`;
 
-    // iOS Safari có thể chặn popup nếu không trực tiếp từ click -> mình mở luôn trong onclick
+    // iOS Safari có thể chặn popup nếu không trực tiếp từ click -> nên mở luôn trong onclick
     const a = document.createElement("a");
     a.href = u;
     a.target = "_blank";
@@ -313,11 +300,11 @@
     a.click();
     a.remove();
     setTimeout(() => { window.location.href = u; }, 200);
-    showMsg("", "Đang mở trang lấy UDID… Nếu bị chặn popup, hãy cho phép mở tab mới.");
+    showMsg("", "Đang mở trang lấy UDID. Nếu bị chặn popup, hãy cho phép mở tab mới.");
   }
 
   // Device-info redirect + claim verify
-  function parseDeviceHash(){
+        function parseDeviceHash(){
     const hash = window.location.hash || "";
     if(!hash.startsWith("#")) return;
     const params = new URLSearchParams(hash.slice(1));
@@ -335,14 +322,14 @@
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
 
-  function onDeviceMessage(ev){
+        function onDeviceMessage(ev){
     const msg = ev?.data;
     if(!msg || !msg.vshDevice || !msg.data) return;
 
     const udid = normDevId(msg.data.udid || "");
     if(udid && isDevId(udid)){
       setDeviceId(udid);
-      showMsg("ok", "✅ Đã nhận UDID từ cấu hình và tự điền vào Device ID.");
+      showMsg("ok", "Đã nhận UDID từ cấu hình và tự điền vào Device ID.");
       try{ devWin && devWin.close && devWin.close(); }catch{}
     }else{
       showMsg("warn", "Đã nhận dữ liệu nhưng UDID không hợp lệ. Bạn copy UDID trên trang đó rồi dán vào ô này.");
@@ -376,7 +363,7 @@
     }
   }
 
-  function setState(data) {
+        function setState(data) {
     const sta = $("#vgSta");
     if (!sta) return;
 
@@ -392,7 +379,7 @@
     refs.expiry && (refs.expiry.textContent = formatDate(data.expiresAt));
   }
 
-  async function pasteKey() {
+        async function pasteKey() {
     const input = $("#vgKey");
     try {
       const txt = await navigator.clipboard.readText();
@@ -406,14 +393,14 @@
     input.focus();
   }
 
-  function clearKey() {
+        function clearKey() {
     $("#vgKey").value = "";
     localStorage.removeItem(LICENSE_KEY);
     setState(null);
     showMsg("ok", "Đã xóa key khỏi thiết bị này.");
   }
 
-  function onDevChange(){
+        function onDevChange(){
     const v = normDevId($("#vgDev").value);
     deviceId = v;
     localStorage.setItem(DEVICE_KEY, deviceId);
@@ -424,7 +411,7 @@
     }
   }
 
-  function ensureInputs(){
+        function ensureInputs(){
     const key = $("#vgKey").value.trim();
     if (!deviceId) { showMsg("warn","Vui lòng nhập Device ID."); return null; }
     if (!isDevId(deviceId)) { showMsg("warn","Device ID không hợp lệ."); return null; }
@@ -439,7 +426,7 @@
     };
   }
 
-  function mapError(res){
+        function mapError(res){
     const e = (res?.error || "").toUpperCase();
     return {
       RATE_LIMIT: "Bạn thao tác quá nhanh. Thử lại sau.",
@@ -448,7 +435,7 @@
       PARSE_ERROR: "Lỗi phản hồi server.",
       INVALID_DEVICE_ID: "Device ID không hợp lệ.",
       DEVICE_NOT_BOUND: "Key chưa gắn thiết bị. Hãy bấm <b>Kiểm tra</b> hoặc <b>Kích hoạt</b> để tự gắn lần đầu.",
-      BOUND_TO_ANOTHER_DEVICE: "Key đã bind thiết bị khác.",
+      BOUND_TO_ANOTHER_DEVICE: "Key đã gắn thiết bị khác.",
       EXPIRED: "Key đã hết hạn.",
       REVOKED: "Key đã bị thu hồi.",
       NOT_FOUND: "Không tìm thấy key.",
@@ -460,7 +447,7 @@
   // =========================================================
   // Actions
   // =========================================================
-  async function verifyKey() {
+        async function verifyKey() {
     const p = ensureInputs();
     if(!p) return;
 
@@ -478,11 +465,11 @@
     showMsg("err", mapError(res), res);
   }
 
-  async function activateKey() {
+        async function activateKey() {
     const p = ensureInputs();
     if(!p) return;
 
-    showMsg("", "Đang kích hoạt…");
+    showMsg("", "Đang kích hoạt.");
     const meta = getDeviceMeta();
     const res = await api("/api/activate", { ...p, serial: meta.serial, imei: meta.imei });
 
@@ -519,18 +506,16 @@
     parseDeviceHash();
     onDevChange();
 
-    const storedKey = localStorage.getItem(LICENSE_KEY);
-    if (!storedKey) return openGate();
+    openGate();
 
-    if(!deviceId || !isDevId(deviceId)) return openGate();
+    const storedKey = localStorage.getItem(LICENSE_KEY);
+    if (!storedKey) return;
+
+    if(!deviceId || !isDevId(deviceId)) return;
 
     const res = await api("/api/verify", { key: storedKey, deviceId });
     if (res.ok) {
       setState(res.data);
-      closeGate();
-      setTimeout(() => bootstrap(), 600000);
-    } else {
-      openGate();
     }
   }
 
@@ -555,6 +540,7 @@
     }
   };
 })();
+
 
 
 
