@@ -188,9 +188,9 @@
                 </button>
               </div>
               <div style="margin-top:10px;color:#b8c6ff;font-size:.9rem;line-height:1.45">
-                • iOS: bấm <b>Lấy</b> → cài Profile → UDID tự đổ về đây.<br>
+                • iOS: bấm <b>Lấy UUID</b> → cài Profile → UDID sẽ tự điền vào đây.<br>
                 • Android/PC: bạn tự nhập UUID/ID theo hệ bạn dùng.<br>
-                • Device ID phải trùng với ID đã <b>bind</b> cho key trên bot.
+                • Thiết bị sẽ tự gắn với key khi bạn bấm <b>Kiểm tra</b> hoặc <b>Kích hoạt</b> lần đầu.
               </div>
             </div>
 
@@ -435,7 +435,7 @@
       NETWORK_ERROR: "Mất kết nối mạng.",
       PARSE_ERROR: "Lỗi phản hồi server.",
       INVALID_DEVICE_ID: "Device ID không hợp lệ.",
-      DEVICE_NOT_BOUND: "Key chưa được bind Device ID. Liên hệ admin để /bind.",
+      DEVICE_NOT_BOUND: "Key chưa gắn thiết bị. Hãy bấm <b>Kiểm tra</b> hoặc <b>Kích hoạt</b> để tự gắn lần đầu.",
       BOUND_TO_ANOTHER_DEVICE: "Key đã bind thiết bị khác.",
       EXPIRED: "Key đã hết hạn.",
       REVOKED: "Key đã bị thu hồi.",
