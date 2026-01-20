@@ -1,0 +1,18 @@
+DirectoryIndex index.php index.html
+
+# Chặn truy cập trực tiếp vào thư mục ipas/ và plist/
+RewriteEngine On
+# Nếu request cố mở file .ipa hoặc .plist trong hai thư mục này, trả 403
+RewriteCond %{REQUEST_URI} ^/app/panel-ios-vshtech/(ipas|plist)/ [NC]
+RewriteRule . - [F,L]
+
+# Hoặc chặn chung theo phần mở rộng (fallback cho shared hosting)
+<FilesMatch "\.(ipa|plist)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>

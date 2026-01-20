@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UCHIHA - APPSTACK.BLOG</title>
+  <link rel="stylesheet" href="./uchiha.css">
+</head>
+<body>
+  <div class="header-frame"></div>
+  <div class="header-strip"></div>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-content">
+        <div class="nav-left">
+          <a href="#hero" class="logo">
+            <img src="../assets/icons/uchiha.png" alt="PANEL" class="logo-icon-img">
+            <span class="logo-text" data-i18n="site.title">UCHIHA</span>
+          </a>
+        </div>
+        <div class="nav-links">
+          <a href="#hero" data-i18n="nav.home">Home</a>
+          <a href="../index.html#panel-ios" data-i18n="nav.dns">DNS Config</a>
+          <a href="#panel-list-panel" data-i18n="nav.apps">Apps</a>
+        </div>
+        <div class="nav-right">
+          <div class="lang-selector">
+            <button class="lang-btn" type="button">
+              <span class="lang-icon">🌐</span>
+              <span data-i18n="nav.languages">Languages</span>
+              <svg class="lang-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 4.5 6 7.5 9 4.5"></polyline>
+              </svg>
+            </button>
+            <div class="lang-dropdown">
+              <div class="lang-option" data-lang="en">English</div>
+              <div class="lang-option" data-lang="vi">Vietnamese</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <section id="hero" class="osign-hero">
+    <div class="osign-container">
+      <div class="osign-content">
+        <div class="osign-left">
+          <h1 class="osign-title">UCHIHA</h1>
+          <p class="osign-desc highlight-desc" data-i18n="hero.description">
+            Developer : UCHIHA 2026
+            <span class="meta-badge" aria-label="verified profile">
+              <span class="meta-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+          </p>
+          <div class="osign-features">
+            <div class="osign-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span data-i18n="hero.feature.simple">Simple</span>
+            </div>
+            <span class="osign-divider">|</span>
+            <div class="osign-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              <span data-i18n="hero.feature.efficient">Efficient</span>
+            </div>
+            <span class="osign-divider">|</span>
+            <div class="osign-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="7" y="2" width="10" height="20" rx="2" ry="2"></rect>
+                <line x1="11" y1="19" x2="13" y2="19"></line>
+              </svg>
+          <span data-i18n="hero.feature.phone">Phone</span>
+        </div>
+      </div>
+    </div>
+    <div class="osign-right">
+      <div class="osign-icon-large">
+        <img src="../assets/icons/uchiha.png" alt="Osign" class="osign-icon-img">
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<main class="hero">
+  <div class="panel-frame">
+    <div class="handle-block">
+
+      <div class="install-banner">
+        <div class="install-banner-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="14" />
+            <line x1="12" y1="18" x2="12" y2="18.01" />
+          </svg>
+        </div>
+        <p class="install-banner-title" data-i18n="banner.title">First, you need to download the DNS configuration file to your phone before installing the UCHIHA.</p>
+        <div class="install-banner-action">
+          <a class="install-banner-link" href="../index.html#panel-ios" data-i18n="banner.link">MOVE THERE</a>
+        </div>
+      </div>
+
+      <div class="panel-preview">
+        <div class="panel-preview-info">
+          <div class="panel-preview-avatar">
+            <img src="../assets/icons/uchiha.png" alt="UCHIHA icon">
+          </div>
+          <div>
+            <div class="panel-preview-name">UCHIHA</div>
+            <div class="panel-preview-sub"></div>
+          </div>
+        </div>
+        <button class="panel-toggle-btn" type="button" data-target="panel-list-panel" aria-expanded="false">See more</button>
+      </div>
+
+      <div id="panel-list-panel" class="panel-list" hidden>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>HDFC Bank Limited</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_bank">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>CHIBA INSTITUTE OF TECHNOLOGY</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_chiba">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>China Telecommunications Corporation</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_chinatelecom">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>Guangzhou Huahan Educational &amp; Technology</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_education">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>EEO Education</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_eeo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>China Railway Eryuan Engineering Group</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_eryuan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>Beijing Esensoft</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_esen">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>NREH ESTATE INFORMATION TECHNOLOGY</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_infor">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>TCL household Appliance Marketing</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_mkt">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>GLOBAL TAKEOFF</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_takeoff">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>Etisalat - Emirates Telecommunications Corporation</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_telecom">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>Tianjin University of Commerce</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_tianjin">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>China National Heavy Duty Truck Group</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_truck">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>VIETTEL GROUP</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_viettel">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_viettinbank">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+        <div class="app-line">
+          <div class="app-icon">
+            <img src="../assets/icons/uchiha.png" alt="Panel icon">
+          </div>
+          <div class="app-meta">
+            <h3>UCHIHA</h3>
+            <p>Wuling Power Corporation</p>
+          </div>
+          <div class="app-action">
+            <a class="app-download" data-app-id="panel_wuling">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15.5a5 5 0 0 1 1.5-9.7 5 5 0 0 1 9.4 1.8A4.2 4.2 0 0 1 17.5 15" />
+                <path d="m12 11.5 0 7" />
+                <path d="m9.5 15 2.5 3 2.5-3" />
+              </svg>
+              <span data-i18n="button.install">Install</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </main>
+
+   <section id="help" class="help">
+    <div class="container">
+      <h2 class="section-title" data-i18n="help.title">Usage Help</h2>
+      <p class="section-subtitle" data-i18n="help.subtitle">Quick guide on how to use UCHIHA IOS</p>
+      <div class="help-process">
+        <div class="help-process-step">
+          <div class="help-process-icon">⚙️</div>
+          <h3 data-i18n="help.step1.title">INSTALL</h3>
+          <p data-i18n="help.step1.text">Download the DNS configuration to your device before downloading the iOS UCHIHA app.</p>
+        </div>
+        <div class="help-process-arrow">→</div>
+        <div class="help-process-step">
+          <div class="help-process-icon">📥</div>
+          <h3 data-i18n="help.step2.title">Download the app.</h3>
+          <p data-i18n="help.step2.text">Try each app one by one. If your device isn't blacklisted, then it's fine.</p>
+        </div>
+        <div class="help-process-arrow">→</div>
+        <div class="help-process-step">
+          <div class="help-process-icon">✅</div>
+          <h3 data-i18n="help.step4.title">Download successful.</h3>
+          <p data-i18n="help.step4.text">Go to Settings and General, then to VPN & Device Management, and trust the app.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <script src="./uchiha.js"></script>
+</body>
+</html>
+
