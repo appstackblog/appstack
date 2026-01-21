@@ -14,10 +14,14 @@ const CFG = {
   KEY_PREFIX:  "iOS_Server_Key_AppStackTeam_Top_One",
   DOWNLOAD_URL:"https://example.com/your-dylib",
   DEVICE_INFO_URL: "",
-  ADMIN_NOTIFY_ON_CLAIM: true,
+  ADMIN_NOTIFY_ON_CLAIM: false,
   PUBLIC_MODE: false,
   ALLOW_IDS:   "",
 
+  NOTIFY_BOT_TOKEN: "",
+  NOTIFY_CHAT_ID: "-1003669032722",
+  NOTIFY_ENABLED: false,
+  NOTIFY_ALSO_ADMINS: true,
   TZ:          "Asia/Ho_Chi_Minh",
   MAX_QTY:     200,
 
@@ -49,6 +53,10 @@ function envCfg(env){
     PUBLIC_MODE: b(env && env.PUBLIC_MODE, CFG.PUBLIC_MODE),
     ADMIN_IDS: (env && env.ADMIN_IDS) || CFG.ADMIN_IDS,
     ALLOW_IDS: (env && env.ALLOW_IDS) || CFG.ALLOW_IDS,
+    NOTIFY_BOT_TOKEN: (env && env.NOTIFY_BOT_TOKEN) || CFG.NOTIFY_BOT_TOKEN,
+    NOTIFY_CHAT_ID: (env && env.NOTIFY_CHAT_ID) || CFG.NOTIFY_CHAT_ID,
+    NOTIFY_ENABLED: b(env && env.NOTIFY_ENABLED, CFG.NOTIFY_ENABLED),
+    NOTIFY_ALSO_ADMINS: b(env && env.NOTIFY_ALSO_ADMINS, CFG.NOTIFY_ALSO_ADMINS),
     TZ: (env && env.TZ) || CFG.TZ
   };
 }
@@ -119,6 +127,34 @@ async function csvGet(env, key){
 }
 async function csvSet(env, key, arr){
   await env.KEYS.put(key, Array.from(new Set(arr)).join(","));
+}
+async function saveUserProfile(env, fromObj){
+  if(!fromObj || !fromObj.id) return;
+  const id = String(fromObj.id);
+  const username = fromObj.username ? String(fromObj.username) : "";
+  const first = fromObj.first_name ? String(fromObj.first_name) : "";
+  const last = fromObj.last_name ? String(fromObj.last_name) : "";
+  const name = (first + " " + last).trim() || first || username || "Unknown";
+  const payload = {
+    id,
+    username,
+    first_name: first,
+    last_name: last,
+    name,
+    updatedAt: now()
+  };
+  try{
+    await env.KEYS.put(`u:${id}`, JSON.stringify(payload));
+  }catch{}
+}
+
+async function getUserProfile(env, id){
+  try{
+    const raw = await env.KEYS.get(`u:${id}`);
+    return raw ? JSON.parse(raw) : null;
+  }catch{
+    return null;
+  }
 }
 
 async function getAdmins(env){
@@ -244,6 +280,7 @@ function view(row){
     plan: row.plan,
     issuedAt: row.t0,
     expiresAt: row.exp ?? null,
+    durationMs: row.dur ?? null,
     revoked: !!row.rev,
     activatedAt: row.tA ?? null,
     deviceId: row.did ?? null,
@@ -257,10 +294,11 @@ async function createKeys(env, cfg, {durationMs=null, untilTs=null, quantity=1, 
   const out=[];
   for(let i=0;i<n;i++){
     const k = genKey(cfg.KEY_PREFIX), t0 = now();
-    const exp = (untilTs!=null) ? untilTs : (durationMs==null ? null : t0 + durationMs);
+    const exp = (untilTs!=null) ? untilTs : null;
+    const dur = (untilTs!=null) ? null : (durationMs==null ? null : durationMs);
     const label = planLabel || (untilTs!=null ? "until" : (durationMs==null?"life":"custom"));
     const row = {
-      k, plan: label, t0, exp, rev:0,
+      k, plan: label, t0, exp, dur, rev:0,
       tA:null,
       did: bindDeviceId || null, // gắn cùng UUID nếu có
       note: note||null
@@ -304,6 +342,44 @@ async function tgsend(env, chatId, html, keyboard, opts){
     body:JSON.stringify(body)
   });
 }
+async function tgCall(token, method, payload){
+  const t = token || "";
+  if(!t) throw new Error("Missing TG_TOKEN");
+  const u = `https://api.telegram.org/bot${t}/${method}`;
+  await fetch(u,{
+    method:"POST",
+    headers:{ "content-type":"application/json" },
+    body:JSON.stringify(payload)
+  });
+}
+
+async function tgSendMessage(token, chatId, html, keyboard){
+  const body = {
+    chat_id:chatId,
+    text:html,
+    parse_mode:"HTML",
+    disable_web_page_preview:true
+  };
+  if (keyboard) body.reply_markup = keyboard;
+  await tgCall(token, "sendMessage", body);
+}
+
+async function tgDeleteMessage(token, chatId, messageId){
+  const body = { chat_id:chatId, message_id:messageId };
+  await tgCall(token, "deleteMessage", body);
+}
+
+async function tgDelete(env, chatId, messageId){
+  const cfg = envCfg(env);
+  if(!cfg.TG_TOKEN) throw new Error("Missing TG_TOKEN");
+  const u = `https://api.telegram.org/bot${cfg.TG_TOKEN}/deleteMessage`;
+  const body = { chat_id:chatId, message_id:messageId };
+  await fetch(u,{
+    method:"POST",
+    headers:{ "content-type":"application/json" },
+    body:JSON.stringify(body)
+  });
+}
 
 async function tgSendDocument(env, chatId, filename, textContent, captionHtml){
   const cfg = envCfg(env);
@@ -333,6 +409,21 @@ function line(label, value){
   return `• ${escapeHTML(label)}: ${value}`;
 }
 
+function header(cfg, title){
+  return msgHeader(cfg, title);
+}
+
+function bullet(label, value){
+  return line(label, value);
+}
+
+function note(text){
+  return `<i>${escapeHTML(text)}</i>`;
+}
+
+function err(text){
+  return `⛔ ${escapeHTML(text)}`;
+}
 function fmtKey(k){
   return `<code>${escapeHTML(k)}</code>`;
 }
@@ -367,13 +458,13 @@ function box(text){
 }
 
 function buildNewHeader(cfg, planText, qty, expSample, note){
-  let h = msgHeader(cfg, "TẠO KEY MỚI");
+  let h = header(cfg, "TẠO KEY MỚI");
   h += [
-    line("Gói", `<code>${escapeHTML(planText)}</code>`),
-    line("Số lượng", `<b>${qty}</b>`),
-    line("Hết hạn mẫu", `<code>${escapeHTML(expSample)}</code>`)
+    bullet("Gói", `<code>${escapeHTML(planText)}</code>`),
+    bullet("Số lượng", `<b>${qty}</b>`),
+    bullet("Hết hạn mẫu", `<code>${escapeHTML(expSample)}</code>`)
   ].join("\n");
-  if(note) h += `\n${line("Ghi chú", `<code>${escapeHTML(note)}</code>`)}`;
+  if(note) h += `\n${bullet("Ghi chú", `<code>${escapeHTML(note)}</code>`)}`;
   return h;
 }
 
@@ -426,46 +517,58 @@ async function sendLong(env, chatId, htmlParts, keyboard, opts){
   }
 }
 
-async function notifyAdmins(env, cfg, payload){
-  if(cfg.ADMIN_NOTIFY_ON_CLAIM === false) return;
-  const ids = CSV(cfg.ADMIN_IDS);
-  if(!ids.length) return;
+async function notifyTargets(env, cfg, payload){
+  if(!cfg.NOTIFY_CHAT_ID) return;
+  const tokenNotify = cfg.NOTIFY_BOT_TOKEN || cfg.TG_TOKEN;
   const timeText = fmtDate(payload.time || now(), cfg.TZ);
-  let msg = msgHeader(cfg, "THÔNG BÁO") + [
-    line("Trạng thái", "✅ Đã gắn key với thiết bị"),
-    line("Key", fmtKey(payload.key)),
-    line("Thiết bị", fmtUuid(payload.uuid, "admin")),
-    line("Thời gian", `<code>${escapeHTML(timeText)}</code>`)
+  const expText = payload.expiresAt
+    ? fmtDate(payload.expiresAt, cfg.TZ)
+    : (payload.durationMs ? "Chưa kích hoạt" : "Vĩnh viễn");
+  const statusText = payload.status || "Đã gắn thiết bị";
+  let msg = header(cfg, "THÔNG BÁO KÍCH HOẠT") + [
+    bullet("Trạng thái", `✅ ${escapeHTML(statusText)}`),
+    bullet("Key", fmtKey(payload.key)),
+    bullet("Thiết bị", fmtUuid(payload.uuid, "admin")),
+    bullet("Hết hạn", `<code>${escapeHTML(expText)}</code>`),
+    bullet("Thời gian", `<code>${escapeHTML(timeText)}</code>`)
   ].join("\n");
-  if(payload.serial) msg += `\n${line("Serial", `<code>${escapeHTML(payload.serial)}</code>`)}`;
-  if(payload.imei) msg += `\n${line("IMEI", `<code>${escapeHTML(payload.imei)}</code>`)}`;
-  for (const id of ids){
-    await tgsend(env, id, msg, null, { raw: true });
-  }
+  if(payload.serial) msg += `\n${bullet("Serial", `<code>${escapeHTML(payload.serial)}</code>`)}`;
+  if(payload.imei) msg += `\n${bullet("IMEI", `<code>${escapeHTML(payload.imei)}</code>`)}`;
+  try{ await tgSendMessage(tokenNotify, cfg.NOTIFY_CHAT_ID, msg); }catch{}
 }
 
 function H(cfg){
   return {
-    head:(t)=>msgHeader(cfg, t),
+    head:(t)=>header(cfg, t),
     yes:(b)=> b ? "✅" : "❌"
   };
 }
 
 
 function infoLines(cfg, d, mode="user"){
+  const expText = d.expiresAt
+    ? fmtDate(d.expiresAt, cfg.TZ)
+    : (d.durationMs != null && !d.activatedAt ? "Chưa kích hoạt" : "Vĩnh viễn");
+  const expHint = (d.durationMs != null && !d.activatedAt)
+    ? "Hạn sẽ tính từ lúc kích hoạt"
+    : null;
+  const remainingText = (d.durationMs != null && !d.activatedAt)
+    ? "Chưa kích hoạt"
+    : (d.remainingSeconds==null ? "∞" : (d.remainingSeconds + " giây"));
   return [
-    line("Key", fmtKey(d.key)),
-    line("Gói", `<code>${escapeHTML(d.plan)}</code>`),
-    line("Phát hành", fmtTime(d.issuedAt, cfg)),
-    line("Hết hạn", `<code>${escapeHTML(d.expiresAt ? fmtDate(d.expiresAt, cfg.TZ) : "vĩnh viễn")}</code>`),
-    line("Còn lại", `<code>${escapeHTML(d.remainingSeconds==null?"∞":(d.remainingSeconds+" giây"))}</code>`),
+    bullet("Key", fmtKey(d.key)),
+    bullet("Gói", `<code>${escapeHTML(d.plan)}</code>`),
+    bullet("Phát hành", fmtTime(d.issuedAt, cfg)),
+    bullet("Hết hạn", `<code>${escapeHTML(expText)}</code>`),
+    ...(expHint ? [bullet("Ghi chú", `<code>${escapeHTML(expHint)}</code>`)] : []),
+    bullet("Còn lại", `<code>${escapeHTML(remainingText)}</code>`),
     renderBindLine(d.deviceId, mode),
-    line("Đã thu hồi", `<code>${H(cfg).yes(d.revoked)}</code>`)
+    bullet("Đã thu hồi", `<code>${H(cfg).yes(d.revoked)}</code>`)
   ].join("\n");
 }
 
 function fmtInfo(cfg, d, mode="user"){
-  return `${msgHeader(cfg, "TÌNH TRẠNG KEY")}${infoLines(cfg, d, mode)}`;
+  return `${header(cfg, "TÌNH TRẠNG KEY")}${infoLines(cfg, d, mode)}`;
 }
 
 
@@ -473,52 +576,52 @@ const kbHelpOnly = { keyboard: [[{text:"📘 /help"}]], resize_keyboard:true, on
 const kbDownloadInline = (cfg)=>({ inline_keyboard: [[{text:"⬇️ Tải dylib", url: cfg.DOWNLOAD_URL}]] });
 
 function helpUser(cfg){
-return `${msgHeader(cfg, "HƯỚNG DẪN (Người dùng)")}
-${line("Lệnh", "<code>/start</code>, <code>/help</code>")}
-${line("ID Telegram", "<code>/whoami</code>")}
-${line("Kiểm tra key", "<code>/verify &lt;KEY&gt;</code>")}
-${line("Tình trạng key", "<code>/check &lt;KEY&gt;</code>")}
-${line("Tải dylib", "<code>/download</code> (khi đã được cấp quyền)")}
+return `${header(cfg, "HƯỚNG DẪN (Người dùng)")}
+${bullet("Lệnh", "<code>/start</code>, <code>/help</code>")}
+${bullet("ID Telegram", "<code>/whoami</code>")}
+${bullet("Kiểm tra key", "<code>/verify &lt;KEY&gt;</code>")}
+${bullet("Tình trạng key", "<code>/check &lt;KEY&gt;</code>")}
+${bullet("Tải dylib", "<code>/download</code> (khi đã được cấp quyền)")}
 
 <i>⏱ Thời gian theo giờ VN (UTC+7).</i>`;
 }
 
 function helpPower(cfg){
-return `${msgHeader(cfg, "TẠO / GIA HẠN")}
-${line("Tạo key", "<code>/new &lt;dur|life&gt; [qty] [note]</code>")}
-${line("Tạo theo ngày", "<code>/newuntil &lt;YYYY-MM-DD[ HH:mm]&gt; [qty] [note]</code>")}
-${line("Tạo + gắn UUID", "<code>/newuuid &lt;UUID&gt; &lt;dur|life&gt; [qty] [note]</code>")}
-${line("Gia hạn", "<code>/extend &lt;KEY&gt; &lt;dur|life&gt;</code>")}
+return `${header(cfg, "TẠO / GIA HẠN")}
+${bullet("Tạo key", "<code>/new &lt;dur|life&gt; [qty] [note]</code>")}
+${bullet("Tạo theo ngày", "<code>/newuntil &lt;YYYY-MM-DD[ HH:mm]&gt; [qty] [note]</code>")}
+${bullet("Tạo + gắn UUID", "<code>/newuuid &lt;UUID&gt; &lt;dur|life&gt; [qty] [note]</code>")}
+${bullet("Gia hạn", "<code>/extend &lt;KEY&gt; &lt;dur|life&gt;</code>")}
 
-${msgHeader(cfg, "TRA CỨU")}
-${line("Thông tin", "<code>/info &lt;KEY&gt;</code>")}
-${line("Thiết bị giữ key", "<code>/who &lt;KEY&gt;</code>")}
-${line("Thu hồi", "<code>/revoke &lt;KEY&gt;</code>")}`;
+${header(cfg, "TRA CỨU")}
+${bullet("Thông tin", "<code>/info &lt;KEY&gt;</code>")}
+${bullet("Thiết bị giữ key", "<code>/who &lt;KEY&gt;</code>")}
+${bullet("Thu hồi", "<code>/revoke &lt;KEY&gt;</code>")}`;
 }
 
 function helpAdmin(cfg){
-return `${msgHeader(cfg, "ỦY QUYỀN (Admin)")}
-${line("Thêm admin", "<code>/op [chatId]</code>")}
-${line("Gỡ admin", "<code>/deop &lt;chatId&gt;</code>")}
-${line("Danh sách admin", "<code>/admins</code>")}
-${line("Cấp quyền", "<code>/allow &lt;chatId&gt;</code>")}
-${line("Thu quyền", "<code>/deny &lt;chatId&gt;</code>")}
-${line("Danh sách quyền", "<code>/allowlist</code>")}
-${line("Gỡ UUID", "<code>/unbind &lt;KEY&gt;</code>")}
+return `${header(cfg, "ỦY QUYỀN (Admin)")}
+${bullet("Thêm admin", "<code>/op [chatId]</code>")}
+${bullet("Gỡ admin", "<code>/deop &lt;chatId&gt;</code>")}
+${bullet("Danh sách admin", "<code>/admins</code>")}
+${bullet("Cấp quyền", "<code>/allow &lt;chatId&gt;</code>")}
+${bullet("Thu quyền", "<code>/deny &lt;chatId&gt;</code>")}
+${bullet("Danh sách quyền", "<code>/allowlist</code>")}
+${bullet("Gỡ UUID", "<code>/unbind &lt;KEY&gt;</code>")}
 
 <i>🧩 App sẽ yêu cầu thiết bị trùng khớp mới verify/activate được.</i>`;
 }
 async function needArgs(env, chatId, usage, example){
-  const msg = msgHeader(envCfg(env), "THIẾU THAM SỐ") +
-    line("Cú pháp", `<code>${escapeHTML(usage)}</code>`) +
-    (example ? `\n${line("Ví dụ", `<code>${escapeHTML(example)}</code>`)}` : "") +
+  const msg = header(envCfg(env), "THIẾU THAM SỐ") +
+    bullet("Cú pháp", `<code>${escapeHTML(usage)}</code>`) +
+    (example ? `\n${bullet("Ví dụ", `<code>${escapeHTML(example)}</code>`)}` : "") +
     `\n\n<i>Gõ <code>/help</code> để xem hướng dẫn.</i>`;
   return tgsend(env, chatId, msg, kbHelpOnly);
 }
 async function denyPerm(env, chatId, who, cmd){
-  const msg = msgHeader(envCfg(env), "KHÔNG ĐỦ QUYỀN") +
-    line("Bạn là", `<b>${escapeHTML(who)}</b>`) +
-    `\n${line("Lệnh", `<code>${escapeHTML(cmd)}</code> (chỉ dành cho <b>Admin</b>)`)}`;
+  const msg = header(envCfg(env), "KHÔNG ĐỦ QUYỀN") +
+    bullet("Bạn là", `<b>${escapeHTML(who)}</b>`) +
+    `\n${bullet("Lệnh", `<code>${escapeHTML(cmd)}</code> (chỉ dành cho <b>Admin</b>)`)}`;
   return tgsend(env, chatId, msg, kbHelpOnly);
 }
 
@@ -645,15 +748,18 @@ async function handleAPI(req, env){
 
     if(!row.did){
       row.did = reqDid;
-      row.tA = now();
-      await kvPut(env,row);
-      await notifyAdmins(env, cfg, { key: row.k, uuid: reqDid, serial, imei, time: row.tA });
-      return ok({data:view(row)});
     }
     if(row.did !== reqDid) return bad(403,"BOUND_TO_ANOTHER_DEVICE",{deviceId:row.did});
 
+    const firstActivate = !row.tA;
     if(!row.tA) row.tA = now();
+    if(row.exp == null && row.dur != null){
+      row.exp = row.tA + row.dur;
+    }
     await kvPut(env,row);
+    if(firstActivate){
+      await notifyTargets(env, cfg, { key: row.k, uuid: reqDid, serial, imei, time: row.tA, expiresAt: row.exp, durationMs: row.dur, status: "Đã kích hoạt" });
+    }
     return ok({data:view(row)});
   }
 
@@ -675,7 +781,7 @@ async function handleAPI(req, env){
       if(claim === true){
         row.did = reqDid;
         await kvPut(env,row);
-        await notifyAdmins(env, cfg, { key: row.k, uuid: reqDid, serial, imei, time: now() });
+        await notifyTargets(env, cfg, { key: row.k, uuid: reqDid, serial, imei, time: now(), expiresAt: row.exp, durationMs: row.dur, status: "Đã gắn thiết bị" });
         return ok({data:view(row)});
       }
       return bad(403,"DEVICE_NOT_BOUND",{data:view(row)});
@@ -692,13 +798,40 @@ async function handleAPI(req, env){
 async function handleBot(req, env){
   const cfg = envCfg(env);
   const upd = await req.json().catch(()=>null);
-  if(!upd || !upd.message) return new Response("OK");
+  if(!upd) return new Response("OK");
 
-  const msg    = upd.message;
+  const msg    = upd.message || upd.channel_post;
+  if(!msg) return new Response("OK");
   const chat   = msg.chat || {};
   const from   = msg.from || {};
   const chatId = chat.id;
   const fromId = String(from.id);
+
+  const textRaw = typeof msg.text === "string" ? msg.text.trim() : "";
+  const cmdIndex = textRaw ? textRaw.indexOf("/") : -1;
+  const isCommand = cmdIndex >= 0;
+  if(msg.message_id && (!textRaw || !isCommand)){
+    await tgDelete(env, chatId, msg.message_id).catch(()=>{});
+    return new Response("OK");
+  }
+
+  const isNotifyChat = !!cfg.NOTIFY_ENABLED && cfg.NOTIFY_CHAT_ID && String(chatId) === String(cfg.NOTIFY_CHAT_ID);
+  if (isNotifyChat && textRaw && !textRaw.startsWith("/") && !(from && from.is_bot)) {
+    const senderParts = [];
+    if (from && from.username) senderParts.push("@" + String(from.username));
+    const fullName = [from && from.first_name, from && from.last_name].filter(Boolean).join(" ");
+    if (fullName) senderParts.push(fullName);
+    const sender = senderParts.join(" — ") || msg.author_signature || "Ẩn danh";
+    const notice = header(cfg, "THÔNG BÁO") +
+      bullet("Người gửi", `<code>${escapeHTML(sender)}</code>`) +
+      `\n<blockquote>${escapeHTML(textRaw)}</blockquote>`;
+    const tokenNotify = cfg.NOTIFY_BOT_TOKEN || cfg.TG_TOKEN;
+    try{ await tgSendMessage(tokenNotify, chatId, notice); }catch{}
+    try{ await tgDeleteMessage(tokenNotify, chatId, msg.message_id); }catch{}
+    return new Response("OK");
+  }
+
+  await saveUserProfile(env, from);
   const text   = canonicalCmd((msg.text||"").trim());
   const fromIdSafe = escapeHTML(fromId);
   const chatIdSafe = escapeHTML(String(chatId));
@@ -709,9 +842,9 @@ async function handleBot(req, env){
 
   // Người CHƯA allow: chỉ /start /help /whoami
   if(!allowed && !/^\/(start|help|whoami)\b/i.test(text)){
-    const msg = msgHeader(cfg, "BỊ HẠN CHẾ") +
-      line("Trạng thái", "🔒 Chưa được cấp quyền") +
-      `\n${line("ID của bạn", `<code>${fromIdSafe}</code>`)}` +
+    const msg = header(cfg, "BỊ HẠN CHẾ") +
+      bullet("Trạng thái", "🔒 Chưa được cấp quyền") +
+      `\n${bullet("ID của bạn", `<code>${fromIdSafe}</code>`)}` +
       `\n\n<i>Liên hệ admin để được cấp quyền.</i>`;
     await tgsend(env, chatId, msg, kbHelpOnly);
     return new Response("OK");
@@ -719,17 +852,17 @@ async function handleBot(req, env){
 
   // /download
   if(/^\/download$/i.test(text)){
-    const msg = msgHeader(cfg, "TẢI VỀ") + line("Tải xuống", "Nhấn nút bên dưới để tải dylib.");
+    const msg = header(cfg, "TẢI VỀ") + bullet("Tải xuống", "Nhấn nút bên dưới để tải dylib.");
     await tgsend(env, chatId, msg, kbDownloadInline(cfg));
     return new Response("OK");
   }
 
   // /whoami
   if(/^\/whoami$/i.test(text)){
-    const msg = msgHeader(cfg, "THÔNG TIN NGƯỜI DÙNG") +
-      line("Sender", `<code>${fromIdSafe}</code>`) +
-      `\n${line("Chat", `<code>${chatIdSafe}</code>`)}` +
-      `\n${line("Quyền", admin ? "✅ Admin" : (allowed ? "✅ Đã cấp quyền" : "❌ Chưa cấp quyền"))}`;
+    const msg = header(cfg, "THÔNG TIN NGƯỜI DÙNG") +
+      bullet("Sender", `<code>${fromIdSafe}</code>`) +
+      `\n${bullet("Chat", `<code>${chatIdSafe}</code>`)}` +
+      `\n${bullet("Quyền", admin ? "✅ Admin" : (allowed ? "✅ Đã cấp quyền" : "❌ Chưa cấp quyền"))}`;
     await tgsend(env, chatId, msg, kbHelpOnly);
     return new Response("OK");
   }
@@ -743,11 +876,11 @@ async function handleBot(req, env){
     }else if(admin){
       html = `${helpUser(cfg)}\n\n${helpPower(cfg)}\n\n${helpAdmin(cfg)}`;
       await tgsend(env, chatId, html, kbHelpOnly);
-      await tgsend(env, chatId, msgHeader(cfg, "TẢI VỀ") + line("Tải xuống", "Nhấn nút bên dưới để tải dylib."), kbDownloadInline(cfg));
+      await tgsend(env, chatId, header(cfg, "TẢI VỀ") + bullet("Tải xuống", "Nhấn nút bên dưới để tải dylib."), kbDownloadInline(cfg));
     }else{
       html = `${helpUser(cfg)}\n\n${helpPower(cfg)}`;
       await tgsend(env, chatId, html, kbHelpOnly);
-      await tgsend(env, chatId, msgHeader(cfg, "TẢI VỀ") + line("Tải xuống", "Nhấn nút bên dưới để tải dylib."), kbDownloadInline(cfg));
+      await tgsend(env, chatId, header(cfg, "TẢI VỀ") + bullet("Tải xuống", "Nhấn nút bên dưới để tải dylib."), kbDownloadInline(cfg));
     }
     return new Response("OK");
   }
@@ -767,7 +900,7 @@ async function handleBot(req, env){
     const id = opMatch[1] ? opMatch[1] : String(fromId);
     await addAdmin(env, id);
     await allowAdd(env, id);
-    await tgsend(env, chatId, msgHeader(cfg, "THÀNH CÔNG") + line("Đã thêm admin", `<code>${escapeHTML(id)}</code>`), kbHelpOnly);
+    await tgsend(env, chatId, header(cfg, "THÀNH CÔNG") + bullet("Đã thêm admin", `<code>${escapeHTML(id)}</code>`), kbHelpOnly);
     return new Response("OK");
   }
 
@@ -776,7 +909,7 @@ async function handleBot(req, env){
   if(deopMatch){
     const id = deopMatch[1];
     await removeAdmin(env, id);
-    await tgsend(env, chatId, msgHeader(cfg, "THÀNH CÔNG") + line("Đã gỡ admin", `<code>${escapeHTML(id)}</code>`), kbHelpOnly);
+    await tgsend(env, chatId, header(cfg, "THÀNH CÔNG") + bullet("Đã gỡ admin", `<code>${escapeHTML(id)}</code>`), kbHelpOnly);
     return new Response("OK");
   }
 
@@ -785,7 +918,7 @@ async function handleBot(req, env){
   if(allowMatch){
     const id = allowMatch[1];
     await allowAdd(env, id);
-    await tgsend(env, chatId, msgHeader(cfg, "THÀNH CÔNG") + line("Đã cấp quyền", `<code>${escapeHTML(id)}</code>`), kbHelpOnly);
+    await tgsend(env, chatId, header(cfg, "THÀNH CÔNG") + bullet("Đã cấp quyền", `<code>${escapeHTML(id)}</code>`), kbHelpOnly);
     return new Response("OK");
   }
 
@@ -794,17 +927,55 @@ async function handleBot(req, env){
   if(denyMatch){
     const id = denyMatch[1];
     await allowDel(env, id);
-    await tgsend(env, chatId, msgHeader(cfg, "THÀNH CÔNG") + line("Đã thu quyền", `<code>${escapeHTML(id)}</code>`), kbHelpOnly);
+    await tgsend(env, chatId, header(cfg, "THÀNH CÔNG") + bullet("Đã thu quyền", `<code>${escapeHTML(id)}</code>`), kbHelpOnly);
     return new Response("OK");
   }
 
   // /admins
   if(/^\/admins$/i.test(text)){
     const list = await getAdmins(env);
-    const body = list.length
-      ? list.map(i => `• <code>${escapeHTML(i)}</code>`).join("\n")
-      : "• <code>(trống)</code>";
-    await tgsend(env, chatId, `${msgHeader(cfg, "DANH SÁCH ADMIN")}${body}`, kbHelpOnly);
+    const lines = [];
+    let idx = 1;
+    for (const id of list) {
+      const profile = await getUserProfile(env, id);
+      const nameText = profile && profile.name ? `<b>${escapeHTML(profile.name)}</b>` : "(chưa có thông tin, user chưa nhắn bot)";
+      const userText = profile && profile.username ? `<code>@${escapeHTML(profile.username)}</code>` : "(chưa có thông tin, user chưa nhắn bot)";
+      lines.push(`• <code>${escapeHTML(String(id))}</code> — ${nameText} — ${userText}`);
+      idx++;
+    }
+    const body = lines.length ? "\n" + lines.join("\n") : "\n• (trống)";
+    const parts = chunkText4096(header(cfg, "DANH SACH ADMIN") + body);
+    for (const part of parts) {
+      await tgsend(env, chatId, part, kbHelpOnly);
+    }
+    return new Response("OK");
+  }
+  // /allowlist
+  if(/^\/allowlist$/i.test(text)){
+    const list = await getAllows(env);
+    const headerText = header(cfg, "DANH SACH QUYEN") + bullet("Tổng số", `<b>${list.length}</b>`);
+    const lines = [];
+    let idx = 1;
+    for (const id of list) {
+      const profile = await getUserProfile(env, id);
+      if(profile){
+        const uname = profile.username ? "@" + escapeHTML(profile.username) : "";
+        const name = profile.name ? escapeHTML(profile.name) : "";
+        const meta = [];
+        if(uname) meta.push(uname);
+        if(name) meta.push(name);
+        const tail = meta.length ? meta.join(" — ") : "(chưa có thông tin, user chưa nhắn bot)";
+        lines.push(`${idx}) <code>${escapeHTML(String(id))}</code> — ${tail}`);
+      }else{
+        lines.push(`${idx}) <code>${escapeHTML(String(id))}</code> — (chưa có thông tin, user chưa nhắn bot)`);
+      }
+      idx++;
+    }
+    const body = lines.length ? "\n" + lines.join("\n") : "\n(trống)";
+    const parts = chunkText4096(headerText + body);
+    for (const part of parts) {
+      await tgsend(env, chatId, part, kbHelpOnly);
+    }
     return new Response("OK");
   }
 
@@ -818,12 +989,12 @@ async function handleBot(req, env){
     const key = parts[1];
     const row = await kvGet(env,key);
     if(!row){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
       return new Response("OK");
     }
     row.did=null; row.tA=null;
     await kvPut(env,row);
-    await tgsend(env, chatId, msgHeader(cfg, "THÀNH CÔNG") + line("Đã gỡ UUID cho key", fmtKey(key)), kbHelpOnly);
+    await tgsend(env, chatId, header(cfg, "THÀNH CÔNG") + bullet("Đã gỡ UUID cho key", fmtKey(key)), kbHelpOnly);
     return new Response("OK");
   }
 
@@ -837,20 +1008,20 @@ async function handleBot(req, env){
     const key = parts[1];
     const row = await kvGet(env,key);
     if(!row){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
       return new Response("OK");
     }
     const d = view(row);
     const mode = admin ? "admin" : "user";
     if(row.rev){
-      await tgsend(env, chatId, `${msgHeader(cfg, "KEY BỊ THU HỒI")}${infoLines(cfg, d, mode)}`, kbHelpOnly);
+      await tgsend(env, chatId, `${header(cfg, "KEY BỊ THU HỒI")}${infoLines(cfg, d, mode)}`, kbHelpOnly);
       return new Response("OK");
     }
     if(row.exp && now()>row.exp){
-      await tgsend(env, chatId, `${msgHeader(cfg, "KEY HẾT HẠN")}${infoLines(cfg, d, mode)}`, kbHelpOnly);
+      await tgsend(env, chatId, `${header(cfg, "KEY HẾT HẠN")}${infoLines(cfg, d, mode)}`, kbHelpOnly);
       return new Response("OK");
     }
-    await tgsend(env, chatId, `${msgHeader(cfg, "KEY HỢP LỆ")}${infoLines(cfg, d, mode)}`, kbHelpOnly);
+    await tgsend(env, chatId, `${header(cfg, "KEY HỢP LỆ")}${infoLines(cfg, d, mode)}`, kbHelpOnly);
     return new Response("OK");
   }
 
@@ -864,16 +1035,23 @@ async function handleBot(req, env){
     const key = parts[1];
     const row = await kvGet(env,key);
     if(!row){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
       return new Response("OK");
     }
     const d = view(row);
     const mode = admin ? "admin" : "user";
-    const msg = msgHeader(cfg, "TRẠNG THÁI KEY") + [
-      line("Key", fmtKey(d.key)),
+    const expText = d.expiresAt
+      ? fmtDate(d.expiresAt, cfg.TZ)
+      : (d.durationMs != null && !d.activatedAt ? "Chưa kích hoạt" : "Vĩnh viễn");
+    const expHint = (d.durationMs != null && !d.activatedAt)
+      ? "Hạn sẽ tính từ lúc kích hoạt"
+      : null;
+    const msg = header(cfg, "TRẠNG THÁI KEY") + [
+      bullet("Key", fmtKey(d.key)),
       renderBindLine(d.deviceId, mode),
-      line("Hết hạn", `<code>${escapeHTML(d.expiresAt? fmtDate(d.expiresAt, cfg.TZ):"vĩnh viễn")}</code>`),
-      line("Thu hồi", `<code>${H(cfg).yes(!!d.revoked)}</code>`)
+      bullet("Hết hạn", `<code>${escapeHTML(expText)}</code>`),
+      ...(expHint ? [bullet("Ghi chú", `<code>${escapeHTML(expHint)}</code>`)] : []),
+      bullet("Thu hồi", `<code>${H(cfg).yes(!!d.revoked)}</code>`)
     ].join("\n");
     await tgsend(env, chatId, msg, kbHelpOnly);
     return new Response("OK");
@@ -898,11 +1076,11 @@ async function handleBot(req, env){
         const stamp = fmtFileTime(now(), cfg.TZ);
         const fileName = `vsh_keys_${durStr}_${qty}_${stamp}.txt`;
         const content = keys.map((o,i)=>`KEY ${i+1} | ${o.key}`).join("\n");
-        let caption = msgHeader(cfg, "TẠO KEY MỚI") +
-          line("Kết quả", "✅ Đã tạo file key. Tải file bên dưới.") +
-          `\n${line("Số lượng", `<b>${qty}</b>`)}` +
-          `\n${line("Gói", `<code>${escapeHTML(d==null ? "vĩnh viễn" : durStr)}</code>`)}`;
-        if(note) caption += `\n${line("Ghi chú", `<code>${escapeHTML(note)}</code>`)}`;
+        let caption = header(cfg, "TẠO KEY MỚI") +
+          bullet("Kết quả", "✅ Đã tạo file key. Tải file bên dưới.") +
+          `\n${bullet("Số lượng", `<b>${qty}</b>`)}` +
+          `\n${bullet("Gói", `<code>${escapeHTML(d==null ? "vĩnh viễn" : durStr)}</code>`)}`;
+        if(note) caption += `\n${bullet("Ghi chú", `<code>${escapeHTML(note)}</code>`)}`;
         await tgSendDocument(env, chatId, fileName, content, caption);
       }else{
         const planText = d==null ? "vĩnh viễn" : durStr;
@@ -912,7 +1090,7 @@ async function handleBot(req, env){
         await sendLong(env, chatId, msgs, kbHelpOnly, { raw: true });
       }
     }catch(e){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Chi tiết", `<code>${escapeHTML(e.message||e)}</code>`), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Chi tiết", `<code>${escapeHTML(e.message||e)}</code>`), kbHelpOnly);
     }
     return new Response("OK");
   }
@@ -938,7 +1116,7 @@ async function handleBot(req, env){
       const msgs = chunkKeyMessages(header, keys.map(k => k.key));
       await sendLong(env, chatId, msgs, kbHelpOnly, { raw: true });
     }catch(e){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Chi tiết", `<code>${escapeHTML(e.message||e)}</code>`), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Chi tiết", `<code>${escapeHTML(e.message||e)}</code>`), kbHelpOnly);
     }
     return new Response("OK");
   }
@@ -967,7 +1145,7 @@ async function handleBot(req, env){
       const msgs = chunkKeyMessages(header, keys.map(k => k.key));
       await sendLong(env, chatId, msgs, kbHelpOnly, { raw: true });
     }catch(e){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Chi tiết", `<code>${escapeHTML(e.message||e)}</code>`), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Chi tiết", `<code>${escapeHTML(e.message||e)}</code>`), kbHelpOnly);
     }
     return new Response("OK");
   }
@@ -982,7 +1160,7 @@ async function handleBot(req, env){
     const [ , key, val ] = parts;
     const row = await kvGet(env,key);
     if(!row){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
       return new Response("OK");
     }
 
@@ -990,13 +1168,13 @@ async function handleBot(req, env){
       const d = parseDuration(val);
       extendExpiry(row, d);
       await kvPut(env,row);
-      const msg = msgHeader(cfg, "GIA HẠN") + [
-        line("Key", fmtKey(key)),
-        line("Hết hạn mới", `<code>${escapeHTML(row.exp? fmtDate(row.exp, cfg.TZ):"vĩnh viễn")}</code>`)
+      const msg = header(cfg, "GIA HẠN") + [
+        bullet("Key", fmtKey(key)),
+        bullet("Hết hạn mới", `<code>${escapeHTML(row.exp? fmtDate(row.exp, cfg.TZ):"vĩnh viễn")}</code>`)
       ].join("\n");
       await tgsend(env, chatId, msg, kbHelpOnly);
     }catch(e){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Chi tiết", `<code>${escapeHTML(e.message||e)}</code>`), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Chi tiết", `<code>${escapeHTML(e.message||e)}</code>`), kbHelpOnly);
     }
     return new Response("OK");
   }
@@ -1011,7 +1189,7 @@ async function handleBot(req, env){
     const key = parts[1];
     const row = await kvGet(env,key);
     if(!row){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
       return new Response("OK");
     }
     const mode = admin ? "admin" : "user";
@@ -1029,15 +1207,15 @@ async function handleBot(req, env){
     const key = parts[1];
     const row = await kvGet(env,key);
     if(!row){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
       return new Response("OK");
     }
     const d = view(row);
     const mode = admin ? "admin" : "user";
-    const msg = msgHeader(cfg, "AI ĐANG GIỮ KEY?") + [
-      line("Key", fmtKey(d.key)),
+    const msg = header(cfg, "AI ĐANG GIỮ KEY?") + [
+      bullet("Key", fmtKey(d.key)),
       renderBindLine(d.deviceId, mode),
-      line("Kích hoạt", fmtTime(d.activatedAt, cfg))
+      bullet("Kích hoạt", fmtTime(d.activatedAt, cfg))
     ].join("\n");
     await tgsend(env, chatId, msg, kbHelpOnly);
     return new Response("OK");
@@ -1053,16 +1231,16 @@ async function handleBot(req, env){
     const key = parts[1];
     const row = await kvGet(env,key);
     if(!row){
-      await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
+      await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Kết quả", "⛔ Không tìm thấy key."), kbHelpOnly);
       return new Response("OK");
     }
     row.rev=1; await kvPut(env,row);
-    await tgsend(env, chatId, msgHeader(cfg, "THÀNH CÔNG") + line("Đã thu hồi key", fmtKey(key)), kbHelpOnly);
+    await tgsend(env, chatId, header(cfg, "THÀNH CÔNG") + bullet("Đã thu hồi key", fmtKey(key)), kbHelpOnly);
     return new Response("OK");
   }
 
   // fallback
-  await tgsend(env, chatId, msgHeader(cfg, "LỖI") + line("Kết quả", "⛔ Lệnh không hợp lệ.") + `\n\n<i>Gõ <code>/help</code> để mở menu.</i>`, kbHelpOnly);
+  await tgsend(env, chatId, header(cfg, "LỖI") + bullet("Kết quả", "⛔ Lệnh không hợp lệ.") + `\n\n<i>Gõ <code>/help</code> để mở menu.</i>`, kbHelpOnly);
   return new Response("OK");
 }
 
@@ -1104,6 +1282,15 @@ export default {
 
 
 // Only key creation messages are boxed
+
+
+
+
+
+
+
+
+
 
 
 
