@@ -4,22 +4,22 @@ $id = $_GET['id'] ?? '';
 
 // Map id => plist template file and (optional) display name; if no template, we build minimal manifest.
 $maps = [
-    'panel_bank'         => ['file' => __DIR__ . '/plist/Bank.plist',        'title' => 'Bank'],
-    'panel_chiba'        => ['file' => __DIR__ . '/plist/Chiba.plist',       'title' => 'Chiba'],
-    'panel_chinatelecom' => ['file' => __DIR__ . '/plist/ChinaTelecom.plist','title' => 'ChinaTelecom'],
-    'panel_education'    => ['file' => __DIR__ . '/plist/Education.plist',   'title' => 'Education'],
-    'panel_eeo'          => ['file' => __DIR__ . '/plist/Eeo.plist',         'title' => 'Eeo'],
-    'panel_eryuan'       => ['file' => __DIR__ . '/plist/Eryuan.plist',      'title' => 'Eryuan'],
-    'panel_esen'         => ['file' => __DIR__ . '/plist/Esen.plist',        'title' => 'Esen'],
-    'panel_infor'        => ['file' => __DIR__ . '/plist/Infor.plist',       'title' => 'Infor'],
-    'panel_mkt'          => ['file' => __DIR__ . '/plist/Mkt.plist',         'title' => 'Mkt'],
-    'panel_takeoff'      => ['file' => __DIR__ . '/plist/Takeoff.plist',     'title' => 'Takeoff'],
-    'panel_telecom'      => ['file' => __DIR__ . '/plist/Telecom.plist',     'title' => 'Telecom'],
-    'panel_tianjin'      => ['file' => __DIR__ . '/plist/Tianjin.plist',     'title' => 'Tianjin'],
-    'panel_truck'        => ['file' => __DIR__ . '/plist/Truck.plist',       'title' => 'Truck'],
-    'panel_viettel'      => ['file' => __DIR__ . '/plist/Viettel.plist',     'title' => 'Viettel'],
-    'panel_viettinbank'  => ['file' => __DIR__ . '/plist/Viettinbank.plist', 'title' => 'Viettinbank'],
-    'panel_wuling'       => ['file' => __DIR__ . '/plist/Wuling.plist',      'title' => 'Wuling'],
+    'panel_chiba'        => ['file' => __DIR__ . '/plist/Chiba.plist',        'title' => 'Chiba'],
+    'panel_chiba2'       => ['file' => __DIR__ . '/plist/Chiba2.plist',       'title' => 'Chiba2'],
+    'panel_elec'         => ['file' => __DIR__ . '/plist/Elec.plist',         'title' => 'Elec'],
+    'panel_elec2'        => ['file' => __DIR__ . '/plist/Elec2.plist',        'title' => 'Elec2'],
+    'panel_emi'          => ['file' => __DIR__ . '/plist/Emi.plist',          'title' => 'Emi'],
+    'panel_postal'       => ['file' => __DIR__ . '/plist/Postal.plist',       'title' => 'Postal'],
+    'panel_rural'        => ['file' => __DIR__ . '/plist/Rural.plist',        'title' => 'Rural'],
+    'panel_takeoff'      => ['file' => __DIR__ . '/plist/Takeoff.plist',      'title' => 'Takeoff'],
+    'panel_takeoff2'     => ['file' => __DIR__ . '/plist/Takeoff2.plist',     'title' => 'Takeoff2'],
+    'panel_takeoff3'     => ['file' => __DIR__ . '/plist/Takeoff3.plist',     'title' => 'Takeoff3'],
+    'panel_telecom'      => ['file' => __DIR__ . '/plist/Telecom.plist',      'title' => 'Telecom'],
+    'panel_tianjin'      => ['file' => __DIR__ . '/plist/Tianjin.plist',      'title' => 'Tianjin'],
+    'panel_truck'        => ['file' => __DIR__ . '/plist/Truck.plist',        'title' => 'Truck'],
+    'panel_viettel'      => ['file' => __DIR__ . '/plist/Viettel.plist',      'title' => 'Viettel'],
+    'panel_viettinbank'  => ['file' => __DIR__ . '/plist/Viettinbank.plist',  'title' => 'Viettinbank'],
+    'panel_viettinbank2' => ['file' => __DIR__ . '/plist/Viettinbank2.plist', 'title' => 'Viettinbank2'],
 ];
 
 if (!isset($maps[$id])) {
@@ -33,7 +33,7 @@ if (!$host) {
     http_response_code(400);
     exit('Host header missing');
 }
-$base = "{$scheme}://{$host}/app/panel-ios-vshtech";
+$base = "{$scheme}://{$host}/app/uchiha-ios";
 $downloadUrl = $base . '/download.php?id=' . rawurlencode($id);
 
 $tplPath = $maps[$id]['file'] ?? null;
@@ -46,12 +46,12 @@ if ($tplPath && is_file($tplPath)) {
         exit('Cannot read manifest');
     }
     // Force correct download URL inside the manifest
-    $plist = preg_replace('#https?://[^"]+/app/panel-ios-vshtech/download\\.php\\?id=[^"<]+#', $downloadUrl, $plist);
+    $plist = preg_replace('#https?://[^"]+/app/uchiha-ios/download\\.php\\?id=[^"<]+#', $downloadUrl, $plist);
     // Also handle old domain without /app
-    $plist = str_replace('https://appstack.blog/panel-ios-vshtech/download.php', $base . '/download.php', $plist);
-    $plist = str_replace('https://appstack.blog/app/panel-ios-vshtech/download.php', $base . '/download.php', $plist);
-    $plist = str_replace('https://appstack.blog/app/panel-ios-vshtech/download.php?id=' . $id, $downloadUrl, $plist);
-    $plist = str_replace('https://appstack.blog/panel-ios-vshtech/download.php?id=' . $id, $downloadUrl, $plist);
+    $plist = str_replace('https://appstack.blog/uchiha-ios/download.php', $base . '/download.php', $plist);
+    $plist = str_replace('https://appstack.blog/app/uchiha-ios/download.php', $base . '/download.php', $plist);
+    $plist = str_replace('https://appstack.blog/app/uchiha-ios/download.php?id=' . $id, $downloadUrl, $plist);
+    $plist = str_replace('https://appstack.blog/uchiha-ios/download.php?id=' . $id, $downloadUrl, $plist);
 } else {
     // Fallback minimal manifest if template missing
     $title = $maps[$id]['title'] ?? $id;

@@ -4,22 +4,22 @@ $id = $_GET['id'] ?? '';
 
 // Whitelisted map: id => absolute file path
 $maps = [
-    'panel_bank'         => __DIR__ . '/ipas/Bank.ipa',
     'panel_chiba'        => __DIR__ . '/ipas/Chiba.ipa',
-    'panel_chinatelecom' => __DIR__ . '/ipas/ChinaTelecom.ipa',
-    'panel_education'    => __DIR__ . '/ipas/Education.ipa',
-    'panel_eeo'          => __DIR__ . '/ipas/Eeo.ipa',
-    'panel_eryuan'       => __DIR__ . '/ipas/Eryuan.ipa',
-    'panel_esen'         => __DIR__ . '/ipas/Esen.ipa',
-    'panel_infor'        => __DIR__ . '/ipas/Infor.ipa',
-    'panel_mkt'          => __DIR__ . '/ipas/Mkt.ipa',
+    'panel_chiba2'       => __DIR__ . '/ipas/Chiba2.ipa',
+    'panel_elec'         => __DIR__ . '/ipas/Elec.ipa',
+    'panel_elec2'        => __DIR__ . '/ipas/Elec2.ipa',
+    'panel_emi'          => __DIR__ . '/ipas/Emi.ipa',
+    'panel_postal'       => __DIR__ . '/ipas/Postal.ipa',
+    'panel_rural'        => __DIR__ . '/ipas/Rural.ipa',
     'panel_takeoff'      => __DIR__ . '/ipas/Takeoff.ipa',
+    'panel_takeoff2'     => __DIR__ . '/ipas/Takeoff2.ipa',
+    'panel_takeoff3'     => __DIR__ . '/ipas/Takeoff3.ipa',
     'panel_telecom'      => __DIR__ . '/ipas/Telecom.ipa',
     'panel_tianjin'      => __DIR__ . '/ipas/Tianjin.ipa',
     'panel_truck'        => __DIR__ . '/ipas/Truck.ipa',
     'panel_viettel'      => __DIR__ . '/ipas/Viettel.ipa',
     'panel_viettinbank'  => __DIR__ . '/ipas/Viettinbank.ipa',
-    'panel_wuling'       => __DIR__ . '/ipas/Wuling.ipa',
+    'panel_viettinbank2' => __DIR__ . '/ipas/Viettinbank2.ipa',
 ];
 
 if (!isset($maps[$id])) {
