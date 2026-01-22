@@ -40,10 +40,11 @@ body {
   overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  height: 100%;
-  overscroll-behavior: none;
-  overscroll-behavior-y: none;
-  touch-action: pan-y;
+  height: auto;
+  overflow-y: auto;
+  overscroll-behavior: auto;
+  overscroll-behavior-y: auto;
+  touch-action: auto;
 }
 
 html::-webkit-scrollbar,
@@ -62,11 +63,16 @@ body {
   color: var(--text);
   position: relative;
   overflow-x: hidden;
+  overflow-y: auto;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: auto;
 }
 
 body.booster-lock {
+  overflow: hidden;
+}
+
+body.home-locked {
   overflow: hidden;
 }
 
@@ -420,7 +426,7 @@ body::after {
   z-index: 1;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: stretch;
   flex-direction: column;
   width: 100%;
   height: auto;
@@ -511,6 +517,7 @@ body::after {
 .ios-panel {
   width: min(520px, 100%);
   margin: 0 auto;
+  align-self: center;
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -569,6 +576,11 @@ body::after {
 .home-panel,
 .booster-panel {
   padding: 0 0 1.5rem;
+}
+
+body.home-locked .home-panel {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .home-panel .panel-frame,
