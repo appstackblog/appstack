@@ -9,6 +9,18 @@ if (!is_file($htmlPath)) {
 
 $cssVer = asset_ver('color/theme.css');
 $jsVer  = asset_ver('keygate.js');
+$javaFiles = [
+  'aimlock.js',
+  'anchorAim.js',
+  'app.js',
+  'driftFix.js',
+  'featherAim.js',
+  'headFix.js',
+  'quickSwipe.js',
+  'screenBoost.js',
+  'shakeFix.js',
+  'steadyHold.js',
+];
 
 $html = file_get_contents($htmlPath);
 
@@ -21,5 +33,11 @@ $replace = [
   "./color/theme.css?v={$cssVer}",
   "./keygate.js?v={$jsVer}",
 ];
+
+foreach ($javaFiles as $file) {
+  $ver = asset_ver("java/{$file}");
+  $search[] = "./java/{$file}";
+  $replace[] = "./java/{$file}?v={$ver}";
+}
 
 echo str_replace($search, $replace, $html);
