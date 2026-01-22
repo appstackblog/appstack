@@ -22,7 +22,7 @@
   --active-bg: rgba(90, 167, 255, 0.16);
   --disabled: #5b6b86;
   --scroll-offset: 0px;
-  --top-bar: calc(72px + 1cm);
+  --top-bar: 1.5rem;
   --bottom-bar: calc(72px + 2cm);
   font-family: "SF Pro Display", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   line-height: 1.5;
@@ -68,11 +68,6 @@ body {
 
 body.booster-lock {
   overflow: hidden;
-}
-
-.screen {
-  padding-top: calc(var(--top-bar) + env(safe-area-inset-top, 0px));
-  padding-bottom: calc(var(--bottom-bar) + env(safe-area-inset-bottom, 0px));
 }
 
 .bottom-nav {
@@ -125,31 +120,10 @@ body.booster-lock {
   height: 100%;
 }
 
-.top-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: calc(1.6rem + env(safe-area-inset-top, 0px)) 1.2rem 1.1rem;
-  border-bottom: 1px solid var(--border);
-  background: #0b111d;
-  backdrop-filter: blur(8px);
-}
-
-.top-banner-logo {
-  width: min(220px, 60vw);
-  height: auto;
-  display: block;
-}
-
 .booster-toast {
-  position: absolute;
-  right: 0;
-  bottom: -1px;
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  right: env(safe-area-inset-right, 0px);
   z-index: 8;
   width: fit-content;
   max-width: min(320px, 88vw);
@@ -445,7 +419,19 @@ body::after {
   position: relative;
   z-index: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.screen::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .site-footer {
@@ -524,6 +510,7 @@ body::after {
 
 .ios-panel {
   width: min(520px, 100%);
+  margin: 0 auto;
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -582,6 +569,11 @@ body::after {
 .home-panel,
 .booster-panel {
   padding: 0 0 1.5rem;
+}
+
+.home-panel .panel-frame,
+.function-panel .panel-frame {
+  margin-bottom: 2cm;
 }
 
 .booster-panel .panel-frame {
