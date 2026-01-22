@@ -578,6 +578,10 @@ body::after {
   padding: 0 0 1.5rem;
 }
 
+body.home-locked {
+  overflow: hidden;
+}
+
 body.home-locked .home-panel {
   margin-top: auto;
   margin-bottom: auto;
@@ -585,7 +589,7 @@ body.home-locked .home-panel {
 
 .home-panel .panel-frame,
 .function-panel .panel-frame {
-  margin-bottom: 2cm;
+  margin-bottom: 0.8rem;
 }
 
 .booster-panel .panel-frame {
