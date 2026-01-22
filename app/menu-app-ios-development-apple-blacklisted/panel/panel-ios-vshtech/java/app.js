@@ -186,11 +186,19 @@ function bootPanel() {
   const functionPanel = document.getElementById("functionPanel");
   const boosterPanel = document.getElementById("boosterPanel");
   const homePanel = document.getElementById("homePanel");
+  const detailsBtn = document.getElementById("detailsBtn");
+  const detailsPanel = document.getElementById("detailsPanel");
+  const updateHomeLock = () => {
+    const detailsOpen = detailsPanel ? detailsPanel.classList.contains("is-open") : false;
+    const isHome = homePanel ? homePanel.classList.contains("is-active") : false;
+    document.body.classList.toggle("home-locked", isHome && !detailsOpen);
+  };
   const setView = (view) => {
     if (homePanel) homePanel.classList.toggle("is-active", view === "home");
     if (functionPanel) functionPanel.classList.toggle("is-active", view === "function");
     if (boosterPanel) boosterPanel.classList.toggle("is-active", view === "booster");
     document.body.classList.toggle("booster-lock", view === "booster");
+    updateHomeLock();
   };
   setView("home");
   if (homeBtn) homeBtn.addEventListener("click", () => setView("home"));
@@ -203,11 +211,10 @@ function bootPanel() {
       groupPanel.classList.toggle("is-open");
     });
   }
-  const detailsBtn = document.getElementById("detailsBtn");
-  const detailsPanel = document.getElementById("detailsPanel");
   if (detailsBtn && detailsPanel) {
     detailsBtn.addEventListener("click", () => {
       detailsPanel.classList.toggle("is-open");
+      updateHomeLock();
     });
   }
   const boosterToast = document.getElementById("boosterToast");
