@@ -22,6 +22,8 @@
   --active-bg: rgba(90, 167, 255, 0.16);
   --disabled: #5b6b86;
   --scroll-offset: 0px;
+  --top-bar: calc(72px + 1cm);
+  --bottom-bar: 72px;
   font-family: "SF Pro Display", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   line-height: 1.5;
   color-scheme: dark;
@@ -38,6 +40,8 @@ body {
   overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  height: 100%;
+  overscroll-behavior: none;
 }
 
 html::-webkit-scrollbar,
@@ -64,12 +68,13 @@ body.booster-lock {
 }
 
 .screen {
-  padding-bottom: 3.3rem;
+  padding-top: calc(var(--top-bar) + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(var(--bottom-bar) + env(safe-area-inset-bottom, 0px));
 }
 
 .bottom-nav {
   position: fixed;
-  bottom: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
   left: 0;
   right: 0;
   z-index: 6;
@@ -80,6 +85,8 @@ body.booster-lock {
   background: rgba(11, 17, 29, 0.92);
   border-top: 1px solid var(--border);
   backdrop-filter: blur(8px);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .bottom-nav-btn {
@@ -116,15 +123,17 @@ body.booster-lock {
 }
 
 .top-banner {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 7;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: calc(0.9rem + env(safe-area-inset-top, 0px)) 1.2rem 0.9rem;
   border-bottom: 1px solid var(--border);
-  background: rgba(11, 17, 29, 0.92);
+  background: #0b111d;
   backdrop-filter: blur(8px);
 }
 
@@ -427,12 +436,13 @@ body::after {
 }
 
 .screen {
-  display: grid;
-  place-items: center;
   min-height: 100vh;
-  padding: 2rem 1rem;
+  padding: calc(var(--top-bar) + env(safe-area-inset-top, 0px)) 1rem
+    calc(var(--bottom-bar) + env(safe-area-inset-bottom, 0px));
   position: relative;
   z-index: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .site-footer {
@@ -572,7 +582,7 @@ body::after {
 }
 
 .booster-panel .panel-frame {
-  margin-top: -1.7cm;
+  margin-top: 2cm;
 }
 
 .home-placeholder,
@@ -1010,6 +1020,7 @@ body::after {
   position: static;
   overflow: visible;
 }
+
 
 .feature-grid {
   display: grid;
