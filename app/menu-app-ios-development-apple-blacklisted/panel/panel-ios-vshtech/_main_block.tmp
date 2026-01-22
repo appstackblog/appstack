@@ -1,0 +1,124 @@
+<main class="screen">
+      <section class="ios-panel">
+        <div class="panel-frame">
+          <div class="panel-tag-row">
+            <span class="panel-tag">IOS OPTIMIZER</span>
+          </div>
+          <div class="panel-placeholder">
+            <div class="feature-grid" id="featureGrid">
+              <article class="toggle-card compact" data-feature="aimlock">
+                <div class="feature-row">
+                  <p class="feature-title">Aimlock</p>
+                  <div class="status-toggle">
+                    <span class="status-pill off" aria-label="Tr?ng thái: t?t">Off</span>
+                    <button type="button" class="aimlock-switch" aria-pressed="false">
+                      <span class="thumb"></span>
+                    </button>
+                  </div>
+                </div>
+                <p class="feature-desc"><span class="desc-icon">&#10003;</span>Khóa tâm bám d?u</p>
+              </article>
+              <article class="toggle-card compact" data-feature="featherAim">
+                <div class="feature-row">
+                  <p class="feature-title">Feather Aim</p>
+                  <div class="status-toggle">
+                    <span class="status-pill off" aria-label="Tr?ng thái: t?t">Off</span>
+                    <button type="button" class="aimlock-switch" aria-pressed="false">
+                      <span class="thumb"></span>
+                    </button>
+                  </div>
+                </div>
+                <p class="feature-desc"><span class="desc-icon">&#10003;</span>Nh? Tâm</p>
+              </article>
+              <article class="toggle-card compact" data-feature="quickSwipe">
+                <div class="feature-row">
+                  <p class="feature-title">Quick Swipe</p>
+                  <div class="status-toggle">
+                    <span class="status-pill off" aria-label="Tr?ng thái: t?t">Off</span>
+                    <button type="button" class="aimlock-switch" aria-pressed="false">
+                      <span class="thumb"></span>
+                    </button>
+                  </div>
+                </div>
+                <p class="feature-desc"><span class="desc-icon">&#10003;</span>Nh?y Màn</p>
+              </article>
+              <article class="toggle-card compact" data-feature="steadyHold">
+                <div class="feature-row">
+                  <p class="feature-title">Steady Hold</p>
+                  <div class="status-toggle">
+                    <span class="status-pill off" aria-label="Tr?ng thái: t?t">Off</span>
+                    <button type="button" class="aimlock-switch" aria-pressed="false">
+                      <span class="thumb"></span>
+                    </button>
+                  </div>
+                </div>
+                <p class="feature-desc"><span class="desc-icon">&#10003;</span>Ð?m Tâm</p>
+              </article>
+              <article class="toggle-card compact" data-feature="anchorAim">
+                <div class="feature-row">
+                  <p class="feature-title">Anchor Aim</p>
+                  <div class="status-toggle">
+                    <span class="status-pill off" aria-label="Tr?ng thái: t?t">Off</span>
+                    <button type="button" class="aimlock-switch" aria-pressed="false">
+                      <span class="thumb"></span>
+                    </button>
+                  </div>
+                </div>
+                <p class="feature-desc"><span class="desc-icon">&#10003;</span>Ghìm Tâm</p>
+              </article>
+              <article class="toggle-card compact" data-feature="shakeFix">
+                <div class="feature-row">
+                  <p class="feature-title">Shake Fix</p>
+                  <div class="status-toggle">
+                    <span class="status-pill off" aria-label="Tr?ng thái: t?t">Off</span>
+                    <button type="button" class="aimlock-switch" aria-pressed="false">
+                      <span class="thumb"></span>
+                    </button>
+                  </div>
+                </div>
+                <p class="feature-desc"><span class="desc-icon">&#10003;</span>Fix Rung Tâm</p>
+              </article>
+              <article class="toggle-card compact" data-feature="driftFix">
+                <div class="feature-row">
+                  <p class="feature-title">Drift Fix</p>
+                  <div class="status-toggle">
+                    <span class="status-pill off" aria-label="Tr?ng thái: t?t">Off</span>
+                    <button type="button" class="aimlock-switch" aria-pressed="false">
+                      <span class="thumb"></span>
+                    </button>
+                  </div>
+                </div>
+                <p class="feature-desc"><span class="desc-icon">&#10003;</span>Fix L?c Ð?n</p>
+              </article>
+              <article class="toggle-card compact" data-feature="headFix">
+                <div class="feature-row">
+                  <p class="feature-title">Head Fix</p>
+                  <div class="status-toggle">
+                    <span class="status-pill off" aria-label="Tr?ng thái: t?t">Off</span>
+                    <button type="button" class="aimlock-switch" aria-pressed="false">
+                      <span class="thumb"></span>
+                    </button>
+                  </div>
+                </div>
+                <p class="feature-desc"><span class="desc-icon">&#10003;</span>Fix L? Ð?u</p>
+              </article>
+              <article class="toggle-card compact" data-feature="screenBoost">
+                <div class="feature-row">
+                  <p class="feature-title">Screen Boost</p>
+                  <div class="status-toggle">
+                    <span class="status-pill off" aria-label="Tr?ng thái: t?t">Off</span>
+                    <button type="button" class="aimlock-switch" aria-pressed="false">
+                      <span class="thumb"></span>
+                    </button>
+                  </div>
+                </div>
+                <p class="feature-desc"><span class="desc-icon">&#10003;</span>Buff Màn</p>
+              </article>
+            </div>
+          </div>
+          <footer class="site-footer">
+            <p class="site-footer-copy">&copy; B?n quy?n VSH TECH</p>
+          </footer>
+        </div>
+      </section>
+    </main>

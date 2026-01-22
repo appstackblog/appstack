@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<style>
+  html, body { touch-action: manipulation; }
+  input, select, textarea { font-size:16px; }
+</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Panel iOS Free Fire</title>
+    <link rel="stylesheet" href="./color/theme.css" />
+  </head>
+  <body>
+    
+    <div class="top-banner">
+      <img class="top-banner-logo" src="./img/Logo-panelios.gif" alt="IOS OPTIMIZER" />
+      <div class="booster-toast" id="boosterToast" role="status" aria-live="polite"></div>
+    </div>
+    <div class="code-rain" aria-hidden="true">
+      <div class="code-layer" id="codeRain"></div>
+    </div>
+    <div class="aim-crosshair" id="aimCrosshair" aria-hidden="true"></div>
+    <canvas class="aim-canvas" id="aimCanvas" aria-hidden="true"></canvas>
+    <div class="feather-cursor" id="featherCursor" aria-hidden="true"></div>
+    <div class="limit-overlay" id="limitOverlay" aria-hidden="true"></div>
+    <div class="limit-toast" id="limitToast" role="alert" aria-live="assertive">
+      <p>Giới hạn kích hoạt</p>
+      <span>Chỉ có thể bật tối đa 3 tính năng cùng lúc. Vui lòng tắt bớt một mục trước khi tiếp tục.</span>
+    </div>
+    <main class="screen">
+      <section class="ios-panel">
+        <section class="view-panel home-panel" id="homePanel">
+          <div class="panel-frame">
+            <div class="panel-tag-row">
+              <span class="panel-tag">HOME</span>
+            </div>
+            <div class="home-hero">
+              <div class="hero-badge">VSH TECH</div>
+            </div>
+
+            <h3 class="details-heading">Chào Mừng Bạn Đến Với App PANEL IOS</h3>
+            <div class="details-subtitle">
+              <span>App Mang Tính Chất Hỗ Trợ Và Cải Thiện Chứ Không Can Thiệp Vào Data Game Nên Việc Bị Band Acc Là Không lo Tuyệt Đối Nhé !</span>
+            </div>
+            <h4 class="details-subheading">Trang Cá Nhân Zalo Admin</h4>
+            <div class="details-avatar">
+              <img src="./img/avt.png" alt="Zalo Admin" />
+            </div>
+            <a class="details-contact-btn" href="https://zalo.me/0382304188" target="_blank" rel="noopener">Liên Hệ</a>
+            <button type="button" class="details-btn" id="detailsBtn">CHI TIẾT VỀ VSH TECH</button>
+            <div class="details-panel" id="detailsPanel">
+            <div class="home-section boxed">
+              <h3 class="section-title">👋 Giới thiệu nhanh</h3>
+              <p class="intro-text">Xin chào bạn, mình là Người Sáng Lập VSH TECH</p>
+              <p class="intro-text">Chuyên hỗ trợ công nghệ, tối ưu thiết bị và lập trình website theo nhu cầu.</p>
+            </div>
+            <div class="home-section boxed">
+              <h3 class="section-title">📌 Dịch vụ & chuyên mục hỗ trợ</h3>
+              <div class="service-grid">
+                <article class="service-card">
+                  <p class="service-title">📱 Hỗ trợ File iOS/Android</p>
+                  <p class="service-desc">Kiểm tra, xử lý, tối ưu theo yêu cầu.</p>
+                </article>
+                <article class="service-card">
+                  <p class="service-title">⚙️ Tối ưu thiết bị</p>
+                  <p class="service-desc">Hiệu năng, cấu hình, ổn định hệ thống.</p>
+                </article>
+                <article class="service-card">
+                  <p class="service-title">💻 Lập trình Website chuyên nghiệp</p>
+                  <p class="service-desc">Landing page, web bán hàng, hệ thống quản trị, API.</p>
+                </article>
+                <article class="service-card">
+                  <p class="service-title">🎓 Đào tạo Marketing chuẩn CEO</p>
+                  <p class="service-desc">Đa nền tảng: 📘 Facebook | 🎵 TikTok | 📸 Instagram.</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="home-section boxed">
+              <h3 class="section-title">🔗 Liên kết chính thức</h3>
+              <div class="link-grid">
+                <a class="link-card" href="https://www.vshtech.online" target="_blank" rel="noopener">
+                  <span class="link-title">🌐 Website VSH TECH</span>
+                  <span class="link-url">vshtech.online</span>
+                </a>
+                <a class="link-card" href="https://www.appstack.blog" target="_blank" rel="noopener">
+                  <span class="link-title">👨‍💻 Developer Website</span>
+                  <span class="link-url">appstack.blog</span>
+                </a>
+                <a class="link-card" href="https://instabio.cc/vshtech" target="_blank" rel="noopener">
+                  <span class="link-title">🔗 BioLink</span>
+                  <span class="link-url">instabio.cc/vshtech</span>
+                </a>
+              </div>
+              <button type="button" class="group-btn" id="groupBtn">GROUP VSH TECH</button>
+              <div class="group-panel" id="groupPanel">
+                <div class="group-panel-inner" id="groupPanelContent">
+                  <p class="group-title">🏢 GIỚI THIỆU HỆ THỐNG GROUP VSH TECH</p>
+                  <p>
+                    💡 VSH TECH là hệ thống nhóm hỗ trợ công nghệ, tập trung vào lập trình – thiết kế – vận hành – hỗ trợ kỹ thuật. Chúng tôi xây dựng cộng đồng làm việc theo mô hình phân nhóm rõ ràng để đảm bảo ⚡ tốc độ phản hồi nhanh, 🧩 quy trình gọn, và ✅ hiệu quả xử lý cao.
+                  </p>
+                  <div class="group-divider"></div>
+                  <p class="group-subtitle">🛠️ NĂNG LỰC HỖ TRỢ CHÍNH</p>
+                  <ul class="group-list">
+                    <li>📱 Hỗ trợ File iOS & Android</li>
+                    <li>🔐 An toàn & bảo mật: An toàn luôn đặt lên hàng đầu, hướng tới tiêu chuẩn vận hành ổn định và bảo mật mạnh, được cộng đồng đánh giá cao.</li>
+                  </ul>
+                  <div class="group-divider"></div>
+                  <p class="group-subtitle">🧭 CẤU TRÚC GROUP (MỤC ĐÍCH & PHÂN VAI)</p>
+                  <p>Để thuận tiện trong vận hành, VSH TECH chia thành các nhóm theo 2 lớp:</p>
+                  <ol class="group-list">
+                    <li>🧩 Box điều phối chính & trao đổi nhanh</li>
+                    <li>🎨 Các group DESIGN (tách theo box số)</li>
+                  </ol>
+                  <div class="group-divider"></div>
+                  <p class="group-subtitle">📌 DANH SÁCH GROUP CHÍNH THỨC</p>
+                  <div class="group-block">
+                    <p class="group-block-title">1) 🧱 BOX CHÍNH (KÊNH ĐIỀU PHỐI TRUNG TÂM)</p>
+                    <p>📣 Thảo luận tổng, thông báo quan trọng, điều phối công việc và hỗ trợ chính.</p>
+                    <p>🔗 Link: <a href="https://zalo.me/g/nwsykq703" target="_blank" rel="noopener">https://zalo.me/g/nwsykq703</a></p>
+                  </div>
+                  <div class="group-block">
+                    <p class="group-block-title">2) 💬 BOX CHAT (KÊNH TRAO ĐỔI NHANH)</p>
+                    <p>⚡ Trao đổi nhanh, cập nhật tình huống, xử lý gấp theo luồng công việc.</p>
+                    <p>🔗 Link: <a href="https://zalo.me/g/ygukkw435" target="_blank" rel="noopener">https://zalo.me/g/ygukkw435</a></p>
+                  </div>
+                  <div class="group-divider"></div>
+                  <p class="group-subtitle">🎨 NHÓM DESIGN (PHÂN LUỒNG THEO BOX)</p>
+                  <ul class="group-links">
+                    <li>🎨 GROUP VSH TECH DESIGN 02 — <a href="https://zalo.me/g/vgaold299" target="_blank" rel="noopener">https://zalo.me/g/vgaold299</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 03 — <a href="https://zalo.me/g/tppoeu934" target="_blank" rel="noopener">https://zalo.me/g/tppoeu934</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 04 — <a href="https://zalo.me/g/opdfez747" target="_blank" rel="noopener">https://zalo.me/g/opdfez747</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 05 — <a href="https://zalo.me/g/vorqyz460" target="_blank" rel="noopener">https://zalo.me/g/vorqyz460</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 06 — <a href="https://zalo.me/g/apupgh526" target="_blank" rel="noopener">https://zalo.me/g/apupgh526</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 07 — <a href="https://zalo.me/g/tepbie388" target="_blank" rel="noopener">https://zalo.me/g/tepbie388</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 08 — <a href="https://zalo.me/g/ezflvd432" target="_blank" rel="noopener">https://zalo.me/g/ezflvd432</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 09 — <a href="https://zalo.me/g/eqthou899" target="_blank" rel="noopener">https://zalo.me/g/eqthou899</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 10 — <a href="https://zalo.me/g/arodwj813" target="_blank" rel="noopener">https://zalo.me/g/arodwj813</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 11 — <a href="https://zalo.me/g/uzksbl657" target="_blank" rel="noopener">https://zalo.me/g/uzksbl657</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 12 — <a href="https://zalo.me/g/jwiexh862" target="_blank" rel="noopener">https://zalo.me/g/jwiexh862</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 13 — <a href="https://zalo.me/g/ihnleb651" target="_blank" rel="noopener">https://zalo.me/g/ihnleb651</a></li>
+                    <li>🎨 GROUP VSH TECH DESIGN 14 — <a href="https://zalo.me/g/tifima666" target="_blank" rel="noopener">https://zalo.me/g/tifima666</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="home-section boxed">
+              <h3 class="section-title">✅ Để mình hỗ trợ nhanh nhất</h3>
+              <div class="request-list">
+                <div class="request-item">1. 🧾 Nhu cầu cụ thể (File/Thiết bị/Website/Marketing)</div>
+                <div class="request-item">2. 📲 Thiết bị & hệ điều hành (iOS/Android/PC)</div>
+                <div class="request-item">3. 🧩 Tình trạng hiện tại + mục tiêu bạn muốn đạt</div>
+                <div class="request-item">4. ⏰ Thời gian cần hoàn thành (nếu gấp)</div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </section>
+        <div class="panel-frame view-panel function-panel" id="functionPanel">
+        <div class="panel-placeholder">
+          <div class="panel-tag-row">
+            <span class="panel-tag">IOS OPTIMIZER</span>
+          </div>
+          <div class="feature-grid" id="featureGrid">
+            <article class="toggle-card compact" data-feature="aimlock">
+              <div class="feature-row">
+                <p class="feature-title">Aimlock</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Khóa tâm bám đầu</p>
+            </article>
+            <article class="toggle-card compact" data-feature="featherAim">
+              <div class="feature-row">
+                <p class="feature-title">Feather Aim</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Nhẹ Tâm</p>
+            </article>
+            <article class="toggle-card compact" data-feature="quickSwipe">
+              <div class="feature-row">
+                <p class="feature-title">Quick Swipe</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Nhạy Màn</p>
+            </article>
+            <article class="toggle-card compact" data-feature="steadyHold">
+              <div class="feature-row">
+                <p class="feature-title">Steady Hold</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Đầm Tâm</p>
+            </article>
+            <article class="toggle-card compact" data-feature="anchorAim">
+              <div class="feature-row">
+                <p class="feature-title">Anchor Aim</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Ghìm Tâm</p>
+            </article>
+            <article class="toggle-card compact" data-feature="shakeFix">
+              <div class="feature-row">
+                <p class="feature-title">Shake Fix</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Fix Rung Tâm</p>
+            </article>
+            <article class="toggle-card compact" data-feature="driftFix">
+              <div class="feature-row">
+                <p class="feature-title">Drift Fix</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Fix Lạc Đạn</p>
+            </article>
+            <article class="toggle-card compact" data-feature="headFix">
+              <div class="feature-row">
+                <p class="feature-title">Head Fix</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Fix Lố Đầu</p>
+            </article>
+            <article class="toggle-card compact" data-feature="screenBoost">
+              <div class="feature-row">
+                <p class="feature-title">Screen Boost</p>
+                <div class="status-toggle">
+                  <span class="status-pill off" aria-label="Trạng thái: tắt">Off</span>
+                  <button type="button" class="aimlock-switch" aria-pressed="false">
+                    <span class="thumb"></span>
+                  </button>
+                </div>
+              </div>
+              <p class="feature-desc"><span class="desc-icon">&#10003;</span>Buff Man</p>
+            </article>
+          </div>
+        </div>
+        <footer class="site-footer">
+          <p class="site-footer-copy">&copy; Bản quyền VSH TECH</p>
+        </footer>
+        </div>
+        <section class="view-panel booster-panel" id="boosterPanel">
+          <div class="panel-frame">
+            <div class="panel-tag-row">
+              <span class="panel-tag">BOOSTER</span>
+            </div>
+            <div class="booster-grid">
+              <div class="booster-card">
+                <div class="booster-row">
+                  <div class="booster-title">
+                    <img src="./img/ffth.jpg" alt="Free Fire" />
+                    <span>Free Fire</span>
+                  </div>
+                  <button type="button" class="booster-btn" data-game="Free Fire">Booster</button>
+                </div>
+              </div>
+              <div class="booster-card">
+                <div class="booster-row">
+                  <div class="booster-title">
+                    <img src="./img/ffm.jpg" alt="Free Fire Max" />
+                    <span>Free Fire Max</span>
+                  </div>
+                  <button type="button" class="booster-btn" data-game="Free Fire Max">Booster</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <nav class="bottom-nav" aria-label="Primary">
+      <button type="button" class="bottom-nav-btn" id="btnHome">
+        <span class="bottom-nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 10.5L12 4l8 6.5v8.5a1 1 0 0 1-1 1h-4.5v-6H9.5v6H5a1 1 0 0 1-1-1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span>Home</span>
+      </button>
+      <button type="button" class="bottom-nav-btn" id="btnFunction">
+        <span class="bottom-nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 3.5l1.2 2.2 2.5.4-1.7 1.7.4 2.5L12 9.6l-2.4 1.3.4-2.5-1.7-1.7 2.5-.4L12 3.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M6 12a6 6 0 0 1 0 0M18 12a6 6 0 0 1 0 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span>Function</span>
+      </button>
+      <button type="button" class="bottom-nav-btn" id="btnBooster">
+        <span class="bottom-nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M7 9h10a5 5 0 0 1 5 5v0a4 4 0 0 1-6.8 2.8L14 15.6h-4l-1.2 1.2A4 4 0 0 1 2 14v0a5 5 0 0 1 5-5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M8.5 13.5h-3M7 12v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="16.5" cy="12.5" r="0.9" fill="currentColor"/>
+            <circle cx="18.7" cy="14.2" r="0.9" fill="currentColor"/>
+          </svg>
+        </span>
+        <span>Booster</span>
+      </button>
+    </nav>
+    <script>
+      (() => {
+        const payload =
+          "KCgpID0+IHsKICBjb25zdCBpc0Jsb2NrZWRDb21ibyA9IChldmVudCkgPT4gewogICAgY29uc3Qga2V5ID0gKGV2ZW50LmtleSB8fCAiIikudG9VcHBlckNhc2UoKTsKICAgIGlmIChrZXkgPT09ICJGMTIiKSByZXR1cm4gdHJ1ZTsKICAgIGlmIChldmVudC5jdHJsS2V5ICYmIGV2ZW50LnNoaWZ0S2V5ICYmIFsiSSIsICJKIiwgIkMiXS5pbmNsdWRlcyhrZXkpKSByZXR1cm4gdHJ1ZTsKICAgIGlmIChldmVudC5jdHJsS2V5ICYmICFldmVudC5zaGlmdEtleSAmJiBrZXkgPT09ICJVIikgcmV0dXJuIHRydWU7CiAgICByZXR1cm4gZmFsc2U7CiAgfTsKCiAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoImNvbnRleHRtZW51IiwgKGV2ZW50KSA9PiB7CiAgICBldmVudC5wcmV2ZW50RGVmYXVsdCgpOwogIH0pOwoKICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcigKICAgICJrZXlkb3duIiwKICAgIChldmVudCkgPT4gewogICAgICBpZiAoaXNCbG9ja2VkQ29tYm8oZXZlbnQpKSB7CiAgICAgICAgZXZlbnQucHJldmVudERlZmF1bHQoKTsKICAgICAgICBldmVudC5zdG9wUHJvcGFnYXRpb24oKTsKICAgICAgICByZXR1cm4gZmFsc2U7CiAgICAgIH0KICAgIH0sCiAgICB7IGNhcHR1cmU6IHRydWUgfQogICk7Cn0pKCk7";
+        const decode =
+          typeof atob === "function"
+            ? atob
+            : (str) => Buffer.from(str, "base64").toString("utf8");
+        Function(decode(payload))();
+      })();
+    </script>
+    <script>
+      (function () {
+         const blockGesture = (e) => e.preventDefault();
+        ["gesturestart", "gesturechange"].forEach((ev) =>
+          document.addEventListener(ev, blockGesture, { passive: false })
+        );
+         window.addEventListener("wheel", (e) => {
+          if (e.ctrlKey) {
+            e.preventDefault();
+          }
+        }, { passive: false });
+
+        function loadScript(src, onDone) {
+          var s = document.createElement("script");
+          s.src = src;
+          s.async = false;
+          s.onload = function () {
+            if (typeof onDone === "function") onDone();
+          };
+          s.onerror = function () {
+            console.error("Không tải được script:", src);
+            if (typeof onDone === "function") onDone();
+          };
+          document.body.appendChild(s);
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var id = params.get("id");
+        var loaderSrc =
+          "./code/app-loader.php" + (id ? "?id=" + encodeURIComponent(id) : "");
+
+        loadScript(loaderSrc, function () {
+          if (!window.__panelScriptLoaded) {
+            loadScript("./java/app.js", function () {
+              loadScript("./keygate.js");
+            });
+            return;
+          }
+          loadScript("./keygate.js");
+        });
+      })();
+    </script>
+    <script>
+      (function () {
+         var connection =
+          navigator.connection ||
+          navigator.mozConnection ||
+          navigator.webkitConnection ||
+          null;
+
+        var warmStarted = false;
+        var toggleLocks = new Set();
+
+        function warmConnection() {
+          if (warmStarted) return;
+          warmStarted = true;
+           fetch("./code/app-loader.php?warm=" + Date.now(), {
+            cache: "no-store",
+            keepalive: true,
+            mode: "no-cors",
+          }).catch(function () {
+            warmStarted = false;
+          });
+        }
+
+        function isHighThroughput() {
+          if (!connection) return true;
+          if (/wifi|ethernet/gi.test(String(connection.type))) return true;
+          if (/5g/gi.test(String(connection.type))) return true;
+          if (connection.effectiveType && /4g|5g/gi.test(connection.effectiveType))
+            return true;
+          return connection.downlink && connection.downlink >= 10;
+        }
+
+        function smoothToggle(btn) {
+          var feature = btn.closest(".toggle-card");
+          var name = feature ? feature.dataset.feature || "unknown" : "unknown";
+          if (toggleLocks.has(name)) return;
+          toggleLocks.add(name);
+           requestAnimationFrame(function () {
+            warmConnection();
+            setTimeout(function () {
+              toggleLocks.delete(name);
+            }, 320);
+          });
+        }
+
+         document.querySelectorAll(".toggle-card .aimlock-switch").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            smoothToggle(btn);
+          });
+        });
+
+        if (connection && typeof connection.addEventListener === "function") {
+          connection.addEventListener("change", function () {
+            if (isHighThroughput()) {
+              warmConnection();
+            }
+          });
+        } else {
+           warmConnection();
+        }
+      })();
+    </script>
+    <script src="./java/aimlock.js"></script>
+<script src="./java/featherAim.js"></script>
+<script src="./java/anchorAim.js"></script>
+<script src="./java/steadyHold.js"></script>
+<script src="./java/quickSwipe.js"></script>
+<script src="./java/screenBoost.js"></script>
+<script src="./java/headFix.js"></script>
+<script src="./java/driftFix.js"></script>
+<script src="./java/shakeFix.js"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
