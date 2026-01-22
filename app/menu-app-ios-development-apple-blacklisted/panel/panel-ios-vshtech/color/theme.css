@@ -45,6 +45,7 @@ body {
   overscroll-behavior: none;
   overscroll-behavior-y: none;
   touch-action: pan-y;
+  overflow: hidden;
 }
 
 html::-webkit-scrollbar,
@@ -64,7 +65,7 @@ body {
   color: var(--text);
   position: relative;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: auto;
 }
@@ -430,8 +431,10 @@ body::after {
   align-items: stretch;
   flex-direction: column;
   width: 100%;
-  height: auto;
-  overflow: visible;
+  height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
