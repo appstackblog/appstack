@@ -19,6 +19,10 @@ $quickSwipeVer = asset_ver('java/quickSwipe.js');
 $screenBoostVer = asset_ver('java/screenBoost.js');
 $shakeFixVer = asset_ver('java/shakeFix.js');
 $steadyHoldVer = asset_ver('java/steadyHold.js');
+$logoVer = asset_ver('img/logo-panelios.gif');
+$avatarVer = asset_ver('img/avt.png');
+$ffthVer = asset_ver('img/ffth.jpg');
+$ffmVer = asset_ver('img/ffm.jpg');
 
 $html = file_get_contents($htmlPath);
 
@@ -35,6 +39,10 @@ $search = [
   './java/screenBoost.js',
   './java/shakeFix.js',
   './java/steadyHold.js',
+  './img/logo-panelios.gif',
+  './img/avt.png',
+  './img/ffth.jpg',
+  './img/ffm.jpg',
 ];
 
 $replace = [
@@ -50,6 +58,10 @@ $replace = [
   "./java/screenBoost.js?v={$screenBoostVer}",
   "./java/shakeFix.js?v={$shakeFixVer}",
   "./java/steadyHold.js?v={$steadyHoldVer}",
+  "./img/logo-panelios.gif?v={$logoVer}",
+  "./img/avt.png?v={$avatarVer}",
+  "./img/ffth.jpg?v={$ffthVer}",
+  "./img/ffm.jpg?v={$ffmVer}",
 ];
 
 echo str_replace($search, $replace, $html);
