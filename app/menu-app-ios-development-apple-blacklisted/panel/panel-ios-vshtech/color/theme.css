@@ -94,8 +94,8 @@ body.home-locked {
   top: -2cm;
   height: 2cm;
   background: var(--bg);
-  border: 1px solid #2b3548;
-  border-bottom: 0;
+  border: 0;
+  border-bottom: 1px solid #2b3548;
   z-index: 0;
 }
 
@@ -622,6 +622,10 @@ body::after {
 
 body.home-locked {
   overflow: hidden;
+}
+
+body.home-locked .screen {
+  padding-bottom: calc(72px + 0.4cm + env(safe-area-inset-bottom, 0px));
 }
 
 body.home-locked .home-panel {
