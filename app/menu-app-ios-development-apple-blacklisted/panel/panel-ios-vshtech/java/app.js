@@ -192,12 +192,27 @@ function bootPanel() {
     const detailsOpen = detailsPanel ? detailsPanel.classList.contains("is-open") : false;
     const isHome = homePanel ? homePanel.classList.contains("is-active") : false;
     document.body.classList.toggle("home-locked", isHome && !detailsOpen);
+    if (isHome && !detailsOpen) {
+      if (!document.body.dataset.homeAnchorTop && homePanel) {
+        const rect = homePanel.getBoundingClientRect();
+        const top = rect.top + window.pageYOffset;
+        document.body.dataset.homeAnchorTop = String(Math.max(0, Math.round(top)));
+      }
+      const top = Number(document.body.dataset.homeAnchorTop || 0);
+      window.scrollTo({ top, left: 0, behavior: "auto" });
+    }
   };
   const setView = (view) => {
     if (homePanel) homePanel.classList.toggle("is-active", view === "home");
     if (functionPanel) functionPanel.classList.toggle("is-active", view === "function");
     if (boosterPanel) boosterPanel.classList.toggle("is-active", view === "booster");
     document.body.classList.toggle("booster-lock", view === "booster");
+    const scroller = document.querySelector(".screen");
+    if (scroller) {
+      scroller.scrollTop = 0;
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
     updateHomeLock();
   };
   setView("home");
