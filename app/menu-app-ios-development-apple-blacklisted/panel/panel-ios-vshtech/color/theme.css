@@ -22,7 +22,7 @@
   --active-bg: rgba(90, 167, 255, 0.16);
   --disabled: #5b6b86;
   --scroll-offset: 0px;
-  --top-bar: calc(1.5rem + 1.3cm);
+  --top-bar: 4cm;
   --bottom-bar: calc(72px + 2cm);
   font-family: "SF Pro Display", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   line-height: 1.5;
@@ -57,11 +57,8 @@ body::-webkit-scrollbar {
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #0a0f1a;
-  background:
-    radial-gradient(circle at 20% 20%, #121c2e 0%, transparent 55%),
-    radial-gradient(circle at 80% 70%, #0f1828 0%, transparent 60%),
-    linear-gradient(180deg, #0a0f1a 0%, #0d1422 45%, #121c2e 100%);
+  background-color: var(--bg);
+  background: var(--bg);
   color: var(--text);
   position: relative;
   overflow-x: hidden;
@@ -76,6 +73,43 @@ body.booster-lock {
 
 body.home-locked {
   overflow: hidden;
+}
+
+.top-rule {
+  position: absolute;
+  top: 2cm;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #2b3548;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.top-rule::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -2cm;
+  height: 2cm;
+  background: var(--bg);
+  border: 1px solid #2b3548;
+  border-bottom: 0;
+  z-index: 0;
+}
+
+.top-logo {
+  height: 52px;
+  width: auto;
+  position: absolute;
+  left: 50%;
+  top: calc(-1cm);
+  transform: translate(-50%, -50%);
+  padding: 0;
+  background: var(--bg);
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
+  z-index: 1;
 }
 
 .bottom-nav {
