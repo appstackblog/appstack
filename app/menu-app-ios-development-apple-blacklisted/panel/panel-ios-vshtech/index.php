@@ -19,7 +19,7 @@ $quickSwipeVer = asset_ver('java/quickSwipe.js');
 $screenBoostVer = asset_ver('java/screenBoost.js');
 $shakeFixVer = asset_ver('java/shakeFix.js');
 $steadyHoldVer = asset_ver('java/steadyHold.js');
-$logoVer = asset_ver('img/logo-panelios.gif');
+$logoVer = asset_ver('img/panel-logo.gif');
 $avatarVer = asset_ver('img/avt.png');
 $ffthVer = asset_ver('img/ffth.jpg');
 $ffmVer = asset_ver('img/ffm.jpg');
@@ -39,7 +39,7 @@ $search = [
   './java/screenBoost.js',
   './java/shakeFix.js',
   './java/steadyHold.js',
-  './img/logo-panelios.gif',
+  './img/panel-logo.gif',
   './img/avt.png',
   './img/ffth.jpg',
   './img/ffm.jpg',
@@ -58,7 +58,7 @@ $replace = [
   "./java/screenBoost.js?v={$screenBoostVer}",
   "./java/shakeFix.js?v={$shakeFixVer}",
   "./java/steadyHold.js?v={$steadyHoldVer}",
-  "./img/logo-panelios.gif?v={$logoVer}",
+  "./img/panel-logo.gif?v={$logoVer}",
   "./img/avt.png?v={$avatarVer}",
   "./img/ffth.jpg?v={$ffthVer}",
   "./img/ffm.jpg?v={$ffmVer}",
