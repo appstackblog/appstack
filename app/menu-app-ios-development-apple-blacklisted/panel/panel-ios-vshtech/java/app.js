@@ -362,6 +362,24 @@ function bootPanel() {
     function init() {
       bindButton("ff");
       bindButton("ffmax");
+
+      document.querySelectorAll(".booster-btn").forEach((btn) => {
+        btn.addEventListener(
+          "click",
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const label = (btn.getAttribute("data-game") || btn.textContent || "").toLowerCase();
+            const which = label.includes("max") ? "ffmax" : "ff";
+            showBoosterToast(which === "ffmax" ? "Launching Free Fire MAX..." : "Launching Free Fire...");
+            playChime();
+            const url = `vshbooster://open?app=${encodeURIComponent(which)}`;
+            LOG("Click:", which, "->", url);
+            window.location.href = url;
+          },
+          { passive: false }
+        );
+      });
     }
 
     init();
