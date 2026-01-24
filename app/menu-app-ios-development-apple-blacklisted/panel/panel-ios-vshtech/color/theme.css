@@ -77,10 +77,10 @@ body.home-locked {
 
 .top-rule {
   position: absolute;
-  top: 2cm;
+  top: calc(env(safe-area-inset-top, 0px) + 2cm);
   left: 0;
   right: 0;
-  height: 1px;
+  height: 0.25px;
   background: #2b3548;
   z-index: 5;
   pointer-events: none;
@@ -91,11 +91,11 @@ body.home-locked {
   position: absolute;
   left: 0;
   right: 0;
-  top: -2cm;
-  height: 2cm;
+  top: calc(-2cm - env(safe-area-inset-top, 0px));
+  height: calc(2cm + env(safe-area-inset-top, 0px));
   background: var(--bg);
   border: 0;
-  border-bottom: 1px solid #2b3548;
+  border-bottom: 0.25px solid #2b3548;
   z-index: 0;
 }
 
@@ -104,7 +104,7 @@ body.home-locked {
   width: auto;
   position: absolute;
   left: 50%;
-  top: calc(-1cm);
+  top: calc(-1cm - (env(safe-area-inset-top, 0px) / 2));
   transform: translate(-50%, -50%);
   padding: 0;
   background: var(--bg);
@@ -1316,6 +1316,7 @@ body.home-locked .home-panel {
 
   .home-panel {
     width: 100%;
+    margin-top: calc(18vh + 2cm);
   }
 
   .home-panel.is-active {
