@@ -598,7 +598,7 @@ body::after {
 }
 
 .home-panel {
-  margin-top: 18vh;
+  margin-top: 0.8rem;
 }
 
 body.home-locked {
@@ -610,8 +610,8 @@ body.home-locked .screen {
 }
 
 body.home-locked .home-panel {
-  margin-top: auto;
-  margin-bottom: auto;
+  margin-top: 0.8rem;
+  margin-bottom: 0;
 }
 
 .home-panel .panel-frame,
@@ -1297,7 +1297,7 @@ body.home-locked .home-panel {
 
   .home-panel {
     width: 100%;
-    margin-top: 18vh;
+    margin-top: 0.8rem;
   }
 
   .home-panel.is-active {
