@@ -270,32 +270,95 @@ function bootPanel() {
   const playLaunchTone = () => {
     playChime();
   };
-  const openFreeFire = () => {
-    showNotification("Launching Free Fire...");
-    playLaunchTone();
-    setTimeout(() => {
-      window.location.href = "freefireth://";
-    }, 500);
+  const ANDROID = {
+    ff: { pkg: "com.dts.freefireth", store: "https://play.google.com/store/apps/details?id=com.dts.freefireth" },
+    max: { pkg: "com.dts.freefiremax", store: "https://play.google.com/store/apps/details?id=com.dts.freefiremax" },
   };
-  const openFreeFireMax = () => {
-    showNotification("Launching Free Fire MAX...");
-    playLaunchTone();
-    setTimeout(() => {
-      window.location.href = "freefiremax://";
-    }, 500);
+
+  const IOS = {
+    ff: { id: "1300146617", store: "https://apps.apple.com/app/id1300146617" },
+    max: { id: "1480516829", store: "https://apps.apple.com/app/id1480516829" },
   };
+
+  const ua = navigator.userAgent || "";
+  const isAndroid = /Android/i.test(ua);
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+  const enc = (u) => encodeURIComponent(u);
+
+  function openAndroid(which) {
+    const { pkg, store } = ANDROID[which];
+    const intentUrl =
+      `intent://#Intent;package=${pkg};` + `S.browser_fallback_url=${enc(store)};end`;
+    window.location.href = intentUrl;
+  }
+
+  function openIOS(which) {
+    const { store } = IOS[which];
+    const itms = store.replace(/^https?:\/\//i, "itms-apps://");
+
+    const schemesToTry =
+      which === "max"
+        ? ["freefiremax://", "freefire-max://", "ffmax://", "garenaffmax://"]
+        : ["freefire://", "garenaff://", "ff://", "garena://"];
+
+    let tried = false;
+
+    const tryNextScheme = (i) => {
+      if (i >= schemesToTry.length) {
+        window.location.href = itms;
+        setTimeout(() => (window.location.href = store), 800);
+        return;
+      }
+      tried = true;
+      const scheme = schemesToTry[i];
+      const start = Date.now();
+      window.location.href = scheme;
+      setTimeout(() => {
+        if (Date.now() - start < 1200) tryNextScheme(i + 1);
+      }, 700);
+    };
+
+    tryNextScheme(0);
+
+    setTimeout(() => {
+      if (!tried) {
+        window.location.href = itms;
+        setTimeout(() => (window.location.href = store), 800);
+      }
+    }, 1200);
+  }
+
+  function openGame(which) {
+    const label = which === "max" ? "Free Fire MAX" : "Free Fire";
+    showNotification(`Launching ${label}...`);
+    playLaunchTone();
+    if (isAndroid) return openAndroid(which);
+    if (isIOS) return openIOS(which);
+    window.location.href = which === "max" ? "https://ff.garena.com/max/" : "https://ff.garena.com/";
+  }
+
+  const openFreeFire = () => openGame("ff");
+  const openFreeFireMax = () => openGame("max");
+
   if (typeof window !== "undefined") {
     Object.assign(window, { openFreeFire, openFreeFireMax });
   }
+
+  const btnFF = document.getElementById("btnFreeFire");
+  const btnFFM = document.getElementById("btnFreeFireMax");
+  if (btnFF) btnFF.addEventListener("click", (e) => { e.preventDefault(); openGame("ff"); });
+  if (btnFFM) btnFFM.addEventListener("click", (e) => { e.preventDefault(); openGame("max"); });
+
   document.querySelectorAll(".booster-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const game = btn.getAttribute("data-game") || "Game";
       if (game === "Free Fire") {
-        openFreeFire();
+        openGame("ff");
         return;
       }
       if (game === "Free Fire Max") {
-        openFreeFireMax();
+        openGame("max");
         return;
       }
       playChime();
