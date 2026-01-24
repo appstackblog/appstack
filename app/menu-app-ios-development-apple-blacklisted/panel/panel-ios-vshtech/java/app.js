@@ -270,101 +270,171 @@ function bootPanel() {
   const playLaunchTone = () => {
     playChime();
   };
+
+  const log = (...args) => console.log("[Booster]", ...args);
+
   const ANDROID = {
     ff: { pkg: "com.dts.freefireth", store: "https://play.google.com/store/apps/details?id=com.dts.freefireth" },
-    max: { pkg: "com.dts.freefiremax", store: "https://play.google.com/store/apps/details?id=com.dts.freefiremax" },
+    ffmax: { pkg: "com.dts.freefiremax", store: "https://play.google.com/store/apps/details?id=com.dts.freefiremax" }
   };
 
   const IOS = {
-    ff: { id: "1300146617", store: "https://apps.apple.com/app/id1300146617" },
-    max: { id: "1480516829", store: "https://apps.apple.com/app/id1480516829" },
+    ff: {
+      store: "https://apps.apple.com/app/id1300146617",
+      schemes: ["freefire://", "garenaff://", "ff://", "garena://", "freefireth://"]
+    },
+    ffmax: {
+      store: "https://apps.apple.com/app/id1480516829",
+      schemes: ["freefiremax://", "freefire-max://", "ffmax://", "garenaffmax://"]
+    }
   };
 
   const ua = navigator.userAgent || "";
   const isAndroid = /Android/i.test(ua);
   const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  const isWebViewIOS = isIOS && !/Safari/i.test(ua);
+  const isWebViewAndroid = isAndroid && /wv|Version\/\d+\.\d+|; wv\)/i.test(ua);
+
+  log("UA:", ua);
+  log("Platform:", isAndroid ? "Android" : isIOS ? "iOS" : "Other");
+  log("WebView:", isWebViewIOS ? "iOS WebView" : isWebViewAndroid ? "Android WebView" : "Browser");
 
   const enc = (u) => encodeURIComponent(u);
+
+  function withUserGesture(fn) {
+    return (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      fn();
+    };
+  }
 
   function openAndroid(which) {
     const { pkg, store } = ANDROID[which];
     const intentUrl =
       `intent://#Intent;package=${pkg};` + `S.browser_fallback_url=${enc(store)};end`;
-    window.location.href = intentUrl;
+    log("Android intent:", intentUrl);
+    let fallbackTimer = setTimeout(() => {
+      log("Android fallback -> Play Store");
+      window.location.href = store;
+    }, 1200);
+
+    try {
+      window.location.href = intentUrl;
+    } catch (err) {
+      log("Android intent blocked:", err);
+      clearTimeout(fallbackTimer);
+      window.location.href = store;
+    }
   }
 
   function openIOS(which) {
-    const { store } = IOS[which];
+    const { store, schemes } = IOS[which];
     const itms = store.replace(/^https?:\/\//i, "itms-apps://");
+    log("iOS schemes:", schemes);
 
-    const schemesToTry =
-      which === "max"
-        ? ["freefiremax://", "freefire-max://", "ffmax://", "garenaffmax://"]
-        : ["freefire://", "garenaff://", "ff://", "garena://"];
+    let usedFallback = false;
+    let schemeIndex = 0;
+    let visibilityHandled = false;
+    let visibilityTimer = null;
 
-    let tried = false;
-
-    const tryNextScheme = (i) => {
-      if (i >= schemesToTry.length) {
-        window.location.href = itms;
-        setTimeout(() => (window.location.href = store), 800);
-        return;
-      }
-      tried = true;
-      const scheme = schemesToTry[i];
-      const start = Date.now();
-      window.location.href = scheme;
-      setTimeout(() => {
-        if (Date.now() - start < 1200) tryNextScheme(i + 1);
-      }, 700);
+    const cleanup = () => {
+      if (visibilityTimer) clearTimeout(visibilityTimer);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
 
-    tryNextScheme(0);
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        visibilityHandled = true;
+        log("iOS visibility hidden -> app opened");
+        cleanup();
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    const tryScheme = (i) => {
+      if (i >= schemes.length) {
+        if (!usedFallback) {
+          usedFallback = true;
+          log("iOS fallback -> App Store itms-apps");
+          window.location.href = itms;
+          setTimeout(() => {
+            if (!visibilityHandled) {
+              log("iOS fallback -> App Store https");
+              window.location.href = store;
+            }
+          }, 800);
+        }
+        cleanup();
+        return;
+      }
+
+      const scheme = schemes[i];
+      const start = Date.now();
+      log("iOS try scheme:", scheme);
+      window.location.href = scheme;
+
+      visibilityTimer = setTimeout(() => {
+        const elapsed = Date.now() - start;
+        if (!document.hidden && elapsed < 1600) {
+          log("iOS scheme failed, try next");
+          tryScheme(i + 1);
+        }
+      }, 800);
+    };
+
+    tryScheme(0);
 
     setTimeout(() => {
-      if (!tried) {
+      if (!usedFallback && !visibilityHandled) {
+        log("iOS safety fallback -> App Store itms-apps");
         window.location.href = itms;
         setTimeout(() => (window.location.href = store), 800);
       }
-    }, 1200);
+    }, 1600);
   }
 
   function openGame(which) {
-    const label = which === "max" ? "Free Fire MAX" : "Free Fire";
+    const label = which === "ffmax" ? "Free Fire MAX" : "Free Fire";
     showNotification(`Launching ${label}...`);
     playLaunchTone();
     if (isAndroid) return openAndroid(which);
     if (isIOS) return openIOS(which);
-    window.location.href = which === "max" ? "https://ff.garena.com/max/" : "https://ff.garena.com/";
+    log("Desktop/Other: no redirect");
   }
 
-  const openFreeFire = () => openGame("ff");
-  const openFreeFireMax = () => openGame("max");
-
-  if (typeof window !== "undefined") {
-    Object.assign(window, { openFreeFire, openFreeFireMax });
+  function matchByText(keyword) {
+    const nodes = Array.from(document.querySelectorAll("button, a"));
+    return nodes.find((el) => (el.textContent || "").toLowerCase().includes(keyword));
   }
 
-  const btnFF = document.getElementById("btnFreeFire");
-  const btnFFM = document.getElementById("btnFreeFireMax");
-  if (btnFF) btnFF.addEventListener("click", (e) => { e.preventDefault(); openGame("ff"); });
-  if (btnFFM) btnFFM.addEventListener("click", (e) => { e.preventDefault(); openGame("max"); });
+  function bindButtons() {
+    const btnFF =
+      document.getElementById("btnFreeFire") ||
+      document.querySelector('[data-app="ff"]') ||
+      matchByText("free fire");
 
-  document.querySelectorAll(".booster-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const game = btn.getAttribute("data-game") || "Game";
-      if (game === "Free Fire") {
-        openGame("ff");
-        return;
-      }
-      if (game === "Free Fire Max") {
-        openGame("max");
-        return;
-      }
-      playChime();
-      showBoosterToast(`Đang Mở ${game}...`);
-    });
-  });
+    const btnFFM =
+      document.getElementById("btnFreeFireMax") ||
+      document.querySelector('[data-app="ffmax"]') ||
+      matchByText("max");
+
+    if (btnFF) {
+      btnFF.addEventListener("click", withUserGesture(() => openGame("ff")));
+      log("Bind: Free Fire ->", btnFF);
+    } else {
+      log("Bind: Free Fire -> NOT FOUND");
+    }
+
+    if (btnFFM) {
+      btnFFM.addEventListener("click", withUserGesture(() => openGame("ffmax")));
+      log("Bind: Free Fire MAX ->", btnFFM);
+    } else {
+      log("Bind: Free Fire MAX -> NOT FOUND");
+    }
+  }
+
+  bindButtons();
   window.__panelBooted = true;
 }
 
