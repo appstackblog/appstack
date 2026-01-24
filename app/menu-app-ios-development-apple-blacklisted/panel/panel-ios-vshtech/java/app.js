@@ -274,194 +274,98 @@ function bootPanel() {
   let gameModalTimer = 0;
   let gameModal = null;
 
-  const log = (...args) => console.log("[Booster]", ...args);
+  (() => {
+    const LOG = (...a) => console.log("[booster]", ...a);
 
-  const ANDROID = /Android/i.test(navigator.userAgent);
-  const IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const FF_PLAY = "https://play.google.com/store/apps/details?id=com.dts.freefireth";
-  const FFM_PLAY = "https://play.google.com/store/apps/details?id=com.dts.freefiremax";
-  const FF_APPSTORE = "https://apps.apple.com/vn/app/free-fire/id1300146617";
-  const FFM_APPSTORE = "https://apps.apple.com/vn/app/free-fire-max/id1480516829";
-  const ANDROID_PACKAGES = {
-    ff: "com.dts.freefireth",
-    ffmax: "com.dts.freefiremax",
-  };
-  const IOS_SCHEMES = {
-    ff: ["freefire://", "garenaff://", "ff://", "garena://", "freefireth://"],
-    ffmax: ["freefiremax://", "freefire-max://", "ffmax://", "garenaffmax://"],
-  };
-
-  const ua = navigator.userAgent || "";
-  const isWebViewIOS = IOS && !/Safari/i.test(ua);
-  const isWebViewAndroid = ANDROID && /wv|Version\/\d+\.\d+|; wv\)/i.test(ua);
-
-  log("UA:", ua);
-  log("Platform:", ANDROID ? "Android" : IOS ? "iOS" : "Other");
-  log("WebView:", isWebViewIOS ? "iOS WebView" : isWebViewAndroid ? "Android WebView" : "Browser");
-
-  const enc = (u) => encodeURIComponent(u);
-
-  function withUserGesture(fn) {
-    return (e) => {
-      if (e && e.preventDefault) e.preventDefault();
-      fn();
+    const boosterToast = document.getElementById("boosterToast");
+    let toastTimer = null;
+    const showBoosterToast = (text) => {
+      if (!boosterToast) return;
+      boosterToast.textContent = text;
+      boosterToast.classList.add("show");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        boosterToast.classList.remove("show");
+      }, 1800);
     };
-  }
+    const playChime = () => {
+      const AudioApi = window.AudioContext || window.webkitAudioContext;
+      if (!AudioApi) return;
+      const ctx = new AudioApi();
+      if (ctx.state === "suspended") ctx.resume();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(920, ctx.currentTime);
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.5);
+      osc.onended = () => ctx.close();
+    };
 
-  function openAndroid(which) {
-    const pkg = ANDROID_PACKAGES[which];
-    const store = which === "ffmax" ? FFM_PLAY : FF_PLAY;
-    const intentUrl =
-      `intent://#Intent;package=${pkg};` + `S.browser_fallback_url=${enc(store)};end`;
-    log("Android intent:", intentUrl);
-    let fallbackTimer = setTimeout(() => {
-      log("Android fallback -> Play Store");
-      window.location.href = store;
-    }, 1200);
-
-    try {
-      window.location.href = intentUrl;
-    } catch (err) {
-      log("Android intent blocked:", err);
-      clearTimeout(fallbackTimer);
-      window.location.href = store;
+    function norm(s) {
+      return (s || "").toString().trim().toLowerCase();
     }
-  }
 
-  function openIOS(which) {
-    const store = which === "ffmax" ? FFM_APPSTORE : FF_APPSTORE;
-    const schemes = IOS_SCHEMES[which] || [];
-    const itms = store.replace(/^https?:\/\//i, "itms-apps://");
-    log("iOS schemes:", schemes);
+    function findBtnByText(predicate) {
+      const nodes = Array.from(document.querySelectorAll("a,button,[role='button']"));
+      return nodes.find((el) => predicate(norm(el.textContent)));
+    }
 
-    let usedFallback = false;
-    let schemeIndex = 0;
-    let visibilityHandled = false;
-    let visibilityTimer = null;
+    function bindButton(which) {
+      let el =
+        which === "ff"
+          ? document.querySelector("#btnFreeFire")
+          : document.querySelector("#btnFreeFireMax");
 
-    const cleanup = () => {
-      if (visibilityTimer) clearTimeout(visibilityTimer);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-    };
-
-    const onVisibilityChange = () => {
-      if (document.hidden) {
-        visibilityHandled = true;
-        log("iOS visibility hidden -> app opened");
-        cleanup();
+      if (!el) {
+        el =
+          which === "ff"
+            ? document.querySelector('[data-app="ff"]')
+            : document.querySelector('[data-app="ffmax"]');
       }
-    };
 
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
-    const fireScheme = (scheme) => {
-      log("iOS try scheme:", scheme);
-      window.location.href = scheme;
-      const iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      iframe.src = scheme;
-      document.body.appendChild(iframe);
-      setTimeout(() => {
-        if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-      }, 1200);
-    };
-
-    const tryScheme = (i) => {
-      if (i >= schemes.length) {
-        if (!usedFallback) {
-          usedFallback = true;
-          log("iOS fallback -> App Store itms-apps");
-          window.location.href = itms;
-          setTimeout(() => {
-            if (!visibilityHandled) {
-              log("iOS fallback -> App Store https");
-              window.location.href = store;
-            }
-          }, 800);
+      if (!el) {
+        if (which === "ff") {
+          el = findBtnByText((t) => t.includes("free fire") && !t.includes("max"));
+        } else {
+          el = findBtnByText((t) => t.includes("free fire") && t.includes("max"));
         }
-        cleanup();
+      }
+
+      if (!el) {
+        LOG("Không tìm thấy nút cho:", which);
         return;
       }
 
-      const scheme = schemes[i];
-      const start = Date.now();
-      fireScheme(scheme);
+      LOG("Bind nút OK:", which, el);
 
-      visibilityTimer = setTimeout(() => {
-        const elapsed = Date.now() - start;
-        if (!document.hidden && elapsed < 1600) {
-          log("iOS scheme failed, try next");
-          tryScheme(i + 1);
-        }
-      }, 800);
-    };
+      const url = `vshbooster://open?app=${encodeURIComponent(which)}`;
 
-    tryScheme(0);
-
-    setTimeout(() => {
-      if (!usedFallback && !visibilityHandled) {
-        log("iOS safety fallback -> App Store itms-apps");
-        window.location.href = itms;
-        setTimeout(() => (window.location.href = store), 800);
-      }
-    }, 1600);
-  }
-
-  function openGame(which) {
-    const label = which === "ffmax" ? "Free Fire MAX" : "Free Fire";
-    showNotification(`Launching ${label}...`);
-    playLaunchTone();
-    if (ANDROID) return openAndroid(which);
-    if (IOS) return openIOS(which);
-    log("Desktop/Other: no redirect");
-  }
-
-  function matchByText(keyword) {
-    const nodes = Array.from(document.querySelectorAll("button, a"));
-    return nodes.find((el) => (el.textContent || "").toLowerCase().includes(keyword));
-  }
-
-  function bindButtons() {
-    const btnFF =
-      document.getElementById("btnFreeFire") ||
-      document.querySelector('[data-app="ff"]') ||
-      matchByText("free fire");
-
-    const btnFFM =
-      document.getElementById("btnFreeFireMax") ||
-      document.querySelector('[data-app="ffmax"]') ||
-      matchByText("max");
-
-    if (btnFF) {
-      btnFF.addEventListener("click", withUserGesture(() => openGame("ff")));
-      log("Bind: Free Fire ->", btnFF);
-    } else {
-      log("Bind: Free Fire -> NOT FOUND");
+      el.addEventListener(
+        "click",
+        (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          showBoosterToast(which === "ffmax" ? "Launching Free Fire MAX..." : "Launching Free Fire...");
+          playChime();
+          LOG("Click:", which, "->", url);
+          window.location.href = url;
+        },
+        { passive: false }
+      );
     }
 
-    if (btnFFM) {
-      btnFFM.addEventListener("click", withUserGesture(() => openGame("ffmax")));
-      log("Bind: Free Fire MAX ->", btnFFM);
-    } else {
-      log("Bind: Free Fire MAX -> NOT FOUND");
+    function init() {
+      bindButton("ff");
+      bindButton("ffmax");
     }
-  }
 
-  bindButtons();
-  document.querySelectorAll(".booster-btn").forEach((btn) => {
-    btn.addEventListener("click", withUserGesture(() => {
-      const game = (btn.getAttribute("data-game") || btn.textContent || "").toLowerCase();
-      if (game.includes("max")) {
-        openGame("ffmax");
-        return;
-      }
-      if (game.includes("free fire")) {
-        openGame("ff");
-        return;
-      }
-      log("Booster button unmatched:", game);
-    }));
-  });
+    init();
+  })();
   window.__panelBooted = true;
 }
 
