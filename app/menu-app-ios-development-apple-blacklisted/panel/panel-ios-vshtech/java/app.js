@@ -435,6 +435,20 @@ function bootPanel() {
   }
 
   bindButtons();
+  document.querySelectorAll(".booster-btn").forEach((btn) => {
+    btn.addEventListener("click", withUserGesture(() => {
+      const game = (btn.getAttribute("data-game") || btn.textContent || "").toLowerCase();
+      if (game.includes("max")) {
+        openGame("ffmax");
+        return;
+      }
+      if (game.includes("free fire")) {
+        openGame("ff");
+        return;
+      }
+      log("Booster button unmatched:", game);
+    }));
+  });
   window.__panelBooted = true;
 }
 
