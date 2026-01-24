@@ -271,32 +271,32 @@ function bootPanel() {
     playChime();
   };
 
+  let gameModalTimer = 0;
+  let gameModal = null;
+
   const log = (...args) => console.log("[Booster]", ...args);
 
-  const ANDROID = {
-    ff: { pkg: "com.dts.freefireth", store: "https://play.google.com/store/apps/details?id=com.dts.freefireth" },
-    ffmax: { pkg: "com.dts.freefiremax", store: "https://play.google.com/store/apps/details?id=com.dts.freefiremax" }
+  const ANDROID = /Android/i.test(navigator.userAgent);
+  const IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const FF_PLAY = "https://play.google.com/store/apps/details?id=com.dts.freefireth";
+  const FFM_PLAY = "https://play.google.com/store/apps/details?id=com.dts.freefiremax";
+  const FF_APPSTORE = "https://apps.apple.com/vn/app/free-fire/id1300146617";
+  const FFM_APPSTORE = "https://apps.apple.com/vn/app/free-fire-max/id1480516829";
+  const ANDROID_PACKAGES = {
+    ff: "com.dts.freefireth",
+    ffmax: "com.dts.freefiremax",
   };
-
-  const IOS = {
-    ff: {
-      store: "https://apps.apple.com/app/id1300146617",
-      schemes: ["freefire://", "garenaff://", "ff://", "garena://", "freefireth://"]
-    },
-    ffmax: {
-      store: "https://apps.apple.com/app/id1480516829",
-      schemes: ["freefiremax://", "freefire-max://", "ffmax://", "garenaffmax://"]
-    }
+  const IOS_SCHEMES = {
+    ff: ["freefire://", "garenaff://", "ff://", "garena://", "freefireth://"],
+    ffmax: ["freefiremax://", "freefire-max://", "ffmax://", "garenaffmax://"],
   };
 
   const ua = navigator.userAgent || "";
-  const isAndroid = /Android/i.test(ua);
-  const isIOS = /iPhone|iPad|iPod/i.test(ua);
-  const isWebViewIOS = isIOS && !/Safari/i.test(ua);
-  const isWebViewAndroid = isAndroid && /wv|Version\/\d+\.\d+|; wv\)/i.test(ua);
+  const isWebViewIOS = IOS && !/Safari/i.test(ua);
+  const isWebViewAndroid = ANDROID && /wv|Version\/\d+\.\d+|; wv\)/i.test(ua);
 
   log("UA:", ua);
-  log("Platform:", isAndroid ? "Android" : isIOS ? "iOS" : "Other");
+  log("Platform:", ANDROID ? "Android" : IOS ? "iOS" : "Other");
   log("WebView:", isWebViewIOS ? "iOS WebView" : isWebViewAndroid ? "Android WebView" : "Browser");
 
   const enc = (u) => encodeURIComponent(u);
@@ -309,7 +309,8 @@ function bootPanel() {
   }
 
   function openAndroid(which) {
-    const { pkg, store } = ANDROID[which];
+    const pkg = ANDROID_PACKAGES[which];
+    const store = which === "ffmax" ? FFM_PLAY : FF_PLAY;
     const intentUrl =
       `intent://#Intent;package=${pkg};` + `S.browser_fallback_url=${enc(store)};end`;
     log("Android intent:", intentUrl);
@@ -328,7 +329,8 @@ function bootPanel() {
   }
 
   function openIOS(which) {
-    const { store, schemes } = IOS[which];
+    const store = which === "ffmax" ? FFM_APPSTORE : FF_APPSTORE;
+    const schemes = IOS_SCHEMES[which] || [];
     const itms = store.replace(/^https?:\/\//i, "itms-apps://");
     log("iOS schemes:", schemes);
 
@@ -352,6 +354,18 @@ function bootPanel() {
 
     document.addEventListener("visibilitychange", onVisibilityChange);
 
+    const fireScheme = (scheme) => {
+      log("iOS try scheme:", scheme);
+      window.location.href = scheme;
+      const iframe = document.createElement("iframe");
+      iframe.style.display = "none";
+      iframe.src = scheme;
+      document.body.appendChild(iframe);
+      setTimeout(() => {
+        if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+      }, 1200);
+    };
+
     const tryScheme = (i) => {
       if (i >= schemes.length) {
         if (!usedFallback) {
@@ -371,8 +385,7 @@ function bootPanel() {
 
       const scheme = schemes[i];
       const start = Date.now();
-      log("iOS try scheme:", scheme);
-      window.location.href = scheme;
+      fireScheme(scheme);
 
       visibilityTimer = setTimeout(() => {
         const elapsed = Date.now() - start;
@@ -398,8 +411,8 @@ function bootPanel() {
     const label = which === "ffmax" ? "Free Fire MAX" : "Free Fire";
     showNotification(`Launching ${label}...`);
     playLaunchTone();
-    if (isAndroid) return openAndroid(which);
-    if (isIOS) return openIOS(which);
+    if (ANDROID) return openAndroid(which);
+    if (IOS) return openIOS(which);
     log("Desktop/Other: no redirect");
   }
 
