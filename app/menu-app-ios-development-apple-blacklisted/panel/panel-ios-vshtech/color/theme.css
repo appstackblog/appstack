@@ -75,39 +75,20 @@ body.home-locked {
   overflow: hidden;
 }
 
-.top-rule {
-  position: absolute;
-  top: calc(env(safe-area-inset-top, 0px) + 2cm);
-  left: 0;
-  right: 0;
-  height: 0.25px;
-  background: #2b3548;
-  z-index: 5;
-  pointer-events: none;
-}
-
-.top-rule::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(-2cm - env(safe-area-inset-top, 0px));
-  height: calc(2cm + env(safe-area-inset-top, 0px));
-  background: var(--bg);
-  border: 0;
-  border-bottom: 0.25px solid #2b3548;
-  z-index: 0;
+.top-logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: calc(env(safe-area-inset-top, 0px) + 0.6cm);
+  margin-bottom: 0.6rem;
+  width: 100%;
 }
 
 .top-logo {
   height: 52px;
   width: auto;
-  position: absolute;
-  left: 50%;
-  top: calc(-1cm - (env(safe-area-inset-top, 0px) / 2));
-  transform: translate(-50%, -50%);
+  display: block;
   padding: 0;
-  background: var(--bg);
+  background: transparent;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
   z-index: 1;
 }
@@ -1316,7 +1297,7 @@ body.home-locked .home-panel {
 
   .home-panel {
     width: 100%;
-    margin-top: calc(18vh + 2cm);
+    margin-top: 18vh;
   }
 
   .home-panel.is-active {
