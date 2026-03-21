@@ -1,4 +1,23 @@
 ﻿
+(() => {
+  const stopNativeAppLeak = (event) => event.preventDefault();
+
+  document.addEventListener('contextmenu', stopNativeAppLeak, { passive: false });
+  document.addEventListener('selectstart', stopNativeAppLeak, { passive: false });
+  document.addEventListener('dragstart', stopNativeAppLeak, { passive: false });
+  document.addEventListener('copy', stopNativeAppLeak, { passive: false });
+  document.addEventListener('cut', stopNativeAppLeak, { passive: false });
+  document.addEventListener(
+    'keydown',
+    (event) => {
+      if ((event.ctrlKey || event.metaKey) && ['a', 'c', 'x'].includes(String(event.key).toLowerCase())) {
+        event.preventDefault();
+      }
+    },
+    { passive: false }
+  );
+})();
+
 function switchPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
