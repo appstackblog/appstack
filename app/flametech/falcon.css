@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -12,10 +17,6 @@ body {
 
 body.modal-open {
   overflow: hidden;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 .top-bar {
@@ -1366,13 +1367,41 @@ html {
   --flame-shadow: 0 18px 42px rgba(22, 0, 6, 0.52);
 }
 
+html,
 body {
+  background-color: var(--flame-bg-1);
+}
+
+html {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 55, 104, 0.24) 0%, transparent 28%),
+    radial-gradient(circle at 82% 14%, rgba(255, 18, 80, 0.18) 0%, transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(255, 90, 128, 0.14) 0%, transparent 36%),
+    linear-gradient(180deg, var(--flame-bg-1) 0%, var(--flame-bg-2) 52%, var(--flame-bg-3) 100%);
+}
+
+body {
+  position: relative;
+  isolation: isolate;
   background:
     radial-gradient(circle at 18% 16%, rgba(255, 55, 104, 0.24) 0%, transparent 28%),
     radial-gradient(circle at 82% 14%, rgba(255, 18, 80, 0.18) 0%, transparent 24%),
     radial-gradient(circle at 50% 100%, rgba(255, 90, 128, 0.14) 0%, transparent 36%),
     linear-gradient(180deg, var(--flame-bg-1) 0%, var(--flame-bg-2) 52%, var(--flame-bg-3) 100%);
   color: var(--flame-text);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 55, 104, 0.24) 0%, transparent 28%),
+    radial-gradient(circle at 82% 14%, rgba(255, 18, 80, 0.18) 0%, transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(255, 90, 128, 0.14) 0%, transparent 36%),
+    linear-gradient(180deg, var(--flame-bg-1) 0%, var(--flame-bg-2) 52%, var(--flame-bg-3) 100%);
 }
 
 .background-texture {
