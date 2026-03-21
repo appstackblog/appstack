@@ -1,9 +1,19 @@
 <?php
 require __DIR__ . '/time.php';
 
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
+if (stripos(str_replace('\\', '/', $requestPath), '/VIP/') === false) {
+  header('Location: ../index.html', true, 302);
+  exit;
+}
+
 $cssVer = asset_ver('style.css');
 $keyVer = asset_ver('key.js');
 $jsVer = asset_ver('script.js');
+
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 
 $html = file_get_contents(__DIR__ . '/index.html');
 if ($html === false) {
