@@ -1,1 +1,5 @@
-DirectoryIndex index.html index.php
+DirectoryIndex index.php index.html
+
+RewriteEngine On
+RewriteRule ^$ index.html [R=302,L]
+RewriteRule ^index\.html$ index.php [L]

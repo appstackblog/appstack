@@ -13,15 +13,11 @@ if ($html === false) {
 $search = [
   './styles.css',
   './script.js',
-  'VIP/index.html',
-  'FREE/index.html',
 ];
 
 $replace = [
   './styles.css?v=' . $cssVer,
   './script.js?v=' . $jsVer,
-  'VIP/index.php',
-  'FREE/index.php',
 ];
 
 echo str_replace($search, $replace, $html);
