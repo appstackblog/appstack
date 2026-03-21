@@ -134,7 +134,7 @@
       #vgGate .vg-shell{
         position:relative;
         width:min(100%, 1180px);
-        min-height:100dvh;
+        min-height:var(--ft-app-height, 100dvh);
         margin:0 auto;
         padding:
           calc(24px + env(safe-area-inset-top))
