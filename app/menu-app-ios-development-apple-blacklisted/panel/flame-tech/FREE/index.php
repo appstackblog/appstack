@@ -2,7 +2,9 @@
 require __DIR__ . '/time.php';
 
 $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
-if (stripos(str_replace('\\', '/', $requestPath), '/FREE/') === false) {
+$entry = strtolower((string) ($_GET['entry'] ?? ''));
+
+if (stripos(str_replace('\\', '/', $requestPath), '/FREE/') === false || $entry !== 'hub') {
   header('Location: ../index.html', true, 302);
   exit;
 }
