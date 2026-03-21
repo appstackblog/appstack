@@ -265,35 +265,105 @@
         #vgGate .vg-card{grid-template-columns:1fr}
         #vgGate .vg-field{grid-column:1 / -1}
       }
-      @media (max-width:640px){
+      @media (max-width:640px), (max-height:760px){
         #vgGate .vg-shell{
-          width:100%;
+          width:min(100%, 820px);
+          min-height:100%;
           padding:
-            calc(16px + env(safe-area-inset-top))
+            calc(14px + env(safe-area-inset-top))
             calc(14px + env(safe-area-inset-right))
             calc(18px + env(safe-area-inset-bottom))
             calc(14px + env(safe-area-inset-left))
         }
         #vgGate .vg-header{
           grid-template-columns:minmax(0,1fr) auto;
-          gap:14px;
-          padding:20px 18px;
+          gap:10px 12px;
+          padding:16px 18px;
           border-radius:28px
         }
-        #vgGate .vg-brand{margin-top:14px;font-size:clamp(28px, 10vw, 42px);letter-spacing:3px}
-        #vgGate .vg-title{font-size:1rem}
-        #vgGate .vg-desc{font-size:.92rem;line-height:1.62}
-        #vgGate .vg-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-        #vgGate .vg-stat{padding:14px 12px}
+        #vgGate .vg-close{
+          align-self:start;
+          width:40px;
+          height:40px;
+          border-radius:14px
+        }
+        #vgGate .vg-brand{margin-top:10px;font-size:clamp(24px, 7vw, 34px);letter-spacing:1.8px}
+        #vgGate .vg-title{margin-top:12px;font-size:.95rem}
+        #vgGate .vg-desc{font-size:.88rem;line-height:1.54}
+        #vgGate .vg-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+        #vgGate .vg-stat{padding:12px 14px;border-radius:20px}
+        #vgGate .vg-stat:last-child{grid-column:1 / -1}
         #vgGate .vg-stat span{font-size:9px;letter-spacing:1.2px}
-        #vgGate .vg-stat strong{margin-top:10px;font-size:.86rem}
-        #vgGate .vg-card{padding:18px;border-radius:28px;gap:16px}
-        #vgGate .vg-row{grid-template-columns:minmax(0,1fr) auto auto;gap:8px}
-        #vgGate .vg-tool{min-height:48px;padding:0 14px}
-        #vgGate .vg-btn{width:100%;min-height:50px}
+        #vgGate .vg-stat strong{margin-top:8px;font-size:.85rem}
+        #vgGate .vg-card{padding:16px 18px;border-radius:28px;gap:16px 12px}
+        #vgGate .vg-row{
+          grid-template-columns:minmax(0,1fr) auto auto;
+          gap:8px
+        }
+        #vgGate .vg-tool{
+          min-width:58px;
+          min-height:44px;
+          padding:0 12px
+        }
+        #vgGate .vg-device{margin-top:12px;padding:12px 14px;font-size:.86rem}
+        #vgGate .vg-helper{margin-top:12px;font-size:.89rem;line-height:1.6}
         #vgGate .vg-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-        #vgGate .vg-device{font-size:.88rem}
+        #vgGate .vg-btn{width:100%;min-height:46px;padding:0 14px}
+        #vgGate .vg-msg{padding:14px 15px;font-size:.9rem;line-height:1.6}
         #vgGate details{border-radius:18px}
+        #vgGate summary{padding:13px 15px}
+        #vgGate .vg-pre{padding:0 15px 15px;font-size:11px}
+      }
+      @media (max-width:420px), (max-height:680px){
+        #vgGate .vg-shell{
+          padding:
+            calc(10px + env(safe-area-inset-top))
+            calc(10px + env(safe-area-inset-right))
+            calc(12px + env(safe-area-inset-bottom))
+            calc(10px + env(safe-area-inset-left))
+        }
+        #vgGate .vg-header{
+          grid-template-columns:minmax(0,1fr);
+          padding:14px;
+          border-radius:22px
+        }
+        #vgGate .vg-close{
+          justify-self:end;
+          width:38px;
+          height:38px;
+          border-radius:13px
+        }
+        #vgGate .vg-brand{
+          font-size:22px;
+          letter-spacing:1.2px
+        }
+        #vgGate .vg-title{font-size:.9rem}
+        #vgGate .vg-desc{font-size:.84rem}
+        #vgGate .vg-stats{gap:8px}
+        #vgGate .vg-stat{padding:11px 12px}
+        #vgGate .vg-card{
+          padding:14px 14px 15px;
+          border-radius:22px;
+          gap:14px 10px
+        }
+        #vgGate .vg-label{
+          font-size:10px;
+          letter-spacing:1.3px
+        }
+        #vgGate .vg-row{
+          grid-template-columns:repeat(2,minmax(0,1fr));
+          gap:8px
+        }
+        #vgGate .vg-row > .vg-input{grid-column:1 / -1}
+        #vgGate .vg-input{
+          min-height:50px;
+          padding:12px 14px
+        }
+        #vgGate .vg-tool,
+        #vgGate .vg-btn{
+          min-height:42px
+        }
+        #vgGate .vg-actions{grid-template-columns:1fr;gap:9px}
       }
     `;
     document.head.appendChild(style);
