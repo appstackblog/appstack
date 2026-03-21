@@ -11,10 +11,32 @@
   if (viewport) viewport.setAttribute('content', content);
 
   let rafId = 0;
+  let viewportKey = '';
+  let maxSeenHeight = 0;
+  let maxSeenWidth = 0;
   const syncViewport = () => {
     const vv = window.visualViewport;
-    const height = Math.max(0, Math.round(vv ? vv.height : window.innerHeight));
-    const width = Math.max(0, Math.round(vv ? vv.width : window.innerWidth));
+    const innerHeight = Math.max(0, Math.round(window.innerHeight || 0));
+    const clientHeight = Math.max(0, Math.round(root.clientHeight || 0));
+    const outerHeight = Math.max(0, Math.round(window.outerHeight || 0));
+    const vvHeight = Math.max(0, Math.round(vv ? vv.height + (vv.offsetTop || 0) : 0));
+    const innerWidth = Math.max(0, Math.round(window.innerWidth || 0));
+    const clientWidth = Math.max(0, Math.round(root.clientWidth || 0));
+    const outerWidth = Math.max(0, Math.round(window.outerWidth || 0));
+    const vvWidth = Math.max(0, Math.round(vv ? vv.width + (vv.offsetLeft || 0) : 0));
+    const nextKey = `${Math.round(screen.width || 0)}x${Math.round(screen.height || 0)}:${Math.round(window.orientation || 0)}`;
+
+    if (nextKey !== viewportKey) {
+      viewportKey = nextKey;
+      maxSeenHeight = 0;
+      maxSeenWidth = 0;
+    }
+
+    maxSeenHeight = Math.max(maxSeenHeight, innerHeight, clientHeight, outerHeight, vvHeight);
+    maxSeenWidth = Math.max(maxSeenWidth, innerWidth, clientWidth, outerWidth, vvWidth);
+
+    const height = maxSeenHeight || innerHeight || clientHeight || vvHeight;
+    const width = maxSeenWidth || innerWidth || clientWidth || vvWidth;
     root.style.setProperty('--ft-app-height', `${height}px`);
     root.style.setProperty('--ft-app-width', `${width}px`);
   };
