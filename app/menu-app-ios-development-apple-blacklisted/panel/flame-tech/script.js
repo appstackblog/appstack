@@ -57,4 +57,44 @@
       window.location.href = card.dataset.target;
     });
   });
+
+  document.querySelectorAll('.intro-more-toggle').forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const card = toggle.closest('.intro-card');
+      const extra = card && card.querySelector('.intro-more');
+      if (!card || !extra) return;
+
+      const expanded = card.dataset.expanded === 'true';
+      const nextExpanded = !expanded;
+
+      card.dataset.expanded = nextExpanded ? 'true' : 'false';
+      extra.hidden = !nextExpanded;
+      toggle.textContent = nextExpanded ? 'Thu gọn' : 'Xem thêm...';
+      toggle.setAttribute('aria-expanded', nextExpanded ? 'true' : 'false');
+    });
+  });
+
+  const deck = document.querySelector('.deck');
+  const introCard = document.querySelector('.intro-card');
+  const launchPanel = document.querySelector('.launch-panel');
+  const introNextBtn = document.querySelector('.intro-next-btn');
+  const launchBackBtn = document.querySelector('.launch-back-btn');
+
+  if (deck && introCard && launchPanel && introNextBtn) {
+    introNextBtn.addEventListener('click', () => {
+      deck.dataset.stage = 'access';
+      introCard.hidden = true;
+      launchPanel.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  if (deck && introCard && launchPanel && launchBackBtn) {
+    launchBackBtn.addEventListener('click', () => {
+      deck.dataset.stage = 'intro';
+      launchPanel.hidden = true;
+      introCard.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 })();
