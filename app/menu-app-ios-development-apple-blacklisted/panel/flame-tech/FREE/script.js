@@ -364,10 +364,17 @@ function initActionFeedback() {
 
 function toggleFunc(idx, checkbox) {
   const card = document.getElementById('fc-' + idx);
-  if (checkbox.checked) {
-    card.classList.add('on');
-  } else {
-    card.classList.remove('on');
+  if (card) {
+    if (checkbox.checked) {
+      card.classList.add('on');
+    } else {
+      card.classList.remove('on');
+    }
+    card.dataset.featureRunning = checkbox.checked ? 'true' : 'false';
+  }
+
+  if (window.ftFeatureEngine && typeof window.ftFeatureEngine.toggle === 'function') {
+    window.ftFeatureEngine.toggle(idx, checkbox);
   }
 }
 
@@ -423,6 +430,9 @@ function resetConfiguration(showFeedback = true) {
   const hadSound = isSoundEnabled();
   if (showFeedback && hadSound) playUiSound('reset');
   toggleFeedbackSuppressed = true;
+  if (window.ftFeatureEngine && typeof window.ftFeatureEngine.stopAll === 'function') {
+    window.ftFeatureEngine.stopAll('reset');
+  }
   document.querySelectorAll('.toggle input').forEach(checkbox => {
     checkbox.checked = false;
     syncToggleUI(checkbox);

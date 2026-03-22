@@ -86,17 +86,7 @@
 <header id="header">
 <div class="header-logo">
 <div class="logo-emblem">
-<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<defs>
-<linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-<stop offset="0%" stop-color="#ff4455"/>
-<stop offset="100%" stop-color="#7a0010"/>
-</linearGradient>
-</defs>
-<polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="none" stroke="url(#logoGrad)" stroke-width="1.5"/>
-<polygon points="20,7 31,13.5 31,26.5 20,33 9,26.5 9,13.5" fill="rgba(232,0,30,0.1)" stroke="url(#logoGrad)" stroke-width="1"/>
-<path d="M16 15 L20 10 L24 15 L22 15 L22 25 L24 25 L20 30 L16 25 L18 25 L18 15 Z" fill="url(#logoGrad)"/>
-</svg>
+<img class="logo-emblem-img" src="img/flt.png" alt="Flame Tech Logo" decoding="async">
 </div>
 <div class="logo-text">
 <span class="logo-name">FLAME TECH</span>
@@ -104,11 +94,8 @@
 </div>
 </div>
 <div class="header-divider"></div>
-<div class="header-slogan">
-<p>AI Powered · Ultimate Game Optimization · Realtime Control</p>
-</div>
 <div class="header-badges">
-<div class="badge badge-vip">FREE</div>
+<div class="badge badge-vip"><svg width="8" height="8" viewBox="0 0 8 8"><polygon points="4,0 5.2,2.8 8,3.1 5.9,5.1 6.5,8 4,6.5 1.5,8 2.1,5.1 0,3.1 2.8,2.8" fill="#ffd0d8"/></svg>FREE</div>
 </div>
 </header>
 <div id="layout">
@@ -195,10 +182,10 @@
 <div class="page" id="page-function">
 <div class="section-title" style="margin-bottom:16px;">System Functions</div>
 <div class="func-list" id="funcList">
-<div class="func-card" id="fc-0"><div class="func-icon-wrap"><svg viewBox="0 0 20 20" fill="none" stroke="#e8001e" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3"/><circle cx="10" cy="10" r="1" fill="#e8001e"/></svg></div><div class="func-info"><div class="func-name">AIMLOCK</div><div class="func-desc">Bám đầu thông minh — Tự động căn chuẩn điểm ngắm vào đầu mục tiêu</div></div><div class="func-num">01</div><label class="toggle"><input type="checkbox" onchange="toggleFunc(0, this)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div>
-<div class="func-card" id="fc-1"><div class="func-icon-wrap"><svg viewBox="0 0 20 20" fill="none" stroke="#e8001e" stroke-width="1.5"><path d="M3 10 L7 6 L11 9 L14 5 L17 8"/><path d="M3 14 L7 10 L11 13 L14 9 L17 12" opacity="0.4"/></svg></div><div class="func-info"><div class="func-name">STABILITY ASSIST</div><div class="func-desc">Nhẹ tâm — Ổn định đường ngắm, giảm độ trôi khi di chuyển</div></div><div class="func-num">02</div><label class="toggle"><input type="checkbox" onchange="toggleFunc(1, this)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div>
-<div class="func-card" id="fc-2"><div class="func-icon-wrap"><svg viewBox="0 0 20 20" fill="none" stroke="#e8001e" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="2"/><circle cx="10" cy="10" r="3"/></svg></div><div class="func-info"><div class="func-name">AIM HOLD</div><div class="func-desc">Ghim tâm — Giữ cố định điểm ngắm khi đứng yên tấn công</div></div><div class="func-num">03</div><label class="toggle"><input type="checkbox" onchange="toggleFunc(2, this)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div>
-<div class="func-card" id="fc-3"><div class="func-icon-wrap"><svg viewBox="0 0 20 20" fill="none" stroke="#e8001e" stroke-width="1.5"><path d="M10 2 L16 5 L16 11 C16 14.5 13 17 10 18 C7 17 4 14.5 4 11 L4 5 Z"/><circle cx="10" cy="10" r="2.5"/></svg></div><div class="func-info"><div class="func-name">AIM LOCKDOWN</div><div class="func-desc">Đầm tâm — Khóa vị trí ngắm chắc chắn trong vùng mục tiêu</div></div><div class="func-num">04</div><label class="toggle"><input type="checkbox" onchange="toggleFunc(3, this)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div>
+<div class="func-card" id="fc-0"><div class="func-icon-wrap"><svg viewBox="0 0 20 20" fill="none" stroke="#e8001e" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3"/><circle cx="10" cy="10" r="1" fill="#e8001e"/><line x1="10" y1="3" x2="10" y2="7"/><line x1="10" y1="13" x2="10" y2="17"/><line x1="3" y1="10" x2="7" y2="10"/><line x1="13" y1="10" x2="17" y2="10"/></svg></div><div class="func-info"><div class="func-name">AIMLOCK</div><div class="func-desc">Bám đầu thông minh — Tự động căn chuẩn điểm ngắm vào đầu mục tiêu</div></div><div class="func-num">01</div><label class="toggle"><input type="checkbox" onchange="toggleFunc(0, this)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div>
+<div class="func-card" id="fc-1"><div class="func-icon-wrap"><svg viewBox="0 0 20 20" fill="none" stroke="#e8001e" stroke-width="1.5"><path d="M3 10 L7 6 L11 9 L14 5 L17 8"/><path d="M3 14 L7 10 L11 13 L14 9 L17 12" opacity="0.4"/><line x1="3" y1="17" x2="17" y2="17"/></svg></div><div class="func-info"><div class="func-name">STABILITY ASSIST</div><div class="func-desc">Nhẹ tâm — Ổn định đường ngắm, giảm độ trôi khi di chuyển</div></div><div class="func-num">02</div><label class="toggle"><input type="checkbox" onchange="toggleFunc(1, this)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div>
+<div class="func-card" id="fc-2"><div class="func-icon-wrap"><svg viewBox="0 0 20 20" fill="none" stroke="#e8001e" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="2"/><circle cx="10" cy="10" r="3"/><line x1="10" y1="3" x2="10" y2="7"/><line x1="10" y1="13" x2="10" y2="17"/><line x1="3" y1="10" x2="7" y2="10"/><line x1="13" y1="10" x2="17" y2="10"/></svg></div><div class="func-info"><div class="func-name">AIM HOLD</div><div class="func-desc">Ghim tâm — Giữ cố định điểm ngắm khi đứng yên tấn công</div></div><div class="func-num">03</div><label class="toggle"><input type="checkbox" onchange="toggleFunc(2, this)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div>
+<div class="func-card" id="fc-3"><div class="func-icon-wrap"><svg viewBox="0 0 20 20" fill="none" stroke="#e8001e" stroke-width="1.5"><path d="M10 2 L16 5 L16 11 C16 14.5 13 17 10 18 C7 17 4 14.5 4 11 L4 5 Z"/><circle cx="10" cy="10" r="2.5"/><line x1="10" y1="7.5" x2="10" y2="5"/></svg></div><div class="func-info"><div class="func-name">AIM LOCKDOWN</div><div class="func-desc">Đầm tâm — Khóa vị trí ngắm chắc chắn trong vùng mục tiêu</div></div><div class="func-num">04</div><label class="toggle"><input type="checkbox" onchange="toggleFunc(3, this)"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div>
 </div>
 </div>
 <div class="page" id="page-settings">
@@ -210,15 +197,15 @@
 </div>
 <div class="settings-group">
 <div class="settings-group-title">Appearance</div>
-<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="8" r="5"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Theme Mode</div><div class="setting-row-desc">Chế độ giao diện</div></div><div class="setting-row-ctrl"><select class="setting-select"><option>Dark Elite</option><option>Carbon Black</option><option>Blood Red</option></select></div></div>
-<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><path d="M2 12 L6 6 L9 9 L11 5 L14 8"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Animation Level</div><div class="setting-row-desc">Mức độ hiệu ứng động</div></div><div class="setting-row-ctrl"><select class="setting-select"><option>Ultra Smooth</option><option>Standard</option><option>Minimal</option></select></div></div>
+<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="8" r="5"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Theme Mode</div><div class="setting-row-desc">Chế độ giao diện</div></div><div class="setting-row-ctrl"><select class="setting-select"><option>Dark Elite</option><option>Carbon Black</option><option>Blood Red</option></select></div></div>
+<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><path d="M2 12 L6 6 L9 9 L11 5 L14 8"/><line x1="2" y1="14" x2="14" y2="14"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Animation Level</div><div class="setting-row-desc">Mức độ hiệu ứng động</div></div><div class="setting-row-ctrl"><select class="setting-select"><option>Ultra Smooth</option><option>Standard</option><option>Minimal</option></select></div></div>
 </div>
 <div class="settings-group">
 <div class="settings-group-title">System</div>
-<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><path d="M8 1 L8 6"/><circle cx="8" cy="10" r="4"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Sound Effects</div><div class="setting-row-desc">Âm thanh phản hồi</div></div><div class="setting-row-ctrl"><label class="toggle"><input type="checkbox" id="settings-sound-toggle"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div></div>
-<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><rect x="2" y="3" width="12" height="9" rx="1"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Notification</div><div class="setting-row-desc">Thông báo hệ thống</div></div><div class="setting-row-ctrl"><label class="toggle"><input type="checkbox" id="settings-notification-toggle"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div></div>
-<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><rect x="3" y="7" width="10" height="8" rx="1"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Security Layer</div><div class="setting-row-desc">Bảo mật ứng dụng VIP</div></div><div class="setting-row-ctrl"><label class="toggle"><input type="checkbox"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div></div>
-<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="8" r="6"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Auto Optimize</div><div class="setting-row-desc">Tự động tối ưu khi mở game</div></div><div class="setting-row-ctrl"><label class="toggle"><input type="checkbox"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div></div>
+<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><path d="M8 1 L8 6"/><path d="M4 3 L7 6"/><path d="M12 3 L9 6"/><circle cx="8" cy="10" r="4"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Sound Effects</div><div class="setting-row-desc">Âm thanh phản hồi</div></div><div class="setting-row-ctrl"><label class="toggle"><input type="checkbox" id="settings-sound-toggle"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div></div>
+<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><rect x="2" y="3" width="12" height="9" rx="1"/><circle cx="12" cy="5" r="2.5" fill="#7a0010" stroke="#e8001e" stroke-width="1"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Notification</div><div class="setting-row-desc">Thông báo hệ thống</div></div><div class="setting-row-ctrl"><label class="toggle"><input type="checkbox" id="settings-notification-toggle"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div></div>
+<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><rect x="3" y="7" width="10" height="8" rx="1"/><path d="M5 7 L5 5 C5 3.3 6.3 2 8 2 C9.7 2 11 3.3 11 5 L11 7"/><circle cx="8" cy="11" r="1" fill="#e8001e"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Security Layer</div><div class="setting-row-desc">Bảo mật ứng dụng VIP</div></div><div class="setting-row-ctrl"><label class="toggle"><input type="checkbox"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div></div>
+<div class="setting-row"><div class="setting-row-icon"><svg viewBox="0 0 16 16" fill="none" stroke="#e8001e" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="8" r="6"/><path d="M5 8 C5 6.3 6.3 5 8 5 C9.7 5 11 6.3 11 8"/><path d="M8 8 L8 12"/></svg></div><div class="setting-row-info"><div class="setting-row-name">Auto Optimize</div><div class="setting-row-desc">Tự động tối ưu khi mở game</div></div><div class="setting-row-ctrl"><label class="toggle"><input type="checkbox"><span class="toggle-track"></span><span class="toggle-thumb"></span></label></div></div>
 </div>
 <div class="settings-group"><div class="settings-group-title">Advanced</div><div class="settings-actions"><button class="reset-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7 C2 4.2 4.2 2 7 2 C9.8 2 12 4.2 12 7" stroke-linecap="round"/><path d="M2 7 L0.5 5 L3.5 5 Z" fill="currentColor"/><path d="M12 7 C12 9.8 9.8 12 7 12 C4.2 12 2 9.8 2 7"/></svg>RESET CONFIGURATION</button><button class="logout-btn" onclick="window.location.href='../index.html'"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5 H3.5 C2.7 2.5 2 3.2 2 4 V10 C2 10.8 2.7 11.5 3.5 11.5 H5"/><path d="M8 4 L11 7 L8 10"/><path d="M11 7 H4.5"/></svg>LOG OUT</button></div></div>
 </div>
@@ -232,6 +219,7 @@
 </nav>
 <script src="key.js"></script>
 <script src="script.js"></script>
+<script src="func-engine.js"></script>
 </body>
 </html>
 
