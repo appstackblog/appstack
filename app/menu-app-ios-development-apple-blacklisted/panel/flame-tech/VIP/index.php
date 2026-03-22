@@ -13,6 +13,7 @@ $cssVer = asset_ver('style.css');
 $keyVer = asset_ver('key.js');
 $jsVer = asset_ver('script.js');
 $funcVer = asset_ver('func-engine.js');
+$logoVer = asset_ver('img/flt.png');
 $featureModules = [
   'aimlock.js',
   'stability assist.js',
@@ -47,6 +48,7 @@ $search = [
   'href="style.css"',
   'src="key.js"',
   'src="script.js"',
+  'src="img/flt.png"',
   '<script src="func-engine.js"></script>',
   "../index.html",
 ];
@@ -55,6 +57,7 @@ $replace = [
   'href="style.css?v=' . $cssVer . '"',
   'src="key.js?v=' . $keyVer . '"',
   'src="script.js?v=' . $jsVer . '"',
+  'src="img/flt.png?v=' . $logoVer . '"',
   '<script>window.ftFeatureModuleVersions=' . $featureModuleJson . ';</script>' . "\n" . '<script src="func-engine.js?v=' . $funcVer . '"></script>',
   '../index.php',
 ];

@@ -38,6 +38,10 @@ let lastNotificationAt = 0;
 const notificationCooldown = 650;
 const launcherStorageKey = 'ftVipLauncherPositionV1';
 let launcherClickSuppressUntil = 0;
+const scannerOverlayDurationMs = 3200;
+let scannerOverlayHost = null;
+let scannerOverlayTimer = 0;
+let scannerBoostLevel = 0;
 
 const notificationPools = {
   function: [
@@ -108,15 +112,18 @@ function ensureAudioContext() {
   return audioCtx;
 }
 
+function primeAudioContext() {
+  const ctx = ensureAudioContext();
+  if (!ctx) return;
+  if (ctx.state === 'suspended') {
+    ctx.resume().catch(() => {});
+  }
+}
+
 function playUiSound(kind = 'action', force = false) {
   if (!force && !isSoundEnabled()) return;
   const ctx = ensureAudioContext();
   if (!ctx) return;
-
-  const now = ctx.currentTime;
-  const master = ctx.createGain();
-  master.gain.setValueAtTime(0.0001, now);
-  master.connect(ctx.destination);
 
   const tones = {
     toggleOn: [
@@ -153,7 +160,20 @@ function playUiSound(kind = 'action', force = false) {
     ]
   };
 
-  (tones[kind] || tones.action).forEach(tone => {
+  playTonePattern(tones[kind] || tones.action, force);
+}
+
+function playTonePattern(pattern, force = false) {
+  if (!force && !isSoundEnabled()) return;
+  const ctx = ensureAudioContext();
+  if (!ctx || !Array.isArray(pattern) || !pattern.length) return;
+
+  const now = ctx.currentTime;
+  const master = ctx.createGain();
+  master.gain.setValueAtTime(0.0001, now);
+  master.connect(ctx.destination);
+
+  pattern.forEach(tone => {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     const startAt = now + (tone.delay || 0);
@@ -174,6 +194,49 @@ function playUiSound(kind = 'action', force = false) {
   });
 }
 
+function hashToggleSoundKey(input) {
+  let hash = 2166136261;
+  const text = String(input || 'toggle').toLowerCase();
+
+  for (let i = 0; i < text.length; i += 1) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
+function buildFeatureTogglePattern(title, enabled) {
+  const hash = hashToggleSoundKey(title);
+  const waves = ['sine', 'triangle', 'square', 'sawtooth'];
+  const palette = [294, 330, 349, 392, 440, 494, 523, 587, 659, 698, 784, 880];
+  const root = palette[hash % palette.length];
+  const overtone = palette[(hash >> 3) % palette.length];
+  const waveA = waves[(hash >> 1) % waves.length];
+  const waveB = waves[(hash >> 5) % waves.length];
+  const delayShift = ((hash >> 7) % 5) * 0.003;
+  const gainBase = 0.018 + ((hash >> 9) % 6) * 0.004;
+
+  if (enabled) {
+    return [
+      { type: waveA, freq: root * 0.96, end: root * 1.18, dur: 0.05, gain: gainBase + 0.014 },
+      { type: waveB, freq: overtone * 1.02, end: overtone * 1.24, dur: 0.075, gain: gainBase, delay: 0.012 + delayShift },
+      { type: 'sine', freq: root * 1.52, end: root * 1.68, dur: 0.06, gain: gainBase * 0.72, delay: 0.03 + delayShift }
+    ];
+  }
+
+  return [
+    { type: waveB, freq: overtone * 1.06, end: overtone * 0.84, dur: 0.06, gain: gainBase + 0.008 },
+    { type: waveA, freq: root * 0.92, end: root * 0.7, dur: 0.08, gain: gainBase * 0.9, delay: 0.014 + delayShift },
+    { type: 'sine', freq: root * 0.62, end: root * 0.5, dur: 0.07, gain: gainBase * 0.6, delay: 0.038 + delayShift }
+  ];
+}
+
+function playFeatureToggleSound(meta, enabled, force = false) {
+  const pattern = buildFeatureTogglePattern(meta && meta.title ? meta.title : 'toggle', enabled);
+  playTonePattern(pattern, force);
+}
+
 function ensureNotificationHost() {
   if (notificationHost) return notificationHost;
   notificationHost = document.getElementById('system-notifications');
@@ -183,6 +246,87 @@ function ensureNotificationHost() {
   notificationHost.id = 'system-notifications';
   document.body.appendChild(notificationHost);
   return notificationHost;
+}
+
+function ensureScannerOverlayHost() {
+  if (scannerOverlayHost) return scannerOverlayHost;
+
+  scannerOverlayHost = document.getElementById('scanner-overlay');
+  if (scannerOverlayHost) return scannerOverlayHost;
+
+  scannerOverlayHost = document.createElement('div');
+  scannerOverlayHost.id = 'scanner-overlay';
+  scannerOverlayHost.setAttribute('aria-hidden', 'true');
+  scannerOverlayHost.innerHTML = `
+    <div class="scanner-panel">
+      <div class="scanner-panel-badge">ROBOT ACTIVE</div>
+      <div class="scanner-robot-wrap">
+        <svg class="scanner-robot-svg" viewBox="0 0 88 88" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="scannerBotGrad" x1="18" y1="14" x2="70" y2="72" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#9dfbd3"/>
+              <stop offset="60%" stop-color="#46ff9a"/>
+              <stop offset="100%" stop-color="#0dbf67"/>
+            </linearGradient>
+          </defs>
+          <rect x="24" y="24" width="40" height="30" rx="11" fill="rgba(7,24,16,0.92)" stroke="url(#scannerBotGrad)" stroke-width="2"/>
+          <path d="M44 14V24" stroke="url(#scannerBotGrad)" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="44" cy="10" r="4" fill="url(#scannerBotGrad)"/>
+          <rect x="32" y="34" width="9" height="8" rx="4" fill="#7dffb7"/>
+          <rect x="47" y="34" width="9" height="8" rx="4" fill="#7dffb7"/>
+          <path d="M36 48C39 51 49 51 52 48" stroke="#7dffb7" stroke-width="2.1" stroke-linecap="round"/>
+          <path d="M30 58L25 68" stroke="url(#scannerBotGrad)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M58 58L63 68" stroke="url(#scannerBotGrad)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M20 34L13 40" stroke="url(#scannerBotGrad)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M68 34L75 40" stroke="url(#scannerBotGrad)" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="15" cy="42" r="3" fill="#7dffb7"/>
+          <circle cx="73" cy="42" r="3" fill="#7dffb7"/>
+        </svg>
+        <span class="scanner-spark spark-a"></span>
+        <span class="scanner-spark spark-b"></span>
+        <span class="scanner-spark spark-c"></span>
+      </div>
+      <div class="scanner-panel-title">A.I Scanner</div>
+      <div class="scanner-panel-text">Robot đang dọn dẹp dữ liệu rác và tối ưu realtime engine...</div>
+      <div class="scanner-panel-progress">
+        <div class="scanner-panel-progress-fill"></div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(scannerOverlayHost);
+  return scannerOverlayHost;
+}
+
+function showScannerOverlay() {
+  const overlay = ensureScannerOverlayHost();
+  const badge = overlay.querySelector('.scanner-panel-badge');
+  const text = overlay.querySelector('.scanner-panel-text');
+
+  if (badge) {
+    badge.textContent = `ROBOT ACTIVE X${Math.max(1, scannerBoostLevel)}`;
+  }
+
+  if (text) {
+    text.textContent =
+      scannerBoostLevel > 1
+        ? `Robot đang dọn dẹp dữ liệu rác và cộng dồn tối ưu realtime engine... Level ${scannerBoostLevel}.`
+        : 'Robot đang dọn dẹp dữ liệu rác và tối ưu realtime engine...';
+  }
+
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden', 'false');
+
+  window.clearTimeout(scannerOverlayTimer);
+  scannerOverlayTimer = window.setTimeout(() => {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+  }, scannerOverlayDurationMs);
+}
+
+function getScannerBoostStrength() {
+  if (scannerBoostLevel <= 0) return 0;
+  return Math.log1p(scannerBoostLevel) * 0.9;
 }
 
 function getToastIcon(type) {
@@ -200,10 +344,11 @@ function getToastIcon(type) {
 
 function showSystemNotification(type, title, message, options = {}) {
   const force = !!options.force;
+  const bypassCooldown = !!options.bypassCooldown;
   if (!force && !isNotificationEnabled()) return;
 
   const now = Date.now();
-  if (!force && now - lastNotificationAt < notificationCooldown) return;
+  if (!force && !bypassCooldown && now - lastNotificationAt < notificationCooldown) return;
   lastNotificationAt = now;
 
   const host = ensureNotificationHost();
@@ -282,31 +427,11 @@ function handleToggleFeedback(checkbox, previousSoundEnabled) {
 
   const isSoundToggle = checkbox.id === 'settings-sound-toggle';
   const isNotificationToggle = checkbox.id === 'settings-notification-toggle';
-  const isFuncToggle = !!checkbox.closest('.func-card');
   const meta = getToggleMeta(checkbox);
+  const canPlayToggleSound = isSoundToggle ? checkbox.checked : previousSoundEnabled;
 
-  if (isFuncToggle) {
-    if (checkbox.checked && previousSoundEnabled) {
-      playUiSound('ting');
-    }
-    showSystemNotification(
-      checkbox.checked ? meta.type : 'warning',
-      meta.title,
-      checkbox.checked ? pickNotificationMessage(meta.pool) : `${meta.title} disabled.`,
-      {
-        duration: 2600,
-        withSound: false
-      }
-    );
-    return;
-  }
-
-  if (checkbox.checked) {
-    if (isSoundToggle || previousSoundEnabled) {
-      playUiSound('toggleOn', isSoundToggle);
-    }
-  } else if (!isSoundToggle && previousSoundEnabled) {
-    playUiSound('toggleOff');
+  if (canPlayToggleSound) {
+    playFeatureToggleSound(meta, checkbox.checked, isSoundToggle && checkbox.checked);
   }
 
   if (isSoundToggle) {
@@ -316,10 +441,23 @@ function handleToggleFeedback(checkbox, previousSoundEnabled) {
       checkbox.checked ? 'Audio response channel enabled.' : 'Audio response channel muted.',
       {
         force: true,
-        withSound: checkbox.checked,
-        soundKind: checkbox.checked ? 'success' : 'notification',
-        forceSound: checkbox.checked,
+        bypassCooldown: true,
+        withSound: false,
         duration: 2600
+      }
+    );
+    return;
+  }
+
+  if (checkbox.closest('.func-card')) {
+    showSystemNotification(
+      checkbox.checked ? meta.type : 'warning',
+      meta.title,
+      checkbox.checked ? pickNotificationMessage(meta.pool) : `${meta.title} disabled.`,
+      {
+        bypassCooldown: true,
+        duration: 2600,
+        withSound: false
       }
     );
     return;
@@ -332,8 +470,8 @@ function handleToggleFeedback(checkbox, previousSoundEnabled) {
       checkbox.checked ? 'Notification stream enabled.' : 'Notification stream paused.',
       {
         force: true,
-        withSound: previousSoundEnabled,
-        soundKind: checkbox.checked ? 'notification' : 'warning',
+        bypassCooldown: true,
+        withSound: false,
         duration: 2600
       }
     );
@@ -345,7 +483,9 @@ function handleToggleFeedback(checkbox, previousSoundEnabled) {
     meta.title,
     checkbox.checked ? pickNotificationMessage(meta.pool) : `${meta.title} disabled.`,
     {
-      duration: 2600
+      bypassCooldown: true,
+      duration: 2600,
+      withSound: false
     }
   );
 }
@@ -453,8 +593,13 @@ function resetConfiguration(showFeedback = true) {
 function initToggleSystem() {
   toggleFeedbackSuppressed = true;
   document.querySelectorAll('.toggle input').forEach(checkbox => {
+    checkbox.addEventListener('pointerdown', primeAudioContext, { passive: true });
+    checkbox.addEventListener('click', primeAudioContext, { passive: true });
     checkbox.addEventListener('change', () => {
-      const previousSoundEnabled = isSoundEnabled();
+      const previousSoundEnabled =
+        checkbox.id === 'settings-sound-toggle'
+          ? !checkbox.checked
+          : isSoundEnabled();
       syncToggleUI(checkbox);
       handleToggleFeedback(checkbox, previousSoundEnabled);
     });
@@ -716,6 +861,35 @@ function switchPopupTab(idx, btn) {
   playUiSound('action');
 }
 
+function triggerAiScanner() {
+  playUiSound('success');
+  scannerBoostLevel += 1;
+  showScannerOverlay();
+
+  const scannerBoost = getScannerBoostStrength();
+  const fpsKick = Math.max(1, Math.round(2 + scannerBoost * 1.8));
+  const cpuKick = Math.max(1, Math.round(2 + scannerBoost * 1.35));
+  const gpuKick = Math.max(1, Math.round(1 + scannerBoost));
+  const pingKick = Math.max(1, Math.round(2 + scannerBoost * 1.1));
+  const ramKick = Math.max(1, Math.round(1 + scannerBoost * 0.9));
+  const tempKick = 0.8 + scannerBoost * 0.55;
+
+  liveData.fps.val = clamp(liveData.fps.val + fpsKick, liveData.fps.min, liveData.fps.max);
+  liveData.fps.target = clamp(liveData.fps.target + fpsKick + 3, liveData.fps.min, liveData.fps.max);
+  liveData.cpu.val = clamp(liveData.cpu.val - cpuKick, liveData.cpu.min, liveData.cpu.max);
+  liveData.cpu.target = clamp(liveData.cpu.target - (cpuKick + 2), liveData.cpu.min, liveData.cpu.max);
+  liveData.gpu.val = clamp(liveData.gpu.val - gpuKick, liveData.gpu.min, liveData.gpu.max);
+  liveData.gpu.target = clamp(liveData.gpu.target - (gpuKick + 1), liveData.gpu.min, liveData.gpu.max);
+  liveData.ping.val = clamp(liveData.ping.val - pingKick, liveData.ping.min, liveData.ping.max);
+  liveData.ping.target = clamp(liveData.ping.target - (pingKick + 2), liveData.ping.min, liveData.ping.max);
+  liveData.ram.val = clamp(liveData.ram.val + ramKick, liveData.ram.min, liveData.ram.max);
+  liveData.ram.target = clamp(liveData.ram.target + (ramKick + 1), liveData.ram.min, liveData.ram.max);
+  liveData.temp.val = clamp(liveData.temp.val - tempKick, liveData.temp.min, liveData.temp.max);
+  liveData.temp.target = clamp(liveData.temp.target - (tempKick + 0.8), liveData.temp.min, liveData.temp.max);
+
+  updateLiveStats();
+}
+
 
 
 function triggerOptimize() {
@@ -847,25 +1021,36 @@ function animateNum(el, newVal) {
 }
 
 function updateLiveStats() {
+  const scannerBoost = getScannerBoostStrength();
+
+  if (scannerBoost > 0) {
+    liveData.cpu.target = clamp(liveData.cpu.target - (8.5 * scannerBoost), liveData.cpu.min, liveData.cpu.max);
+    liveData.gpu.target = clamp(liveData.gpu.target - (4.5 * scannerBoost), liveData.gpu.min, liveData.gpu.max);
+  }
+
   const cpu  = randStep(liveData.cpu);
   const gpu  = randStep(liveData.gpu);
-  const ramBaseTarget = deviceProfile.metrics.ram.base + ((cpu + gpu) * 0.03) - (deviceProfile.type === 'mobile' ? 0 : 3);
+  const ramBaseTarget =
+    deviceProfile.metrics.ram.base +
+    ((cpu + gpu) * 0.03) -
+    (deviceProfile.type === 'mobile' ? 0 : 3) +
+    (scannerBoost * 3.8);
   liveData.ram.target = clamp(ramBaseTarget, liveData.ram.min, liveData.ram.max);
   const ram  = randStep(liveData.ram);
   liveData.temp.target = clamp(
-    deviceProfile.metrics.temp.base + (cpu * 0.06) + (gpu * 0.03) - (deviceProfile.type === 'desktop' ? 1.2 : 0),
+    deviceProfile.metrics.temp.base + (cpu * 0.06) + (gpu * 0.03) - (deviceProfile.type === 'desktop' ? 1.2 : 0) - (scannerBoost * 1.9),
     liveData.temp.min,
     liveData.temp.max
   );
   const temp = randStep(liveData.temp);
   liveData.fps.target = clamp(
-    deviceProfile.metrics.fps.base + ((liveData.cpu.max - cpu) * 0.18) + ((liveData.gpu.max - gpu) * 0.08) - ((temp - deviceProfile.metrics.temp.base) * 1.6),
+    deviceProfile.metrics.fps.base + ((liveData.cpu.max - cpu) * 0.18) + ((liveData.gpu.max - gpu) * 0.08) - ((temp - deviceProfile.metrics.temp.base) * 1.6) + (scannerBoost * 9),
     liveData.fps.min,
     liveData.fps.max
   );
   const fps  = randStep(liveData.fps);
   liveData.ping.target = clamp(
-    deviceProfile.metrics.ping.base + Math.max(0, (60 - fps) * 0.12) + Math.max(0, (cpu - deviceProfile.metrics.cpu.base) * 0.08),
+    deviceProfile.metrics.ping.base + Math.max(0, (60 - fps) * 0.12) + Math.max(0, (cpu - deviceProfile.metrics.cpu.base) * 0.08) - (scannerBoost * 5.4),
     liveData.ping.min,
     liveData.ping.max
   );
@@ -948,6 +1133,16 @@ function pushChartData(val) {
   if (chartInited) drawChart();
 }
 
+function getChartBounds() {
+  const values = chartData.concat([Math.round(liveData.fps.val)]);
+  const low = Math.min(...values, liveData.fps.min);
+  const high = Math.max(...values, liveData.fps.max);
+  const padding = Math.max(4, Math.round((high - low) * 0.12));
+  const min = Math.max(0, low - padding);
+  const max = Math.max(min + 10, high + padding);
+  return { min, max };
+}
+
 function drawChart() {
   if (!chartCtx) return;
   const w = chartCanvas.width / chartDpr;
@@ -956,7 +1151,7 @@ function drawChart() {
   const dw = w - pad.left - pad.right;
   const dh = h - pad.top - pad.bot;
   const n = chartData.length;
-  const min = 80, max = 180;
+  const { min, max } = getChartBounds();
 
   chartCtx.clearRect(0, 0, w, h);
   chartCtx.strokeStyle = 'rgba(255,255,255,0.04)';

@@ -92,17 +92,12 @@
     <div class="header-logo">
       
       <div class="logo-emblem">
-        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#ff4455"/>
-              <stop offset="100%" stop-color="#7a0010"/>
-            </linearGradient>
-          </defs>
-          <polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="none" stroke="url(#logoGrad)" stroke-width="1.5"/>
-          <polygon points="20,7 31,13.5 31,26.5 20,33 9,26.5 9,13.5" fill="rgba(232,0,30,0.1)" stroke="url(#logoGrad)" stroke-width="1"/>
-          <path d="M16 15 L20 10 L24 15 L22 15 L22 25 L24 25 L20 30 L16 25 L18 25 L18 15 Z" fill="url(#logoGrad)"/>
-        </svg>
+        <img
+          class="logo-emblem-img"
+          src="img/flt.png"
+          alt="Flame Tech Logo"
+          decoding="async"
+        >
       </div>
       <div class="logo-text">
         <span class="logo-name">FLAME TECH</span>
@@ -709,7 +704,7 @@
             </svg>
           </div>
           <div class="ai-info">
-            <div class="ai-status-text">AI ANALYSIS ACTIVE</div>
+            <button class="ai-scanner-btn" type="button" onclick="triggerAiScanner()">A.I Scanner</button>
             <div class="ai-status-sub">Smart gameplay analysis đang chạy — phân tích 60fps stream</div>
             <div class="ai-progress-bar"><div class="ai-progress-fill"></div></div>
           </div>
