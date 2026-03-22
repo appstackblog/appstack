@@ -3,22 +3,22 @@
 $id = $_GET['id'] ?? '';
 
 $maps = [
-    'fat_bank'         => ['file' => __DIR__ . '/plist-fat/Bank.plist',        'title' => 'Bank'],
-    'fat_chiba'        => ['file' => __DIR__ . '/plist-fat/Chiba.plist',       'title' => 'Chiba'],
-    'fat_chinatelecom' => ['file' => __DIR__ . '/plist-fat/ChinaTelecom.plist','title' => 'ChinaTelecom'],
-    'fat_education'    => ['file' => __DIR__ . '/plist-fat/Education.plist',   'title' => 'Education'],
-    'fat_eeo'          => ['file' => __DIR__ . '/plist-fat/Eeo.plist',         'title' => 'Eeo'],
-    'fat_eryuan'       => ['file' => __DIR__ . '/plist-fat/Eryuan.plist',      'title' => 'Eryuan'],
-    'fat_esen'         => ['file' => __DIR__ . '/plist-fat/Esen.plist',        'title' => 'Esen'],
-    'fat_infor'        => ['file' => __DIR__ . '/plist-fat/Infor.plist',       'title' => 'Infor'],
-    'fat_mkt'          => ['file' => __DIR__ . '/plist-fat/Mkt.plist',         'title' => 'Mkt'],
-    'fat_takeoff'      => ['file' => __DIR__ . '/plist-fat/Takeoff.plist',     'title' => 'Takeoff'],
-    'fat_telecom'      => ['file' => __DIR__ . '/plist-fat/Telecom.plist',     'title' => 'Telecom'],
-    'fat_tianjin'      => ['file' => __DIR__ . '/plist-fat/Tianjin.plist',     'title' => 'Tianjin'],
-    'fat_truck'        => ['file' => __DIR__ . '/plist-fat/Truck.plist',       'title' => 'Truck'],
-    'fat_viettel'      => ['file' => __DIR__ . '/plist-fat/Viettel.plist',     'title' => 'Viettel'],
-    'fat_viettinbank'  => ['file' => __DIR__ . '/plist-fat/Viettinbank.plist', 'title' => 'Viettinbank'],
-    'fat_wuling'       => ['file' => __DIR__ . '/plist-fat/Wuling.plist',      'title' => 'Wuling'],
+    'fat_bank'         => ['file' => __DIR__ . '/plist-flt/Bank.plist',        'title' => 'Bank'],
+    'fat_chiba'        => ['file' => __DIR__ . '/plist-flt/Chiba.plist',       'title' => 'Chiba'],
+    'fat_chinatelecom' => ['file' => __DIR__ . '/plist-flt/China.plist',       'title' => 'China'],
+    'fat_education'    => ['file' => __DIR__ . '/plist-flt/Elec.plist',        'title' => 'Elec'],
+    'fat_eeo'          => ['file' => __DIR__ . '/plist-flt/Inter.plist',       'title' => 'Inter'],
+    'fat_eryuan'       => ['file' => __DIR__ . '/plist-flt/Postal.plist',      'title' => 'Postal'],
+    'fat_esen'         => ['file' => __DIR__ . '/plist-flt/Power.plist',       'title' => 'Power'],
+    'fat_infor'        => ['file' => __DIR__ . '/plist-flt/Rural.plist',       'title' => 'Rural'],
+    'fat_mkt'          => ['file' => __DIR__ . '/plist-flt/Varco.plist',       'title' => 'Varco'],
+    'fat_takeoff'      => ['file' => __DIR__ . '/plist-flt/Takeoff.plist',     'title' => 'Takeoff'],
+    'fat_telecom'      => ['file' => __DIR__ . '/plist-flt/Telecom.plist',     'title' => 'Telecom'],
+    'fat_tianjin'      => ['file' => __DIR__ . '/plist-flt/Tianjin.plist',     'title' => 'Tianjin'],
+    'fat_truck'        => ['file' => __DIR__ . '/plist-flt/Truck.plist',       'title' => 'Truck'],
+    'fat_viettel'      => ['file' => __DIR__ . '/plist-flt/Viettel.plist',     'title' => 'Viettel'],
+    'fat_viettinbank'  => ['file' => __DIR__ . '/plist-flt/Vn.plist',          'title' => 'Vn'],
+    'fat_wuling'       => ['file' => __DIR__ . '/plist-flt/Wasu.plist',        'title' => 'Wasu'],
 ];
 
 if (!isset($maps[$id])) {
@@ -32,7 +32,9 @@ if (!$host) {
     http_response_code(400);
     exit('Host header missing');
 }
-$base = "{$scheme}://{$host}/app/flametech";
+$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+$scriptDir = rtrim($scriptDir, '/');
+$base = "{$scheme}://{$host}{$scriptDir}";
 $downloadUrl = $base . '/download.php?id=' . rawurlencode($id);
 
 $tplPath = $maps[$id]['file'] ?? null;
@@ -44,14 +46,9 @@ if ($tplPath && is_file($tplPath)) {
         http_response_code(500);
         exit('Cannot read manifest');
     }
-    // Force correct download URL inside the manifest
-    $plist = preg_replace('#https?://[^"]+/app/fatx007-ios-turbo/download\\.php\\?id=[^"<]+#', $downloadUrl, $plist);
-    // Also handle old domain without /app
+    // Force the manifest to use the current app URL regardless of template origin.
+    $plist = preg_replace('#https?://[^"<]+/download\\.php\\?id=[^"<]+#', $downloadUrl, $plist);
     $plist = str_replace('Fatx007 Turbo', 'Flame Tech', $plist);
-    $plist = str_replace('https://appstack.blog/fatx007-ios-turbo/download.php', $base . '/download.php', $plist);
-    $plist = str_replace('https://appstack.blog/app/fatx007-ios-turbo/download.php', $base . '/download.php', $plist);
-    $plist = str_replace('https://appstack.blog/app/fatx007-ios-turbo/download.php?id=' . $id, $downloadUrl, $plist);
-    $plist = str_replace('https://appstack.blog/fatx007-ios-turbo/download.php?id=' . $id, $downloadUrl, $plist);
 } else {
     // Fallback minimal manifest if template missing
     $title = $maps[$id]['title'] ?? $id;
