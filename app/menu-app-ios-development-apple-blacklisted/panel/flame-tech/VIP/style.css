@@ -1880,21 +1880,34 @@ body::after {
   bottom: 28px;
   right: 20px;
   z-index: 200;
+  will-change: left, top, transform;
+}
+
+#launcher.launcher-free {
+  right: auto !important;
+  bottom: auto !important;
+}
+
+#launcher.dragging {
+  transition: none;
 }
 
 .launcher-btn {
   width: 48px; height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #1a0005, var(--red-dim));
-  border: 1px solid rgba(232,0,30,0.4);
-  box-shadow: 0 0 24px rgba(232,0,30,0.3), 0 4px 16px rgba(0,0,0,0.6);
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(34,5,8,0.96), rgba(116,8,18,0.92));
+  border: 1px solid rgba(255,120,90,0.42);
+  box-shadow: 0 0 24px rgba(255,78,59,0.24), 0 4px 16px rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  cursor: grab;
   transition: var(--transition);
   position: relative;
   overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .launcher-btn::before {
@@ -1902,18 +1915,26 @@ body::after {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(circle at 50% 0%, rgba(255,60,60,0.2), transparent 70%);
+  background: radial-gradient(circle at 50% 0%, rgba(255,190,110,0.28), transparent 72%);
 }
 
 .launcher-btn:hover {
-  box-shadow: 0 0 36px rgba(232,0,30,0.5), 0 6px 20px rgba(0,0,0,0.6);
+  box-shadow: 0 0 36px rgba(255,106,69,0.34), 0 6px 20px rgba(0,0,0,0.6);
   transform: translateY(-2px);
 }
 
+#launcher.dragging .launcher-btn,
+#launcher.dragging .launcher-btn:hover {
+  cursor: grabbing;
+  transform: scale(0.98);
+  transition: none;
+}
+
 .launcher-btn svg {
-  width: 22px; height: 22px;
+  width: 24px; height: 24px;
   position: relative;
   z-index: 1;
+  filter: drop-shadow(0 0 9px rgba(255, 112, 70, 0.35));
 }
 
 .launcher-pulse {
@@ -1921,9 +1942,13 @@ body::after {
   top: -3px; right: -3px;
   width: 10px; height: 10px;
   border-radius: 50%;
-  background: var(--red2);
-  box-shadow: 0 0 8px var(--red2);
+  background: #ff8a4a;
+  box-shadow: 0 0 10px rgba(255,138,74,0.9);
   animation: launcherPulse 2s ease-in-out infinite;
+}
+
+#launcher.dragging .launcher-pulse {
+  animation-play-state: paused;
 }
 
 @keyframes launcherPulse {
@@ -2680,7 +2705,7 @@ body::after {
   .launcher-btn {
     width: 52px;
     height: 52px;
-    border-radius: 16px;
+    border-radius: 50%;
   }
 
   #popup-overlay {

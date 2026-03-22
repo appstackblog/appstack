@@ -36,6 +36,8 @@ let notificationHost = null;
 let toggleFeedbackSuppressed = false;
 let lastNotificationAt = 0;
 const notificationCooldown = 650;
+const launcherStorageKey = 'ftVipLauncherPositionV1';
+let launcherClickSuppressUntil = 0;
 
 const notificationPools = {
   function: [
@@ -364,10 +366,17 @@ function initActionFeedback() {
 
 function toggleFunc(idx, checkbox) {
   const card = document.getElementById('fc-' + idx);
-  if (checkbox.checked) {
-    card.classList.add('on');
-  } else {
-    card.classList.remove('on');
+  if (card) {
+    if (checkbox.checked) {
+      card.classList.add('on');
+    } else {
+      card.classList.remove('on');
+    }
+    card.dataset.featureRunning = checkbox.checked ? 'true' : 'false';
+  }
+
+  if (window.ftFeatureEngine && typeof window.ftFeatureEngine.toggle === 'function') {
+    window.ftFeatureEngine.toggle(idx, checkbox);
   }
 }
 
@@ -423,6 +432,9 @@ function resetConfiguration(showFeedback = true) {
   const hadSound = isSoundEnabled();
   if (showFeedback && hadSound) playUiSound('reset');
   toggleFeedbackSuppressed = true;
+  if (window.ftFeatureEngine && typeof window.ftFeatureEngine.stopAll === 'function') {
+    window.ftFeatureEngine.stopAll('reset');
+  }
   document.querySelectorAll('.toggle input').forEach(checkbox => {
     checkbox.checked = false;
     syncToggleUI(checkbox);
@@ -498,6 +510,183 @@ function updateVipSlider(idx, value) {
   const pct = String(parseInt(value, 10) || 0);
   document.getElementById('vp' + idx + '-pct').textContent = pct + '%';
   document.getElementById('vp' + idx + '-fill').style.width = pct + '%';
+}
+
+
+function loadLauncherPosition() {
+  try {
+    const raw = localStorage.getItem(launcherStorageKey);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Number.isFinite(parsed.left) || !Number.isFinite(parsed.top)) {
+      return null;
+    }
+
+    return { left: parsed.left, top: parsed.top };
+  } catch (_) {
+    return null;
+  }
+}
+
+function saveLauncherPosition(position) {
+  try {
+    localStorage.setItem(launcherStorageKey, JSON.stringify(position));
+  } catch (_) {}
+}
+
+function clampLauncherPosition(launcher, left, top) {
+  const margin = 10;
+  const rect = launcher.getBoundingClientRect();
+  const width = rect.width || launcher.offsetWidth || 52;
+  const height = rect.height || launcher.offsetHeight || 52;
+
+  return {
+    left: clamp(left, margin, Math.max(margin, window.innerWidth - width - margin)),
+    top: clamp(top, margin, Math.max(margin, window.innerHeight - height - margin))
+  };
+}
+
+function applyLauncherPosition(launcher, position, persist = false) {
+  if (!launcher || !position) return;
+
+  const next = clampLauncherPosition(launcher, Number(position.left) || 0, Number(position.top) || 0);
+  launcher.classList.add('launcher-free');
+  launcher.style.left = next.left + 'px';
+  launcher.style.top = next.top + 'px';
+  launcher.style.right = 'auto';
+  launcher.style.bottom = 'auto';
+
+  if (persist) {
+    saveLauncherPosition(next);
+  }
+}
+
+function pinLauncherToCurrentPosition(launcher) {
+  if (!launcher || launcher.classList.contains('launcher-free')) return;
+  const rect = launcher.getBoundingClientRect();
+  applyLauncherPosition(launcher, { left: rect.left, top: rect.top }, false);
+}
+
+function syncLauncherToViewport() {
+  const launcher = document.getElementById('launcher');
+  if (!launcher || !launcher.classList.contains('launcher-free')) return;
+
+  applyLauncherPosition(
+    launcher,
+    {
+      left: parseFloat(launcher.style.left) || launcher.getBoundingClientRect().left,
+      top: parseFloat(launcher.style.top) || launcher.getBoundingClientRect().top
+    },
+    true
+  );
+}
+
+function initLauncherControl() {
+  const launcher = document.getElementById('launcher');
+  const launcherBtn = document.getElementById('launcherBtn');
+  if (!launcher || !launcherBtn || launcher.dataset.initDone === 'true') return;
+
+  launcher.dataset.initDone = 'true';
+
+  const savedPosition = loadLauncherPosition();
+  if (savedPosition) {
+    applyLauncherPosition(launcher, savedPosition, false);
+  }
+
+  const drag = {
+    active: false,
+    moved: false,
+    pointerId: null,
+    startX: 0,
+    startY: 0,
+    originLeft: 0,
+    originTop: 0
+  };
+
+  launcherBtn.addEventListener('click', (event) => {
+    if (Date.now() < launcherClickSuppressUntil) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    openPopup();
+  });
+
+  launcherBtn.addEventListener('pointerdown', (event) => {
+    if (event.button !== undefined && event.button !== 0) return;
+
+    drag.active = true;
+    drag.moved = false;
+    drag.pointerId = event.pointerId;
+    drag.startX = event.clientX;
+    drag.startY = event.clientY;
+
+    const rect = launcher.getBoundingClientRect();
+    drag.originLeft = rect.left;
+    drag.originTop = rect.top;
+
+    if (typeof launcherBtn.setPointerCapture === 'function') {
+      launcherBtn.setPointerCapture(event.pointerId);
+    }
+  });
+
+  launcherBtn.addEventListener('pointermove', (event) => {
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
+
+    const deltaX = event.clientX - drag.startX;
+    const deltaY = event.clientY - drag.startY;
+
+    if (!drag.moved && Math.hypot(deltaX, deltaY) < 6) {
+      return;
+    }
+
+    if (!drag.moved) {
+      drag.moved = true;
+      pinLauncherToCurrentPosition(launcher);
+      drag.originLeft = parseFloat(launcher.style.left) || launcher.getBoundingClientRect().left;
+      drag.originTop = parseFloat(launcher.style.top) || launcher.getBoundingClientRect().top;
+      launcher.classList.add('dragging');
+    }
+
+    event.preventDefault();
+    applyLauncherPosition(
+      launcher,
+      {
+        left: drag.originLeft + deltaX,
+        top: drag.originTop + deltaY
+      },
+      false
+    );
+  });
+
+  const finishLauncherDrag = (event) => {
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
+
+    if (typeof launcherBtn.releasePointerCapture === 'function') {
+      try {
+        launcherBtn.releasePointerCapture(event.pointerId);
+      } catch (_) {}
+    }
+
+    if (drag.moved) {
+      launcherClickSuppressUntil = Date.now() + 260;
+      saveLauncherPosition({
+        left: parseFloat(launcher.style.left) || launcher.getBoundingClientRect().left,
+        top: parseFloat(launcher.style.top) || launcher.getBoundingClientRect().top
+      });
+    }
+
+    launcher.classList.remove('dragging');
+    drag.active = false;
+    drag.moved = false;
+    drag.pointerId = null;
+  };
+
+  launcherBtn.addEventListener('pointerup', finishLauncherDrag);
+  launcherBtn.addEventListener('pointercancel', finishLauncherDrag);
+  window.addEventListener('resize', syncLauncherToViewport, { passive: true });
 }
 
 
@@ -827,6 +1016,7 @@ function drawChart() {
 window.addEventListener('load', () => {
   initToggleSystem();
   initActionFeedback();
+  initLauncherControl();
   updateLiveStats();
   window.addEventListener('resize', () => {
     if (chartCanvas) {

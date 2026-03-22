@@ -12,6 +12,26 @@ if (stripos(str_replace('\\', '/', $requestPath), '/VIP/') === false || $entry !
 $cssVer = asset_ver('style.css');
 $keyVer = asset_ver('key.js');
 $jsVer = asset_ver('script.js');
+$funcVer = asset_ver('func-engine.js');
+$featureModules = [
+  'aimlock.js',
+  'stability assist.js',
+  'aim hold.js',
+  'aim lockdown.js',
+  'sensitivity boost.js',
+  'screen boost.js',
+  'headshot fix.js',
+  'bulletalign.js',
+  'shake fix.js',
+];
+$featureModuleVers = [];
+foreach ($featureModules as $featureModule) {
+  $featureModuleVers[$featureModule] = asset_ver('C#/' . $featureModule);
+}
+$featureModuleJson = json_encode(
+  $featureModuleVers,
+  JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+);
 
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
@@ -27,6 +47,7 @@ $search = [
   'href="style.css"',
   'src="key.js"',
   'src="script.js"',
+  '<script src="func-engine.js"></script>',
   "../index.html",
 ];
 
@@ -34,6 +55,7 @@ $replace = [
   'href="style.css?v=' . $cssVer . '"',
   'src="key.js?v=' . $keyVer . '"',
   'src="script.js?v=' . $jsVer . '"',
+  '<script>window.ftFeatureModuleVersions=' . $featureModuleJson . ';</script>' . "\n" . '<script src="func-engine.js?v=' . $funcVer . '"></script>',
   '../index.php',
 ];
 
