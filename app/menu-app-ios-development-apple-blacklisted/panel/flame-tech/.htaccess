@@ -1,7 +1,0 @@
-Options -MultiViews
-DirectoryIndex index.php index.html
-
-RewriteEngine On
-RewriteRule ^$ index.php [L]
-RewriteRule ^index\.php$ index.php [L]
-RewriteRule ^index\.html$ index.php [L]
