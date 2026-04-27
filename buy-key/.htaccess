@@ -1,5 +1,6 @@
 Options -Indexes
 ServerSignature Off
+DirectoryIndex index.html index.php
 
 <FilesMatch "(^\.|\.env$|\.sql$|\.log$)">
     <IfModule mod_authz_core.c>
@@ -9,4 +10,3 @@ ServerSignature Off
         Deny from all
     </IfModule>
 </FilesMatch>
-
