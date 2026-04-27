@@ -10,7 +10,7 @@ return [
     'DB_USER' => 'if0_41764782',
     'DB_PASS' => 'mfFBljGb8e',
 
-    'SITE_URL' => 'https://buykey.xo.je',
+    'SITE_URL' => 'https://appstack.blog/buy-key',
 
     'WORKER_BASE_URL' => 'https://flametech.hdangchinhchu.workers.dev',
     'WORKER_ADMIN_KEY' => 'change-me-worker-admin-key',

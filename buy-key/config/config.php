@@ -3,14 +3,14 @@
 return [
     'APP_NAME' => 'FlameTech Key bản quyền',
     'APP_ENV' => 'production',
-    'APP_DEBUG' => true,
+    'APP_DEBUG' => false,
 
     'DB_HOST' => 'sql111.infinityfree.com',
     'DB_NAME' => 'if0_41764782_buykey',
     'DB_USER' => 'if0_41764782',
     'DB_PASS' => 'mfFBljGb8e',
 
-    'SITE_URL' => 'https://buykey.xo.je',
+    'SITE_URL' => 'https://appstack.blog/buy-key',
 
     'WORKER_BASE_URL' => 'https://flametech.hdangchinhchu.workers.dev',
     'WORKER_ADMIN_KEY' => 'vsh_admin_8G9RzJ42XkM',
