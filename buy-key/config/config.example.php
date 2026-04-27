@@ -26,6 +26,15 @@ return [
     'FREE_LINK_BASE_URL' => 'https://link-provider.example/unlock?callback={callback}',
     'FREE_LINK_SECRET' => 'change-me-free-link-secret',
 
+    'MAIL_DRIVER' => 'smtp',
+    'MAIL_HOST' => 'smtp.example.com',
+    'MAIL_PORT' => 587,
+    'MAIL_USERNAME' => 'your_email@example.com',
+    'MAIL_PASSWORD' => 'your_email_password',
+    'MAIL_FROM_EMAIL' => 'no-reply@appstack.blog',
+    'MAIL_FROM_NAME' => 'AppStack Buy Key',
+    'MAIL_ENCRYPTION' => 'tls',
+
     'ADMIN_EMAILS' => 'admin@example.com',
 
     'PLANS' => [
