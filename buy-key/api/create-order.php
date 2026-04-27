@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../includes/csrf.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 require_post();
 
@@ -10,7 +10,9 @@ $input = wants_json() ? array_merge($_POST, read_json_body()) : $_POST;
 require_csrf($input['csrf_token'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? ''));
 
 try {
-    $email = normalize_email((string) ($input['email'] ?? ''));
+    $customer = current_customer();
+    $email = $customer ? normalize_email((string) $customer['email']) : normalize_email((string) ($input['email'] ?? ''));
+    $customerId = $customer ? (int) $customer['id'] : null;
     $planCode = trim((string) ($input['plan_code'] ?? ''));
 
     if (!valid_email($email)) {
@@ -21,7 +23,7 @@ try {
         throw new InvalidArgumentException('Gói Premium đã chọn không hợp lệ.');
     }
 
-    $order = create_order(db(), $email, $planCode);
+    $order = create_order(db(), $email, $planCode, $customerId);
 
     if (wants_json()) {
         json_response([
