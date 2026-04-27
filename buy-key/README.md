@@ -4,18 +4,18 @@ Plain PHP/MySQL license-key storefront for cPanel shared hosting. The website do
 
 ## Structure
 
-- `public_html/` - upload these files to your cPanel `public_html`
+- `public_html/buy-key/` - upload this folder to your cPanel `public_html/buy-key`
 - `database/schema.sql` - import this via phpMyAdmin
-- `public_html/config/config.example.php` - placeholder configuration
-- `public_html/config/config.php` - deployment configuration loaded by the app
+- `public_html/buy-key/config/config.example.php` - placeholder configuration
+- `public_html/buy-key/config/config.php` - deployment configuration loaded by the app
 
 ## cPanel Deployment
 
 1. Create a MySQL database and database user in cPanel.
 2. Grant the user all privileges on the database.
 3. Open phpMyAdmin and import `database/schema.sql`.
-4. Upload the contents of `public_html/` into your hosting account's `public_html/`.
-5. Edit `public_html/config/config.php` and set:
+4. Upload the `buy-key/` folder into your hosting account's `public_html/buy-key/`.
+5. Edit `public_html/buy-key/config/config.php` and set:
    - `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`
    - `SITE_URL`
    - `WORKER_BASE_URL`
@@ -40,13 +40,13 @@ VALUES ('admin@example.com', '$2y$REPLACE_WITH_GENERATED_HASH', NOW());
 7. Set your payment provider webhook URL to:
 
 ```text
-https://your-domain.com/api/payment-webhook.php
+https://appstack.blog/buy-key/api/payment-webhook.php
 ```
 
 8. Set your free-link provider callback URL to:
 
 ```text
-https://your-domain.com/api/free-callback.php?token=<token>
+https://appstack.blog/buy-key/api/free-callback.php?token=<token>
 ```
 
 For providers that accept a callback template, set `FREE_LINK_BASE_URL` like:
@@ -107,11 +107,10 @@ The Worker admin key is sent only by PHP in the `x-server-key` header. It is nev
 
 ## Testing
 
-1. Open `/pricing.php`, create an order, and copy the transfer content.
+1. Open `/buy-key/pricing.php`, create an order, and copy the transfer content.
 2. Send a signed test webhook with that transfer content.
-3. Open `/order.php?id=<order_public_id>` and confirm the generated VIP key appears.
-4. Open `/free.php`, submit an email, complete the placeholder/free-link redirect, and confirm `/free-success.php?id=<claim_public_id>` shows a free key.
-5. Open `/admin/login.php` and confirm orders, free claims, statuses, and generated keys are visible.
+3. Open `/buy-key/order.php?id=<order_public_id>` and confirm the generated VIP key appears.
+4. Open `/buy-key/free.php`, submit an email, complete the placeholder/free-link redirect, and confirm `/buy-key/free-success.php?id=<claim_public_id>` shows a free key.
+5. Open `/buy-key/admin/login.php` and confirm orders, free claims, statuses, and generated keys are visible.
 
 If your Worker has a different verification endpoint, update `WORKER_VERIFY_PATH` in `config.php`.
-
