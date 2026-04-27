@@ -5,6 +5,7 @@ $activeNav = 'free';
 require_once __DIR__ . '/includes/header.php';
 
 $error = trim((string) ($_GET['error'] ?? ''));
+$customer = current_customer();
 ?>
 
 <section class="page-hero compact">
@@ -23,7 +24,10 @@ $error = trim((string) ($_GET['error'] ?? ''));
         <form class="form-card" method="post" action="<?= e(internal_url('/api/free-start.php')) ?>">
             <?= csrf_field() ?>
             <label for="email">Địa chỉ email</label>
-            <input id="email" name="email" type="email" maxlength="255" autocomplete="email" required placeholder="email-cua-ban@example.com">
+            <input id="email" name="email" type="email" maxlength="255" autocomplete="email" required placeholder="email-cua-ban@example.com" value="<?= e($customer['email'] ?? '') ?>" <?= $customer ? 'readonly' : '' ?>>
+            <?php if ($customer): ?>
+                <p class="form-note">Key mien phi se duoc gan vao tai khoan dang nhap.</p>
+            <?php endif; ?>
             <button class="btn btn-primary full" type="submit" data-loading="Đang bắt đầu...">Nhận key miễn phí</button>
         </form>
     </div>

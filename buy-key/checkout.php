@@ -26,6 +26,7 @@ if (!$selectedPlanCode || !get_plan($selectedPlanCode)) {
     }
 }
 $selectedPlan = get_plan($selectedPlanCode);
+$customer = current_customer();
 ?>
 
 <?php if ($systemError): ?>
@@ -127,7 +128,10 @@ $selectedPlan = get_plan($selectedPlanCode);
                 </select>
 
                 <label for="email">Địa chỉ email</label>
-                <input id="email" name="email" type="email" maxlength="255" autocomplete="email" required placeholder="email-cua-ban@example.com">
+                <input id="email" name="email" type="email" maxlength="255" autocomplete="email" required placeholder="email-cua-ban@example.com" value="<?= e($customer['email'] ?? '') ?>" <?= $customer ? 'readonly' : '' ?>>
+                <?php if ($customer): ?>
+                    <p class="form-note">Don hang se duoc gan vao tai khoan dang nhap.</p>
+                <?php endif; ?>
 
                 <?php if ($selectedPlan): ?>
                     <div class="summary-line">
