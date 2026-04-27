@@ -49,6 +49,24 @@
         });
     });
 
+    document.querySelectorAll('[data-toggle-password]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var input = document.querySelector(button.getAttribute('data-toggle-password'));
+            if (!input) {
+                return;
+            }
+            var visible = input.type === 'text';
+            input.type = visible ? 'password' : 'text';
+            button.textContent = visible ? 'Hien' : 'An';
+        });
+    });
+
+    document.querySelectorAll('.otp-input').forEach(function (input) {
+        input.addEventListener('input', function () {
+            input.value = input.value.replace(/\D+/g, '').slice(0, 6);
+        });
+    });
+
     document.querySelectorAll('form').forEach(function (form) {
         if (form.id === 'key-check-form') {
             return;
