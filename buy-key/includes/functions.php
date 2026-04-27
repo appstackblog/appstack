@@ -214,7 +214,28 @@ function create_unique_transfer_content(PDO $pdo): string
     return $code;
 }
 
-function create_order(PDO $pdo, string $email, string $planCode): array
+function db_column_exists(PDO $pdo, string $table, string $column): bool
+{
+    static $cache = [];
+    $key = $table . '.' . $column;
+    if (array_key_exists($key, $cache)) {
+        return $cache[$key];
+    }
+
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*)
+         FROM INFORMATION_SCHEMA.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE()
+         AND TABLE_NAME = ?
+         AND COLUMN_NAME = ?'
+    );
+    $stmt->execute([$table, $column]);
+    $cache[$key] = (int) $stmt->fetchColumn() > 0;
+
+    return $cache[$key];
+}
+
+function create_order(PDO $pdo, string $email, string $planCode, ?int $customerId = null): array
 {
     $plan = get_plan($planCode);
     if (!$plan) {
@@ -224,19 +245,36 @@ function create_order(PDO $pdo, string $email, string $planCode): array
     $publicId = random_token(16);
     $transferContent = create_unique_transfer_content($pdo);
 
-    $stmt = $pdo->prepare(
-        'INSERT INTO orders (public_id, email, plan_code, duration, amount, currency, status, transfer_content, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, "pending", ?, NOW())'
-    );
-    $stmt->execute([
-        $publicId,
-        $email,
-        $planCode,
-        $plan['duration'],
-        $plan['amount'],
-        $plan['currency'] ?? 'VND',
-        $transferContent,
-    ]);
+    if ($customerId !== null && db_column_exists($pdo, 'orders', 'customer_id')) {
+        $stmt = $pdo->prepare(
+            'INSERT INTO orders (customer_id, public_id, email, plan_code, duration, amount, currency, status, transfer_content, created_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, "pending", ?, NOW())'
+        );
+        $stmt->execute([
+            $customerId,
+            $publicId,
+            $email,
+            $planCode,
+            $plan['duration'],
+            $plan['amount'],
+            $plan['currency'] ?? 'VND',
+            $transferContent,
+        ]);
+    } else {
+        $stmt = $pdo->prepare(
+            'INSERT INTO orders (public_id, email, plan_code, duration, amount, currency, status, transfer_content, created_at)
+             VALUES (?, ?, ?, ?, ?, ?, "pending", ?, NOW())'
+        );
+        $stmt->execute([
+            $publicId,
+            $email,
+            $planCode,
+            $plan['duration'],
+            $plan['amount'],
+            $plan['currency'] ?? 'VND',
+            $transferContent,
+        ]);
+    }
 
     return find_order_by_public_id($pdo, $publicId);
 }
