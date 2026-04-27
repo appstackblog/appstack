@@ -43,16 +43,37 @@ function site_url(string $path = ''): string
     return $base . ($path === '/' ? '' : $path);
 }
 
+function app_base_path(): string
+{
+    $base = rtrim((string) (app_config()['SITE_URL'] ?? ''), '/');
+    if ($base === '' || stripos($base, 'your-domain.com') !== false) {
+        return '';
+    }
+
+    $path = (string) (parse_url($base, PHP_URL_PATH) ?? '');
+    return rtrim($path, '/');
+}
+
 function internal_url(string $path = ''): string
 {
     $path = '/' . ltrim($path, '/');
-    return $path === '/' ? '/' : $path;
+    $basePath = app_base_path();
+
+    if ($path === '/') {
+        return $basePath === '' ? '/' : $basePath . '/';
+    }
+
+    return $basePath . $path;
 }
 
 function asset_url(string $path): string
 {
     $path = ltrim($path, '/');
-    $url = '/assets/' . str_replace('\\', '/', $path);
+    if (strpos($path, 'assets/') === 0) {
+        $path = substr($path, 7);
+    }
+
+    $url = internal_url('/assets/' . str_replace('\\', '/', $path));
     $file = dirname(__DIR__) . '/assets/' . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
 
     if (is_file($file)) {
