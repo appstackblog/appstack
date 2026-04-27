@@ -5,10 +5,10 @@ return [
     'APP_ENV' => 'production',
     'APP_DEBUG' => false,
 
-    'DB_HOST' => 'sql111.infinityfree.com',
-    'DB_NAME' => 'if0_41764782_buykey',
-    'DB_USER' => 'if0_41764782',
-    'DB_PASS' => 'mfFBljGb8e',
+    'DB_HOST' => 'localhost',
+    'DB_NAME' => 'appstack_buykey',
+    'DB_USER' => 'appstack_buykeyuser',
+    'DB_PASS' => '!Hdchu2006!',
 
     'SITE_URL' => 'https://appstack.blog/buy-key',
 
