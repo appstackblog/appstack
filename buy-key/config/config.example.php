@@ -13,7 +13,7 @@ return [
     'SITE_URL' => 'https://appstack.blog/buy-key',
 
     'WORKER_BASE_URL' => 'https://flametech.hdangchinhchu.workers.dev',
-    'WORKER_ADMIN_KEY' => 'change-me-worker-admin-key',
+    'WORKER_ADMIN_KEY' => 'vsh_admin_8G9RzJ42XkM',
 
     'PAYMENT_PROVIDER' => 'placeholder',
     'PAYMENT_WEBHOOK_SECRET' => 'buykey_webhook_secret_2026',
